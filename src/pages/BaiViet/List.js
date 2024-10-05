@@ -16,7 +16,7 @@ const List = () => {
     { label: 'Bài Viết', url: '' },
   ];
 
-  const headers = ["#", "Hình Ảnh", "Tiêu Đề", "Lượt Xem", "Tác Giả", "Trạng Thái", "Phiên Bản", "Hành Động"];
+  const headers = ["#", "Hình Ảnh", "Tiêu Đề", "Lượt Xem", "Tác Giả", "Trạng Thái","Phiên Bản","Hành Động"];
 
   const fetchData = async (page = 1, search = "") => {
     try {
@@ -49,7 +49,7 @@ const List = () => {
       <td>
         {
           item.privacy === "public" ? 
-            <i>Đã Duyệt Bài</i>
+            <span className="badge badge-primary">Đã Duyệt Bài</span>
           :
             <button className='btn btn-success' onClick={() => handlePublic(item.article_id)}><i className="fa-solid fa-check"></i> Duyệt Bài Viết</button>
         }
@@ -82,7 +82,7 @@ const List = () => {
       setData(data.map(item => {
         if (item.article_id === id) {
             // Kiểm tra role và thay đổi
-            return { ...item, privacy: "public" };
+            return { ...item, privacy: "public", is_draft:0 };
         }
         return item; 
       }));
