@@ -155,22 +155,9 @@ const Show = () => {
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-md-12">
-                                        <div className="form-group">
-                                            <label htmlFor="name">Nhập Mật Khẩu Mới</label>
-                                            <input
-                                                type="password"
-                                                className="form-control bg-white"
-                                                id="password"
-                                                name="password"
-                                                placeholder='Nhập mật khẩu mới'
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                            />
-                                        </div>
-                                    </div>
                                 </div>
                                 <Link className="btn btn-success mr-2" to="/admin/">Quay Lại</Link>
+                                <Link className="btn btn-dark mr-2" to="/admin/ca-nhan/doi-mat-khau">Đổi Mật Khẩu</Link>
                                 <button className="btn btn-primary" type="submit">Lưu Thông Tin</button>
                             </form>
                         </div>

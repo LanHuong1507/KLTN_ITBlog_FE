@@ -55,6 +55,15 @@ const NguoiDungServices = {
             throw error;
         }
     },
+
+    changePassword: async (data) => {
+        try {
+            const response = await axiosInstance.patch(`/users/changePassword`, data);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
 };
 
 export default NguoiDungServices;
