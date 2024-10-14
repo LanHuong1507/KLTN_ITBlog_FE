@@ -9,19 +9,19 @@ const List = () => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [searchTerm, setSearchTerm] = useState(''); // Thêm state cho từ khóa tìm kiếm
+  const [searchTerm, setSearchTerm] = useState('');
 
   const breadcrumbs = [
     { label: 'Trang Chủ', url: '/admin' },
     { label: 'Bài Viết', url: '' },
   ];
 
-  const headers = ["#", "Hình Ảnh", "Tiêu Đề", "Lượt Xem", "Tác Giả", "Trạng Thái","Phiên Bản","Hành Động"];
+  const headers = ["#", "Hình Ảnh", "Tiêu Đề", "Lượt Xem", "Tác Giả", "Trạng Thái", "Phiên Bản", "Hành Động"];
 
   const fetchData = async (page = 1, search = "") => {
     try {
       const response = await BaiVietServices.list(page, search);
-      setData(response.data.articles); // Cập nhật state data với danh sách bài viết
+      setData(response.data.articles);
       setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error('Lỗi khi gọi API:', error);
@@ -29,7 +29,7 @@ const List = () => {
   };
 
   useEffect(() => {
-    fetchData(currentPage, searchTerm); // Gọi API với từ khóa tìm kiếm
+    fetchData(currentPage, searchTerm);
     window.scrollTo(0, 0);
   }, [currentPage, searchTerm]);
 
@@ -44,30 +44,46 @@ const List = () => {
         />
       </td>
       <td>{item.title}</td>
-      <td><span className="badge badge-success"><i className="fa-regular fa-eye"></i> {item.views.length === 0 ? "0 lượt xem" : `${item.views[0].view_count} lượt xem`}</span></td>
-      <td><Link to={`/admin/nguoi-dung/${item.user.username}`}>{item.user.username}</Link></td>
       <td>
-        {
-          item.privacy === "public" ? 
-            <span className="badge badge-primary">Đã Duyệt Bài</span>
+        <span className="badge badge-success">
+          <i className="fa-regular fa-eye"></i> {item.views.length === 0 ? "0 lượt xem" : `${item.views[0].view_count} lượt xem`}
+        </span>
+      </td>
+      <td>
+        <Link to={`/admin/nguoi-dung/${item.user.username}`}>{item.user.username}</Link>
+      </td>
+      <td>
+        {item.privacy === "public" ? 
+          <span className="badge badge-primary">Đã Duyệt Bài</span>
           :
-            <button className='btn btn-success' onClick={() => handlePublic(item.article_id)}><i className="fa-solid fa-check"></i> Duyệt Bài Viết</button>
+          <button 
+            className='btn btn-success btn-sm' // Added btn-sm for smaller button
+            onClick={() => handlePublic(item.article_id)} 
+          >
+            <i className="fa-solid fa-check"></i> Duyệt
+          </button>
         }
       </td>
       <td>
-        {
-          item.is_draft === true ? 
-            <span className="badge badge-danger">Bản Nháp</span>
+        {item.is_draft === true ? 
+          <span className="badge badge-danger">Bản Nháp</span>
           :
-            <span className="badge badge-primary">Chính Thức</span>
+          <span className="badge badge-primary">Chính Thức</span>
         }
       </td>
       <td>
-        <Link to={`/admin/bai-viet/${item.article_id}`} className="btn btn-primary" style={{ color: 'white', marginRight: '5px' }}>
+        <Link 
+          to={`/admin/bai-viet/${item.article_id}`} 
+          className="btn btn-primary btn-sm" // Added btn-sm for smaller button
+          style={{ marginRight: '5px' }} // This margin is necessary for spacing
+        >
           <i className="fas fa-edit" />
           <span> XEM</span>
         </Link>
-        <button className="btn btn-danger" style={{ color: 'white' }} onClick={() => handleDelete(item.article_id)}>
+        <button 
+          className="btn btn-danger btn-sm" // Added btn-sm for smaller button
+          onClick={() => handleDelete(item.article_id)}
+        >
           <i className="fa-solid fa-trash"></i>
           <span> Xóa</span>
         </button>
@@ -75,14 +91,12 @@ const List = () => {
     </>
   );
 
-  // Xử lý duyệt bài viết
   const handlePublic = async (id) => {
     try {
       const response = await BaiVietServices.public(id);
       setData(data.map(item => {
         if (item.article_id === id) {
-            // Kiểm tra role và thay đổi
-            return { ...item, privacy: "public", is_draft:0 };
+          return { ...item, privacy: "public", is_draft: 0 };
         }
         return item; 
       }));
@@ -92,7 +106,6 @@ const List = () => {
     }
   };
 
-  // Xử lý xóa bài viết
   const handleDelete = async (id) => {
     try {
       const destroy = await BaiVietServices.delete(id);
@@ -103,14 +116,12 @@ const List = () => {
     }
   };
 
-  // Xử lý khi người dùng thay đổi trang
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  // Xử lý khi người dùng nhập vào ô tìm kiếm
   const handleSearch = (term) => {
-    setSearchTerm(term); // Cập nhật từ khóa tìm kiếm
+    setSearchTerm(term);
   };
 
   return (
@@ -122,7 +133,7 @@ const List = () => {
         data={data} 
         addPath="/admin/bai-viet/them/" 
         addText="Thêm Bài Viết" 
-        onSearch={handleSearch} // Truyền hàm xử lý tìm kiếm xuống Table
+        onSearch={handleSearch}
       />
       <ul className="pagination pagination-sm mr-3 mt-1 float-right">
         {Array.from({ length: totalPages }, (_, index) => (
