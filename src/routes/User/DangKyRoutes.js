@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Signup from '../pages/DangKy/Signup';
+import DangKy from '../../pages/User/DangKy';
 
 const DangKyRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Signup />} />
+      <Route path="/" element={<DangKy />} />
     </Routes>
   );
 };

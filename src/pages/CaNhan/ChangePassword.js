@@ -10,8 +10,8 @@ const ChangePassword = () => {
     const navigate = useNavigate(); // Điều hướng sau khi thêm thành công
 
     const breadcrumbs = [
-        { label: 'Trang Chủ', url: '/' },
-        { label: 'Cá Nhân', url: '/ca-nhan' },
+        { label: 'Trang Chủ', url: '/admin' },
+        { label: 'Cá Nhân', url: '/admin/ca-nhan' },
         { label: 'Đổi Mật Khẩu', url: '' },
     ];
 
