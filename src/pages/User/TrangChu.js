@@ -229,7 +229,6 @@ const TrangChu = () => {
                     </div>
                   </div>
                   <div className="col-lg-4 col-md-12 sidebar-right">
-                    {/*Post aside style 1*/}
                     <div className="sidebar-widget mb-30">
                       <div className="widget-header position-relative mb-30">
                         <div className="row">
