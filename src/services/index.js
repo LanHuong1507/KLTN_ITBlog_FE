@@ -57,7 +57,7 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
-        window.location.href = '/admin/dang-nhap/';
+        window.location.href = '/dang-nhap';
         //return Promise.reject(refreshError);
       }
     }

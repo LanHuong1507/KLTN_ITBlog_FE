@@ -10,9 +10,9 @@ const TrangChuServices = {
         }
     },
 
-    getListArticles: async (page) => {
+    getListArticles: async (page, search = "") => {
         try {
-            const response = await axiosInstance.get(`/others/list_articles?page=${page}`);
+            const response = await axiosInstance.get(`/others/list_articles?page=${page}&search=${search}`);
             return response;
         } catch (error) {
             throw error;
@@ -72,6 +72,24 @@ const TrangChuServices = {
             throw error;
         }
     },
+
+    getTopMonth: async (page) => {
+        try {
+            const response = await axiosInstance.get(`/others/top_month/?page=${page}`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    getTopPopularToday: async () => {
+        try {
+            const response = await axiosInstance.get(`/others/popular_today`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
 };
 
 export default TrangChuServices;

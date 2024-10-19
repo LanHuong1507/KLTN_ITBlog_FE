@@ -57,7 +57,7 @@ const List = () => {
           <span className="badge badge-primary">Đã Duyệt Bài</span>
           :
           <button 
-            className='btn btn-success btn-sm' // Added btn-sm for smaller button
+            className='btn btn-success btn-sm' 
             onClick={() => handlePublic(item.article_id)} 
           >
             <i className="fa-solid fa-check"></i> Duyệt
@@ -74,14 +74,14 @@ const List = () => {
       <td>
         <Link 
           to={`/admin/bai-viet/${item.article_id}`} 
-          className="btn btn-primary btn-sm" // Added btn-sm for smaller button
-          style={{ marginRight: '5px' }} // This margin is necessary for spacing
+          className="btn btn-primary btn-sm"
+          style={{ marginRight: '5px' }} 
         >
           <i className="fas fa-edit" />
           <span> XEM</span>
         </Link>
         <button 
-          className="btn btn-danger btn-sm" // Added btn-sm for smaller button
+          className="btn btn-danger btn-sm"
           onClick={() => handleDelete(item.article_id)}
         >
           <i className="fa-solid fa-trash"></i>
