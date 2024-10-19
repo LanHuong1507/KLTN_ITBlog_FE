@@ -35,7 +35,7 @@ const BackToTop = () => {
         position: "fixed",
         bottom: "20px",
         right: "20px",
-        backgroundColor: "white",
+        backgroundColor: "#FF2E2E",
         border: "none",
         borderRadius: "50%",
         boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
@@ -44,7 +44,7 @@ const BackToTop = () => {
         zIndex: 999,
       }}
     >
-      <FontAwesomeIcon icon={faChevronUp} style={{ fontSize: "24px" }} />
+      <FontAwesomeIcon icon={faChevronUp} style={{ fontSize: "24px", color: "white" }} />
     </button>
   );
 };

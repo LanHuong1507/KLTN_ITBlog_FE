@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState} from "react";
+import { Link,useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHouse,
@@ -12,6 +12,15 @@ import {
   faUser,
 } from "@fortawesome/free-regular-svg-icons";
 const Header = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim() !== "") {
+      navigate(`/tim-kiem?s=${encodeURIComponent(searchTerm)}`);
+    }
+  };
   return (
     <>
       <header
@@ -22,7 +31,7 @@ const Header = () => {
           top: 0,
           zIndex: 999,
           backgroundColor: "white",
-        }} // Make the header sticky
+        }}
       >
         <div className="header-bottom header-sticky background-white text-center">
           <div className="scroll-progress gradient-bg-1" />
@@ -69,7 +78,6 @@ const Header = () => {
                         <Link to="/">
                           <span className="mr-15">
                             <FontAwesomeIcon icon={faHouse} />{" "}
-                            {/* Solid icon */}
                           </span>
                           TRANG CHỦ
                         </Link>
@@ -87,7 +95,7 @@ const Header = () => {
                           <span className="mr-15">
                             <FontAwesomeIcon icon={faFire} />
                           </span>
-                          TIN MỚI
+                          THEO DÕI
                         </Link>
                       </li>
                     </ul>
@@ -98,12 +106,14 @@ const Header = () => {
                     action="#"
                     method="get"
                     className="search-form d-lg-inline float-left position-relative d-none mr-20"
+                    onSubmit={handleSearch}
                   >
                     <input
                       type="text"
                       className="search_field"
                       placeholder="Nhập tên bài viết"
-                      defaultValue=""
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
                       name="s"
                     />
                     <span className="search-icon">

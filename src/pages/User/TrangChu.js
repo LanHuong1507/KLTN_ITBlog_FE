@@ -2,13 +2,8 @@ import { useEffect, useState } from "react";
 import TrangChuServices from "../../services/User/TrangChuServices";
 import { Link } from "react-router-dom";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCameraAlt, faThumbtack } from "@fortawesome/free-solid-svg-icons";
-
 function getShortDescription(content, length = 100) {
-  // Loại bỏ các thẻ HTML
   const plainText = content.replace(/<[^>]+>/g, "");
-  // Lấy một số ký tự đầu tiên làm mô tả ngắn
   return plainText.length > length
     ? plainText.substring(0, length) + "..."
     : plainText;
@@ -23,6 +18,9 @@ const TrangChu = () => {
   const [topInteracts, setTopInteracts] = useState([]);
   const [newUsers, setNewUsers] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [topPopularToday, setTopPopularToday] = useState({});
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [hoveredPage, setHoveredPage] = useState(null);
 
   const fetchArticles = async (page = 1) => {
     try {
@@ -88,6 +86,16 @@ const TrangChu = () => {
     }
   };
 
+  const fetchTopPopularToday = async () => {
+    try {
+      const response = await TrangChuServices.getTopPopularToday();
+      setTopPopularToday(response.data.article);
+      console.log(response.data.article);
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+    }
+  };
+
   useEffect(() => {
     fetchArticles();
     fetchTopTrendings();
@@ -96,10 +104,20 @@ const TrangChu = () => {
     fetchTopInteracts();
     fetchNewUsers();
     fetchTopCategories();
+    fetchTopPopularToday();
   }, []);
 
-  const handlePageChange = (page) => {
-    fetchArticles(page);
+  const handlePageChange = async (page) => {
+    try {
+      await fetchArticles(page); // Fetch articles for the selected page
+      const element = document.getElementById("list-articles-new"); // Get the element to scroll to
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" }); // Smooth scroll to the element
+      }
+      setCurrentPage(page); // Update the current page state
+    } catch (error) {
+      console.error("Error fetching articles:", error); // Handle any errors during fetching
+    }
   };
 
   return (
@@ -118,56 +136,68 @@ const TrangChu = () => {
                       </h4>
                       <div className="featured-slider-1 border-radius-10">
                         <div className="featured-slider-1-items">
-                            {mostPopular.length > 0 && (
-                            <div className="slider-single p-10">
-                                <div className="img-hover-slide border-radius-15 mb-30 position-relative overflow-hidden">
-                                <span className="top-right-icon bg-dark">
-                                    <FontAwesomeIcon icon={faCameraAlt} />
-                                </span>
-                                <Link to={`/bai-viet/${mostPopular[0].slug}`}>
-                                    <img
-                                    src={`http://127.0.0.1:3001/${mostPopular[0].image_url}`}
-                                    alt={mostPopular[0].title}
-                                    />
-                                </Link>
-                                </div>
-                                <div className="pr-10 pl-10">
-                                <h4 className="post-title mb-20">
-                                    <Link to={`/bai-viet/${mostPopular[0].slug}`}>
-                                    {mostPopular[0].title}
-                                    </Link>
-                                </h4>
-                                <div className="mb-20 overflow-hidden">
-                                    <div className="entry-meta meta-2 float-left">
-                                    <Link
-                                        className="float-left mr-10 author-img"
-                                        to={`/nguoi-dung/${mostPopular[0].username}`}
-                                        tabIndex={0}
-                                    >
-                                        
-                                    </Link>
-                                    <Link to={`/nguoi-dung/${mostPopular[0].username}`} tabIndex={0}>
-                                        <span className="author-name text-grey">
-                                        {mostPopular[0].fullname}
-                                        </span>
-                                    </Link>
-                                    <br />
-                                    <span className="author-add color-grey">
-                                        {mostPopular[0].total_views} lượt xem
-                                    </span>
-                                    </div>
-                                    <div className="float-right">
-                                    <Link to={`/bai-viet/${mostPopular[0].slug}`} className="read-more">
-                                        <span className="mr-10">
-                                        <FontAwesomeIcon icon={faThumbtack} />
-                                        </span>
-                                        Picked by Editor
-                                    </Link>
-                                    </div>
-                                </div>
-                                </div>
+                          <div className="slider-single p-10">
+                            <div className="img-hover-slide border-radius-15 mb-30 position-relative overflow-hidden">
+                              <span className="top-right-icon bg-dark">
+                                <i className="mdi mdi-camera-alt" />
+                              </span>
+                              <Link to={`/bai-viet/${topPopularToday.slug}`}>
+                                <img
+                                  src={`http://127.0.0.1:3001/${topPopularToday.image_url}`}
+                                  alt="post-slider"
+                                />
+                              </Link>
                             </div>
-                            )}
+                            <div className="pr-10 pl-10">
+                              <h4 className="post-title mb-20">
+                                <Link to={`/bai-viet/${topPopularToday.slug}`}>
+                                  {topPopularToday.title}
+                                </Link>
+                              </h4>
+                              <div className="mb-20 overflow-hidden">
+                                <div className="entry-meta meta-2 float-left">
+                                  <a
+                                    className="float-left mr-10 author-img"
+                                    href="author.html"
+                                    tabIndex={0}
+                                  >
+                                    <img
+                                      src={`http://127.0.0.1:3001/${topPopularToday.avatar_url}`}
+                                      alt=""
+                                    />
+                                  </a>
+                                  <Link
+                                    to={`/nguoi-dung/${topPopularToday.username}`}
+                                    tabIndex={0}
+                                  >
+                                    <span className="author-name text-grey">
+                                      {topPopularToday.fullname}
+                                    </span>
+                                  </Link>
+                                  <br />
+                                  <span className="author-add color-grey">
+                                    {new Date(
+                                      topPopularToday.createdAt
+                                    ).toLocaleDateString("vi-VN")}
+                                  </span>
+                                </div>
+                                <div className="float-right">
+                                  <Link
+                                    to={`/bai-viet/${topPopularToday.slug}`}
+                                    className="read-more"
+                                  >
+                                    <span className="mr-10">
+                                      <i
+                                        className="fa fa-thumbtack"
+                                        aria-hidden="true"
+                                      />
+                                    </span>
+                                    Đọc Thêm
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -180,20 +210,13 @@ const TrangChu = () => {
                               Top <span>Chuyên Mục</span>
                             </h5>
                           </div>
-                          <div className="col-5 text-right">
-                            <h6 className="font-medium pr-15">
-                              <a className="text-muted font-small" href="#">
-                                Xem thêm
-                              </a>
-                            </h6>
-                          </div>
                         </div>
                       </div>
                       <div className="block-tab-item post-module-1 post-module-4">
                         <div className="row">
                           {topCategories.map((category, index) => (
                             <div
-                              index={index}
+                              key={index}
                               className="slider-single col-md-6 mb-30"
                             >
                               <div className="img-hover-scale border-radius-10">
@@ -229,6 +252,7 @@ const TrangChu = () => {
                     </div>
                   </div>
                   <div className="col-lg-4 col-md-12 sidebar-right">
+                    {/*Post aside style 1*/}
                     <div className="sidebar-widget mb-30">
                       <div className="widget-header position-relative mb-30">
                         <div className="row">
@@ -389,16 +413,12 @@ const TrangChu = () => {
                       <div className="widget-header position-relative mb-30">
                         <div className="row">
                           <div className="col-7">
-                            <h4 className="widget-title mb-0">
+                            <h4
+                              className="widget-title mb-0"
+                              id="list-articles-new"
+                            >
                               Bài Viết <span>Mới</span>
                             </h4>
-                          </div>
-                          <div className="col-5 text-right">
-                            <h6 className="font-medium pr-15">
-                              <a className="text-muted font-small" href="#">
-                                Xem tất cả
-                              </a>
-                            </h6>
                           </div>
                         </div>
                       </div>
@@ -443,12 +463,14 @@ const TrangChu = () => {
                                 <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase">
                                   <span className="post-by">
                                     Đăng bởi{" "}
-                                    <Link to={`/nguoi-dung`}>
+                                    <Link
+                                      to={`/nguoi-dung/${article.user.username}`}
+                                    >
                                       {article.user.fullname}
                                     </Link>
                                   </span>
                                   <span className="post-on">
-                                    {article.views.length === 0
+                                    {article.views.length == 0
                                       ? 0
                                       : article.views[0].view_count}{" "}
                                     lượt xem
@@ -461,12 +483,41 @@ const TrangChu = () => {
                       </div>
                       <div className="pagination-area mb-30">
                         <nav aria-label="Page navigation example">
-                          <ul className="pagination justify-content-start">
+                          <ul
+                            style={{
+                              padding: "0",
+                              margin: "0",
+                              listStyle: "none",
+                              display: "flex",
+                            }}
+                          >
                             {Array.from({ length: totalPages }, (_, index) => (
-                              <li key={index} className="page-item active">
+                              <li key={index} style={{ margin: "0 5px" }}>
                                 <a
-                                  className="page-link"
                                   onClick={() => handlePageChange(index + 1)}
+                                  onMouseEnter={() => setHoveredPage(index + 1)}
+                                  onMouseLeave={() => setHoveredPage(null)}
+                                  style={{
+                                    display: "inline-flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    width: "40px",
+                                    height: "40px",
+                                    padding: "0",
+                                    backgroundColor:
+                                      currentPage === index + 1
+                                        ? "#FF2E2E"
+                                        : hoveredPage === index + 1
+                                        ? "#FF4C4C"
+                                        : "transparent",
+                                    color:
+                                      currentPage === index + 1
+                                        ? "white"
+                                        : "black",
+                                    borderRadius: "50%",
+                                    cursor: "pointer",
+                                    textDecoration: "none",
+                                  }}
                                 >
                                   {index + 1}
                                 </a>
@@ -532,7 +583,10 @@ const TrangChu = () => {
                       </div>
                       <div className="post-block-list post-module-6">
                         {lastComments.map((comment, index) => (
-                          <div className="last-comment mb-20 d-flex wow fadeIn animated">
+                          <div
+                            key={index}
+                            className="last-comment mb-20 d-flex wow fadeIn animated"
+                          >
                             <span className="item-count vertical-align">
                               <Link
                                 className="red-tooltip author-avatar"
