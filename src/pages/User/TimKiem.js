@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import TrangChuServices from '../../services/User/TrangChuServices'
 import { Link, useLocation } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faAnglesRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 function getShortDescription(content, length = 100) {
     // Loại bỏ các thẻ HTML
@@ -48,7 +52,7 @@ const TimKiem = () => {
                             </h2>
                             <div className="breadcrumb">
                                 {
-                                    articles.length == 0 ?
+                                    articles.length === 0 ?
                                     <span className="no-arrow">Không tìm thấy bài viết nào</span>
                                     :
                                     <span className="no-arrow">tìm thấy {totalPages * 6} bài viết dành cho bạn</span>
@@ -103,7 +107,7 @@ const TimKiem = () => {
                                                                 </span>
                                                                 <Link to={`/bai-viet/${article.slug}`}>
                                                                     <span className="mr-10">
-                                                                        <i className="fa-solid fa-angles-right"></i> Xem Thêm
+                                                                    <FontAwesomeIcon icon={faAnglesRight} /> Xem Thêm
                                                                     </span>
                                                                 </Link>
                                                             </div>
@@ -114,7 +118,7 @@ const TimKiem = () => {
                                         </div>
                                     </div>
                                     {
-                                        articles.length != 0
+                                        articles.length !== 0
                                             ?
                                             <div className="pagination-area mb-30">
                                                 <nav aria-label="Page navigation example">

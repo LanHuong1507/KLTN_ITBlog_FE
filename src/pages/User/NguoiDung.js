@@ -3,6 +3,14 @@ import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import TaiKhoanServices from '../../services/User/TaiKhoanServices'
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import {
+    faRss,
+    faAnglesRight,   
+    faUserPlus,
+    faUserMinus 
+} from "@fortawesome/free-solid-svg-icons";
 
 function getShortDescription(content, length = 100) {
     // Loại bỏ các thẻ HTML
@@ -69,7 +77,7 @@ const NguoiDung = () => {
             try {
                 const response = await TaiKhoanServices.follow(username);
                 setIsFollower(!isFollower)
-                isFollower == true ? setFollowerCount(followerCount - 1) : setFollowerCount(followerCount + 1);
+                isFollower === true ? setFollowerCount(followerCount - 1) : setFollowerCount(followerCount + 1);
             } catch (error) {
                 console.error('Lỗi khi gọi API:', error);
             }
@@ -113,23 +121,23 @@ const NguoiDung = () => {
                                     </div>
                                     <Link to="#" className="author-bio-link">
                                         <span className="mr-5 font-x-small">
-                                            <i className="fa-solid fa-rss"></i>
+                                        <FontAwesomeIcon icon={faRss} /> 
                                         </span>
                                         {followerCount} người theo dõi
                                     </Link>
                                     <Link to="#" className="author-bio-link" onClick={handelFollow}>
                                         {
-                                            isFollower == true ? 
+                                            isFollower === true ? 
                                                 <>
                                                     <span className="mr-5 font-x-small">
-                                                        <i className="fa-solid fa-user-minus"></i> 
+                                                    <FontAwesomeIcon icon={faUserMinus} />
                                                     </span>
                                                     Hủy Follow
                                                 </>
                                             :
                                                 <>
                                                     <span className="mr-5 font-x-small">
-                                                        <i className="fa-solid fa-user-plus"></i> 
+                                                    <FontAwesomeIcon icon={faUserPlus} />
                                                     </span>
                                                     Follow
                                                 </>
@@ -166,7 +174,7 @@ const NguoiDung = () => {
                             <div className="latest-post mb-50">
                                 <div className="loop-list-style-1">
                                     {articles.map((article, index) => (
-                                        index == 0
+                                        index === 0
                                             ?
                                             <article key={index} className="first-post p-10 background-white border-radius-10 mb-30 wow fadeIn animated">
                                                 <div className="img-hover-slide border-radius-15 mb-30 position-relative overflow-hidden">
@@ -202,7 +210,7 @@ const NguoiDung = () => {
                                                         <div className="float-right">
                                                             <Link to={`/bai-viet/${article.slug}`}>
                                                                 <span className="mr-10">
-                                                                    <i className="fa-solid fa-angles-right"></i>
+                                                                <FontAwesomeIcon icon={faAnglesRight} />
                                                                 </span>
                                                                 ĐỌC THÊM
                                                             </Link>
@@ -248,7 +256,7 @@ const NguoiDung = () => {
                                                             </span>
                                                             <Link to={`/bai-viet/${article.slug}`}>
                                                                 <span className="mr-10">
-                                                                    <i className="fa-solid fa-angles-right"></i> Xem Thêm 
+                                                                <FontAwesomeIcon icon={faAnglesRight} /> Xem Thêm 
                                                                 </span>
                                                             </Link>
                                                         </div>
@@ -259,7 +267,7 @@ const NguoiDung = () => {
                                 </div>
                             </div>
                             {
-                                articles.length != 0
+                                articles.length !== 0
                                     ?
                                     <div className="pagination-area mb-30">
                                         <nav aria-label="Page navigation example">
