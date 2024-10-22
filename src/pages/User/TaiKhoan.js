@@ -5,7 +5,16 @@ import TaiKhoanServices from '../../services/User/TaiKhoanServices'
 import BaiVietServices from '../../services/User/BaiVietServices'
 import { toast } from 'react-toastify';
 import { Modal, Button, Form, Image } from 'react-bootstrap';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faRss,
+    faUserPen,
+    faRightFromBracket,
+    faPenToSquare,
+    faAnglesRight,
+    faCamera,
 
+} from "@fortawesome/free-solid-svg-icons";
 
 function getShortDescription(content, length = 100) {
     // Loại bỏ các thẻ HTML
@@ -29,6 +38,8 @@ const TaiKhoan = () => {
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hoveredPage, setHoveredPage] = useState(null);
 
     const fetchUser = async () => {
         try {
@@ -62,7 +73,7 @@ const TaiKhoan = () => {
     useEffect(() => {
         fetchUser();
         fetchArticles();
-        window.scroll(0,0)
+        window.scroll(0, 0)
     }, []);
 
     const handelLogout = (e) => {
@@ -79,6 +90,7 @@ const TaiKhoan = () => {
         if (element) {
             element.scrollIntoView({ behavior: 'instant', block: 'start' });
         }
+        setCurrentPage(page);
     }
 
     const handleAvatarChange = (e) => {
@@ -95,16 +107,16 @@ const TaiKhoan = () => {
 
     const handleChangePassword = async () => {
         const data = {
-            password, 
-            newPassword, 
+            password,
+            newPassword,
             confirmPassword
         }
         const changePassword = await TaiKhoanServices.changePassword(data);
 
-        if(changePassword.status == 200){            
+        if (changePassword.status === 200) {
             toast.success(changePassword.data.message);
             setShow(false);
-        }else{
+        } else {
             toast.success(changePassword.response.data.message);
         }
 
@@ -122,7 +134,7 @@ const TaiKhoan = () => {
 
         const update = await TaiKhoanServices.update(formData);
 
-        if (update.status == 200) {
+        if (update.status === 200) {
             toast.success(update.data.message);
             fetchUser();
         } else {
@@ -172,26 +184,23 @@ const TaiKhoan = () => {
                                     </div>
                                     <Link to="#" className="author-bio-link" style={{ textTransform: 'unset' }}>
                                         <span className="mr-5 font-x-small">
-                                            <i className="fa-solid fa-rss"></i>
-                                        </span>
+                                            <FontAwesomeIcon icon={faRss} />                                        </span>
                                         {followerCount} người theo dõi
                                     </Link>
                                     <Link to="#" onClick={() => setShow(true)} className="author-bio-link" style={{ textTransform: 'unset' }}>
                                         <span className="mr-5 font-x-small">
-                                            <i className="fa-solid fa-user-pen"></i>
-                                        </span>
+                                            <FontAwesomeIcon icon={faUserPen} />                                        </span>
                                         Cập nhật thông tin
                                     </Link>
                                     <a href="author.html" onClick={(e) => handelLogout(e)} className="author-bio-link" style={{ textTransform: 'unset' }}>
                                         <span className="mr-5 font-x-small">
-                                            <i className="fa-solid fa-right-from-bracket"></i>
-                                        </span>
+                                            <FontAwesomeIcon icon={faRightFromBracket} />                                        </span>
                                         Đăng xuất
                                     </a>
                                 </div>
                             </div>
                             {
-                                articles.length == 0
+                                articles.length === 0
                                     ?
                                     <h2>Chưa có bài viết</h2>
                                     :
@@ -201,7 +210,7 @@ const TaiKhoan = () => {
                             <div className="latest-post mb-50">
                                 <div className="loop-list-style-1">
                                     {articles.map((article, index) => (
-                                        index == 0
+                                        index === 0
                                             ?
                                             <article key={index} className="first-post p-10 background-white border-radius-10 mb-30 wow fadeIn animated">
                                                 <div className="img-hover-slide border-radius-15 mb-30 position-relative overflow-hidden">
@@ -237,7 +246,7 @@ const TaiKhoan = () => {
                                                         <div className="float-right">
                                                             <Link to={`/chinh-sua/${article.article_id}`}>
                                                                 <span className="mr-10">
-                                                                    <i className="fa-regular fa-pen-to-square"></i>
+                                                                    <FontAwesomeIcon icon={faPenToSquare} />
                                                                 </span>
                                                                 Chỉnh Sửa
                                                             </Link>
@@ -283,7 +292,7 @@ const TaiKhoan = () => {
                                                             </span>
                                                             <Link to={`/bai-viet/${article.slug}`}>
                                                                 <span className="mr-10">
-                                                                    <i className="fa-solid fa-angles-right"></i> Xem Thêm 
+                                                                    <FontAwesomeIcon icon={faAnglesRight} /> Xem Thêm
                                                                 </span>
                                                             </Link>
                                                         </div>
@@ -291,7 +300,8 @@ const TaiKhoan = () => {
                                                     <div className="float-right">
                                                         <Link to={`/chinh-sua/${article.article_id}`}>
                                                             <span className="mr-10">
-                                                                <i className="fa-regular fa-pen-to-square"></i>
+                                                                <FontAwesomeIcon icon={faPenToSquare} />
+
                                                             </span>
                                                         </Link>
                                                     </div>
@@ -301,14 +311,46 @@ const TaiKhoan = () => {
                                 </div>
                             </div>
                             {
-                                articles.length != 0
+                                articles.length !== 0
                                     ?
                                     <div className="pagination-area mb-30">
                                         <nav aria-label="Page navigation example">
-                                            <ul className="pagination justify-content-start">
+                                            <ul
+                                                style={{
+                                                    padding: "0",
+                                                    margin: "0",
+                                                    listStyle: "none",
+                                                    display: "flex",
+                                                }}
+                                            >
                                                 {Array.from({ length: totalPages }, (_, index) => (
-                                                    <li key={index} className="page-item active">
-                                                        <a className="page-link" onClick={() => handlePageChange(index + 1)}>
+                                                    <li key={index} style={{ margin: "0 5px" }}>
+                                                        <a
+                                                            onClick={() => handlePageChange(index + 1)}
+                                                            onMouseEnter={() => setHoveredPage(index + 1)}
+                                                            onMouseLeave={() => setHoveredPage(null)}
+                                                            style={{
+                                                                display: "inline-flex",
+                                                                justifyContent: "center",
+                                                                alignItems: "center",
+                                                                width: "40px",
+                                                                height: "40px",
+                                                                padding: "0",
+                                                                backgroundColor:
+                                                                    currentPage === index + 1
+                                                                        ? "#FF2E2E"
+                                                                        : hoveredPage === index + 1
+                                                                            ? "#FF4C4C"
+                                                                            : "transparent",
+                                                                color:
+                                                                    currentPage === index + 1
+                                                                        ? "white"
+                                                                        : "black",
+                                                                borderRadius: "50%",
+                                                                cursor: "pointer",
+                                                                textDecoration: "none",
+                                                            }}
+                                                        >
                                                             {index + 1}
                                                         </a>
                                                     </li>
@@ -353,7 +395,7 @@ const TaiKhoan = () => {
                                     />
                                     <Form.Group controlId="avatarUrl" className="mt-3">
                                         <Form.Label className='btn-upload'>
-                                            <i className="fa-solid fa-camera"></i> Chọn ảnh
+                                            <FontAwesomeIcon icon={faCamera} /> Chọn ảnh
                                             <Form.Control
                                                 type="file"
                                                 className="d-none"

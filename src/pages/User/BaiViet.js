@@ -4,6 +4,18 @@ import BaiVietServices from "../../services/User/BaiVietServices";
 import TaiKhoanServices from "../../services/User/TaiKhoanServices";
 import { toast } from "react-toastify";
 import CryptoJS from "crypto-js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faThumbsUp,
+  faRss,
+  faUserPlus,
+  faUserMinus
+} from "@fortawesome/free-solid-svg-icons";
+
+import {
+  faUser,
+  faPenToSquare,
+} from "@fortawesome/free-regular-svg-icons";
 
 const decodeJWT = (token) => {
   const parts = token.split(".");
@@ -39,6 +51,8 @@ const BaiViet = () => {
   const [comments, setComments] = useState([]);
   const [postComment, setPostComment] = useState("");
   const [related, setRelated] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [hoveredPage, setHoveredPage] = useState(null);
 
   const fetchArticle = async (slugArticle = slug) => {
     try {
@@ -117,7 +131,7 @@ const BaiViet = () => {
       try {
         const response = await TaiKhoanServices.follow(username);
         setIsFollower(!isFollower);
-        isFollower == true
+        isFollower === true
           ? setFollowerCount(followerCount - 1)
           : setFollowerCount(followerCount + 1);
       } catch (error) {
@@ -137,7 +151,7 @@ const BaiViet = () => {
           content: postComment,
         };
         const response = await BaiVietServices.postComment(id, data);
-        if (response.status == 201) {
+        if (response.status === 201) {
           fetchComment(id);
           setPostComment("");
           const element = document.getElementById("list-comments-new");
@@ -368,7 +382,7 @@ const BaiViet = () => {
                   <h3>
                     <span className="vcard author">
                       <span className="fn">
-                        {article.user_id == isAuthor ? (
+                        {article.user_id === isAuthor ? (
                           <Link
                             to={`/tai-khoan`}
                             title="Posts by Robert"
@@ -397,21 +411,21 @@ const BaiViet = () => {
                     <i className="ti-star" />
                   </h5>
                   <div className="author-description">{user.bio}</div>
-                  {article.user_id == isAuthor ? (
+                  {article.user_id === isAuthor ? (
                     <>
                       <Link
                         to={`/tai-khoan`}
                         className="author-bio-link text-muted"
                         style={{ textTransform: "unset" }}
                       >
-                        <i className="fa-regular fa-user"></i> Trang Cá Nhân
+                       <FontAwesomeIcon icon={faUser} /> Trang Cá Nhân
                       </Link>
                       <Link
                         to={`/chinh-sua/${article.article_id}`}
                         className="author-bio-link text-muted"
                         style={{ textTransform: "unset" }}
                       >
-                       <i class="fa-regular fa-pen-to-square"></i> Chỉnh Sửa Bài
+                      <FontAwesomeIcon icon={faPenToSquare} />  Chỉnh Sửa Bài
 
                       </Link>
                     </>
@@ -423,7 +437,7 @@ const BaiViet = () => {
                         className="author-bio-link text-muted"
                         style={{ textTransform: "unset" }}
                       >
-                        <i className="fa-solid fa-thumbs-up"></i> Like Bài
+                        <FontAwesomeIcon icon={faThumbsUp} /> Like Bài
                       </Link>
                       <Link
                         onClick={() => handelFollow(user.username)}
@@ -431,14 +445,14 @@ const BaiViet = () => {
                         className="author-bio-link text-muted"
                         style={{ textTransform: "unset" }}
                       >
-                        {isFollower == true ? (
+                        {isFollower === true ? (
                           <>
-                            <i className="fa-solid fa-user-plus"></i> Hủy Theo
+                            <FontAwesomeIcon icon={faUserMinus} /> Hủy Theo
                             Dõi
                           </>
                         ) : (
                           <>
-                            <i className="fa-solid fa-user-plus"></i> Theo Dõi
+                            <FontAwesomeIcon icon={faUserPlus} /> Theo Dõi
                           </>
                         )}
                       </Link>
@@ -447,7 +461,7 @@ const BaiViet = () => {
                         className="author-bio-link text-muted"
                         style={{ textTransform: "unset" }}
                       >
-                        <i className="fa-solid fa-rss"></i> {followerCount}{" "}
+                         <FontAwesomeIcon icon={faRss} /> {followerCount}{" "}
                         Người Theo Dõi
                       </Link>
                     </>
@@ -548,7 +562,7 @@ const BaiViet = () => {
                 <h3 className="mb-30" id="list-comments-new">
                   Bình Luận ({comments.length})
                 </h3>
-                {comments.length == 0 ? (
+                {comments.length === 0 ? (
                   <p>Chưa có bình luận nào cho bài viết này!</p>
                 ) : null}
                 {comments.map((comment, index) => (
@@ -566,7 +580,7 @@ const BaiViet = () => {
                           <div className="d-flex justify-content-between">
                             <div className="d-flex align-items-center">
                               <h5>
-                                {comment.user_id == isAuthor ? (
+                                {comment.user_id === isAuthor ? (
                                   <Link to={`/tai-khoan`}>
                                     {comment.user.fullname}
                                   </Link>
@@ -624,7 +638,6 @@ const BaiViet = () => {
               </div>
             </div>
           </div>
-          {/*End row*/}
         </div>
       </main>
     </>
