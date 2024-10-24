@@ -361,6 +361,35 @@ iframe {
 	display: block;
 	border: none;
 }
+.custom-quote {
+	font-style: italic;
+	font-size: 1.1rem;
+	color: #666;
+	border-left: 4px solid #666;
+	padding-left: 16px;
+	margin: 20px auto; 
+	background-color: #f1f1f1; 
+	max-width: 30%;
+	line-height: 1.5; 
+	quotes: "“" "”";
+  }
+  
+  .custom-quote:before {
+	content: open-quote;
+	font-size: 1.8rem;
+	vertical-align: top;
+	color: #666; 
+	margin-right: 5px; 
+  }
+  
+  .custom-quote:after {
+	content: close-quote;
+	font-size: 1.8rem;
+	vertical-align: bottom;
+	color: #666; 
+	margin-left: 5px;
+  }
+  
 .entry-header-1 h1{max-width:70%;}
 .entry-header-2 h1{max-width:80%;margin:0 auto;}
 .overflow-hidden{overflow:hidden;}

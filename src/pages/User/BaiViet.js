@@ -53,7 +53,6 @@ const BaiViet = () => {
   const [related, setRelated] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); 
   const [hoveredPage, setHoveredPage] = useState(null);
-
   const fetchArticle = async (slugArticle = slug) => {
     try {
       const response = await BaiVietServices.showArticle(slugArticle);
@@ -71,25 +70,30 @@ const BaiViet = () => {
         }
         return match; // Trả về nguyên bản nếu không phải là video YouTube
       });
-      
-      // Set lại content của bài viết sau khi thay thế thẻ oembed
+  
+      // Xử lý quotes, ví dụ tìm và thay thế thẻ blockquote
+      articleContent = articleContent.replace(/<blockquote>(.*?)<\/blockquote>/g, (match, quoteContent) => {
+        return `<div class="custom-quote">${quoteContent}</div>`;
+      });
+  
+      // Set lại content của bài viết sau khi thay thế thẻ oembed và quotes
       setArticle({ ...response.data.article, content: articleContent });
-      
+  
       setView(response.data.view_count);
       setAuthor(response.data.article.user);
       setTags(response.data.article.tags.split(",").map((tag) => tag.trim()));
       setCategories(response.data.categories);
-      
+  
       // Fetch comments
       fetchComment(response.data.article.article_id);
-      
+  
       const tags = response.data.article.tags
         .split(",")
         .map((tag) => tag.trim());
       const categoryIds = response.data.categories.map(
         (category) => category.category_id
       );
-      
+  
       // Fetch related articles
       fetchRelated(response.data.article.article_id, { categoryIds, tags });
   
@@ -110,7 +114,7 @@ const BaiViet = () => {
       navigate("/404");
       console.error("Lỗi khi gọi API bài viết:", error);
     }
-  };
+  };  
 
   const fetchComment = async (id) => {
     try {
