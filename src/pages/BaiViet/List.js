@@ -57,10 +57,12 @@ const List = () => {
           <span className="badge badge-primary">Đã Duyệt Bài</span>
           :
           <button 
-            className='btn btn-success btn-sm' 
+            className='btn btn-success btn-sm d-flex align-items-center' 
+            style={{ padding: '4px 8px' }} 
             onClick={() => handlePublic(item.article_id)} 
           >
-            <i className="fa-solid fa-check"></i> Duyệt
+            <i className="fa-solid fa-check" style={{ marginRight: '5px' }}></i> 
+            Duyệt
           </button>
         }
       </td>
@@ -72,21 +74,24 @@ const List = () => {
         }
       </td>
       <td>
-        <Link 
-          to={`/admin/bai-viet/${item.article_id}`} 
-          className="btn btn-primary btn-sm"
-          style={{ marginRight: '5px' }} 
-        >
-          <i className="fas fa-edit" />
-          <span> XEM</span>
-        </Link>
-        <button 
-          className="btn btn-danger btn-sm"
-          onClick={() => handleDelete(item.article_id)}
-        >
-          <i className="fa-solid fa-trash"></i>
-          <span> Xóa</span>
-        </button>
+        <div className="d-flex justify-content-between align-items-center">
+          <Link 
+            to={`/admin/bai-viet/${item.article_id}`} 
+            className="btn btn-primary btn-sm d-flex align-items-center"
+            style={{ marginRight: '5px', padding: '4px 8px' }}
+          >
+            <i className="fas fa-edit" style={{ marginRight: '5px' }}></i>
+            XEM
+          </Link>
+          <button 
+            className="btn btn-danger btn-sm d-flex align-items-center"
+            style={{ padding: '4px 8px' }}
+            onClick={() => handleDelete(item.article_id)}
+          >
+            <i className="fa-solid fa-trash" style={{ marginRight: '5px' }}></i>
+            Xóa
+          </button>
+        </div>
       </td>
     </>
   );

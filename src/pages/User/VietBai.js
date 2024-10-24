@@ -26,7 +26,6 @@ const VietBai = () => {
         }));
         setCategories(categoriesOptions);
     };
-
     const createSlug = (title) => {
         // Bản đồ chuyển đổi các ký tự có dấu thành không dấu
         const vietnameseToAscii = (str) => {
@@ -44,15 +43,15 @@ const VietBai = () => {
             'ư': 'u', 'ừ': 'u', 'ứ': 'u', 'ử': 'u', 'ữ': 'u', 'ự': 'u',
             'ỳ': 'y', 'ý': 'y', 'ỷ': 'y', 'ỹ': 'y', 'ỵ': 'y',
             'đ': 'd',
-            // Thêm các ký tự khác nếu cần
           };
           return str.replace(/./g, char => map[char] || char);
         };
-    
+
         return vietnameseToAscii(title)
           .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')  // Thay thế ký tự không phải chữ cái hoặc số bằng dấu gạch ngang
-          .replace(/(^-|-$)/g, '');     // Xóa dấu gạch ngang đầu hoặc cuối
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')          
+          .replace(/(^-|-$)/g, '');      
     };
 
     useEffect(() => {
@@ -74,13 +73,13 @@ const VietBai = () => {
         formData.append('tags', tags);
         formData.append('is_draft', is_draft);
         formData.append('image_url', image);
-        formData.append('content', content); // Thêm phần content vào FormData
+        formData.append('content', content);
         formData.append("categories", JSON.stringify(selectedCategories));
     
         const addArticle = await BaiVietServices.add(formData);
     
         if (addArticle.status === 201) {
-          if (is_draft == 1) {
+          if (is_draft === 1) {
             toast.success("Đã lưu bản nháp bài viết");
           } else {
             toast.success(addArticle.data.message);
@@ -212,7 +211,7 @@ const VietBai = () => {
                                                         <Select
                                                             isMulti
                                                             name="categories"
-                                                            options={categories} // Danh sách các tùy chọn
+                                                            options={categories}
                                                             className="basic-multi-select"
                                                             classNamePrefix="select"
                                                             value={selectedCategories}
@@ -221,12 +220,12 @@ const VietBai = () => {
                                                             styles={{
                                                                 control: (provided) => ({
                                                                     ...provided,
-                                                                    width: '100%', // Chiều rộng 100%
-                                                                    border: '1px solid #eee', // Đường viền xám nhạt
-                                                                    borderRadius: '5px', // Bo tròn các góc
-                                                                    minHeight: '48px', // Khoảng cách bên trong
+                                                                    width: '100%',
+                                                                    border: '1px solid #eee',
+                                                                    borderRadius: '5px', 
+                                                                    minHeight: '48px', 
                                                                     paddingLeft: '7px',
-                                                                    backgroundColor: 'white', // Màu nền trắng
+                                                                    backgroundColor: 'white',
                                                                     fontSize: '13px'
                                                                 }),
                                                             }}

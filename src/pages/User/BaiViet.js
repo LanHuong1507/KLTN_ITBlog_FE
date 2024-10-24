@@ -53,40 +53,68 @@ const BaiViet = () => {
   const [related, setRelated] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); 
   const [hoveredPage, setHoveredPage] = useState(null);
-
   const fetchArticle = async (slugArticle = slug) => {
     try {
       const response = await BaiVietServices.showArticle(slugArticle);
-      setArticle(response.data.article);
+      
+      let articleContent = response.data.article.content;
+      
+      // Thay thế thẻ oembed thành iframe với URL nhúng đúng định dạng của YouTube
+      articleContent = articleContent.replace(/<oembed\s+url="([^"]+)"\s*><\/oembed>/g, (match, url) => {
+        const videoIdMatch = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
+        if (videoIdMatch && videoIdMatch[1]) {
+          const videoId = videoIdMatch[1];
+          return `<iframe src="https://www.youtube.com/embed/${videoId}" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>`;
+        }
+        return match; // Trả về nguyên bản nếu không phải là video YouTube
+      });
+  
+      // Xử lý quotes, ví dụ tìm và thay thế thẻ blockquote
+      articleContent = articleContent.replace(/<blockquote>(.*?)<\/blockquote>/g, (match, quoteContent) => {
+        return `<div class="custom-quote">${quoteContent}</div>`;
+      });
+  
+      // Set lại content của bài viết sau khi thay thế thẻ oembed và quotes
+      setArticle({ ...response.data.article, content: articleContent });
+  
       setView(response.data.view_count);
       setAuthor(response.data.article.user);
       setTags(response.data.article.tags.split(",").map((tag) => tag.trim()));
       setCategories(response.data.categories);
+  
+      // Fetch comments
       fetchComment(response.data.article.article_id);
+  
       const tags = response.data.article.tags
         .split(",")
         .map((tag) => tag.trim());
       const categoryIds = response.data.categories.map(
         (category) => category.category_id
       );
+  
+      // Fetch related articles
       fetchRelated(response.data.article.article_id, { categoryIds, tags });
+  
       try {
         const responseUser = await TaiKhoanServices.userByUsername(
           response.data.article.user_id
         );
         setUser(responseUser.data.user);
         setFollowerCount(responseUser.data.followerCount);
+  
         if (localStorage.getItem("token")) {
           fetchFollowed(responseUser.data.user.username);
         }
       } catch (error) {
-        console.error("Lỗi khi gọi API:", error);
+        console.error("Lỗi khi gọi API người dùng:", error);
       }
     } catch (error) {
       navigate("/404");
-      console.error("Lỗi khi gọi API:", error);
+      console.error("Lỗi khi gọi API bài viết:", error);
     }
-  };
+  };  
 
   const fetchComment = async (id) => {
     try {
