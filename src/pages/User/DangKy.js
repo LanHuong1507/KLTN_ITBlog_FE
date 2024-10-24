@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import DangKyServices from '../../services/User/DangKyServices'
+import DangKyServices from '../../services/User/DangKyServices';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -10,6 +10,7 @@ const DangKy = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     useEffect(() => {
         if (localStorage.getItem('token')) {
@@ -17,16 +18,34 @@ const DangKy = () => {
         }
     }, [navigate]);
 
+    // Hàm kiểm tra mật khẩu bằng regex
+    const validatePassword = (password) => {
+        const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+        return regex.test(password);
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        // Kiểm tra xem mật khẩu và mật khẩu xác nhận có khớp nhau không
+        if (password !== confirmPassword) {
+            toast.error('Mật khẩu và xác nhận mật khẩu không khớp.');
+            return;
+        }
+
+        // Kiểm tra mật khẩu có ít nhất một ký tự đặc biệt
+        if (!validatePassword(password)) {
+            toast.error('Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt.');
+            return;
+        }
+
         const register = await DangKyServices.register({ fullname, username, email, password });
 
-        if(register.response && register.response.status === 400){
-          toast.error(register.response.data.message);
-        }else{
-          toast.success(register.data.message);
-          navigate('/dang-nhap');
+        if (register.response && register.response.status === 400) {
+            toast.error(register.response.data.message);
+        } else {
+            toast.success(register.data.message);
+            navigate('/dang-nhap');
         }
     };
 
@@ -103,6 +122,20 @@ const DangKy = () => {
                                         placeholder="Nhập mật khẩu"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-sm-12">
+                                <div className="form-group">
+                                    <input
+                                        className="form-control"
+                                        name="confirmPassword"
+                                        id="confirmPassword"
+                                        type="password"
+                                        placeholder="Xác nhận mật khẩu"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
                                         required
                                     />
                                 </div>

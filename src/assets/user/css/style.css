@@ -353,6 +353,14 @@ span.notification{position:absolute;color:#fff;font-size:10px;font-weight:500;to
 .animate-conner:hover .animate-conner-box::after{bottom:0!important;right:0!important}
 
 /*SINGLE POST*/
+iframe {
+	width: 100%;
+	max-width: 640px;
+	height: 360px;
+	margin: 0 auto;
+	display: block;
+	border: none;
+}
 .entry-header-1 h1{max-width:70%;}
 .entry-header-2 h1{max-width:80%;margin:0 auto;}
 .overflow-hidden{overflow:hidden;}
