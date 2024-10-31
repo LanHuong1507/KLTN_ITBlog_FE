@@ -35,7 +35,7 @@ const Footer = () => {
                                             key={category.category_id} 
                                             className="cat-item" 
                                         >
-                                            <Link to={`/category/${category.slug}`}>{category.name}</Link>
+                                            <Link to={`/chuyen-muc/${category.slug}`}>{category.name}</Link>
                                         </li>
                                     ))}
                                 </ul>
