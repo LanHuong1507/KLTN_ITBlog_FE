@@ -26,7 +26,6 @@ const Header = () => {
   return (
     <div className="hold-transition sidebar-mini layout-fixed">
       <div className="wrapper">
-        {/* Navbar */}
         <nav className="main-header navbar navbar-expand navbar-white navbar-light">
           {/* Left navbar links */}
           <ul className="navbar-nav">
@@ -111,9 +110,7 @@ const Header = () => {
                 </li>
               </ul>
             </nav>
-            {/* /.sidebar-menu */}
           </div>
-          {/* /.sidebar */}
         </aside>
       </div>
 

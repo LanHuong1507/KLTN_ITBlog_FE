@@ -153,14 +153,14 @@ const TrangChu = () => {
 
   const handlePageChange = async (page) => {
     try {
-      await fetchArticles(page); // Fetch articles for the selected page
-      const element = document.getElementById("list-articles-new"); // Get the element to scroll to
+      await fetchArticles(page);
+      const element = document.getElementById("list-articles-new");
       if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" }); // Smooth scroll to the element
+        element.scrollIntoView({ behavior: "smooth", block: "start" }); 
       }
-      setCurrentPage(page); // Update the current page state
+      setCurrentPage(page); 
     } catch (error) {
-      console.error("Error fetching articles:", error); // Handle any errors during fetching
+      console.error("Error fetching articles:", error);
     }
   };
 
@@ -172,9 +172,9 @@ const TrangChu = () => {
             <div className="row">
               <div className="col-lg-12 col-md-12 order-1 order-md-2">
                 <div className="row">
-                  <div class="col-lg-2 col-md-3 primary-sidebar sticky-sidebar sidebar-left ">
+                  <div className="col-lg-2 col-md-3 primary-sidebar sticky-sidebar sidebar-left">
                     <h4 className="widget-title mb-30">Thời Tiết</h4>
-                    <div class="sidebar-widget widget-weather border-radius-10 bg-white mb-30">
+                    <div className="sidebar-widget widget-weather border-radius-10 bg-white mb-30">
                       <p className="text-success mb-10">
                         <strong>Thành Phố Hồ Chí Minh</strong>
                       </p>
@@ -190,6 +190,20 @@ const TrangChu = () => {
                           <p>{weather.description}</p>
                         </>
                       )}
+                    </div>
+
+                    <div className="animated-text-container mt-50">
+                      {Array.from("Welcome to ITBLOG").map((char, index) => (
+                        <span
+                          key={index}
+                          className="animated-text"
+                          style={{
+                            color: `hsl(${(index * 30) % 360}, 100%, 50%)`,
+                          }} 
+                        >
+                          {char}
+                        </span>
+                      ))}
                     </div>
                   </div>
                   <div className="col-lg-6 col-md-12">

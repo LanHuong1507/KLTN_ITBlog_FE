@@ -316,8 +316,45 @@ span.notification{position:absolute;color:#fff;font-size:10px;font-weight:500;to
 
 .footer-link:hover {
     text-decoration: underline;
-}
-
+}.animated-text-container {
+	position: relative;
+	overflow: hidden;
+	height: 900px;
+	background: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+  }
+  
+  .animated-text {
+	display: block;
+	position: relative; 
+	bottom: -50px; 
+	font-size: 52px; 
+	font-weight: 700;
+	margin: 5px 0; 
+	animation: slide-up 9s linear infinite;
+	opacity: 0; 
+	animation-fill-mode: forwards; 
+  }
+  
+  @keyframes slide-up {
+	0% {
+	  bottom: -50px; 
+	  opacity: 0; 
+	}
+	10% {
+	  opacity: 1;
+	}
+	90% {
+	  opacity: 1; 
+	}
+	100% {
+	  bottom: 100%; 
+	  opacity: 0;
+	}
+  }
+  
 
 /*Pagination*/
 .pagination-area .page-item{margin:0}
