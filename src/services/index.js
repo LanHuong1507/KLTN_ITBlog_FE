@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 // URL API backend
 const API_URL = 'http://127.0.0.1:3001'; // Đổi thành URL của bạn

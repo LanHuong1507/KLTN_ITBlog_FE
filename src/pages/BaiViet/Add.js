@@ -81,7 +81,7 @@ const Add = () => {
     const addArticle = await BaiVietServices.add(formData);
 
     if (addArticle.status === 201) {
-      if (is_draft == 1) {
+      if (is_draft === 1) {
         toast.success("Đã lưu bản nháp bài viết");
         navigate(`/admin/bai-viet/${addArticle.data.article.article_id}`);
       } else {

@@ -9,13 +9,10 @@ import {
   faThumbsUp,
   faRss,
   faUserPlus,
-  faUserMinus
+  faUserMinus,
 } from "@fortawesome/free-solid-svg-icons";
 
-import {
-  faUser,
-  faPenToSquare,
-} from "@fortawesome/free-regular-svg-icons";
+import { faUser, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 
 const decodeJWT = (token) => {
   const parts = token.split(".");
@@ -51,59 +48,86 @@ const BaiViet = () => {
   const [comments, setComments] = useState([]);
   const [postComment, setPostComment] = useState("");
   const [related, setRelated] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1); 
+  const [currentPage, setCurrentPage] = useState(1);
   const [hoveredPage, setHoveredPage] = useState(null);
+
   const fetchArticle = async (slugArticle = slug) => {
     try {
       const response = await BaiVietServices.showArticle(slugArticle);
-      
+
       let articleContent = response.data.article.content;
-      
-      // Thay thế thẻ oembed thành iframe với URL nhúng đúng định dạng của YouTube
-      articleContent = articleContent.replace(/<oembed\s+url="([^"]+)"\s*><\/oembed>/g, (match, url) => {
-        const videoIdMatch = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
-        if (videoIdMatch && videoIdMatch[1]) {
-          const videoId = videoIdMatch[1];
-          return `<iframe src="https://www.youtube.com/embed/${videoId}" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen></iframe>`;
+
+      // Danh sách các định dạng nhúng cho các nền tảng video
+      const embedFormats = [
+        {
+          name: "YouTube",
+          regex:
+            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
+          format: (id) => `https://www.youtube.com/embed/${id}`,
+        },
+        {
+          name: "Dailymotion",
+          regex:
+            /(?:https?:\/\/)?(?:www\.)?dailymotion\.com\/video\/([a-zA-Z0-9]+)/,
+          format: (id) => `https://www.dailymotion.com/embed/video/${id}`,
+        },
+        {
+          name: "Vimeo",
+          regex: /(?:https?:\/\/)?(?:www\.)?vimeo\.com\/([0-9]+)/,
+          format: (id) => `https://player.vimeo.com/video/${id}`,
+        },
+        // Bạn có thể thêm các nền tảng khác tương tự
+      ];
+
+      // Thay thế thẻ oembed cho tất cả nền tảng trong danh sách
+      articleContent = articleContent.replace(
+        /<oembed\s+url="([^"]+)"\s*><\/oembed>/g,
+        (match, url) => {
+          for (let { regex, format } of embedFormats) {
+            const match = url.match(regex);
+            if (match && match[1]) {
+              return `<iframe src="${format(match[1])}" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>`;
+            }
+          }
+          return match; // Trả về nguyên bản nếu không khớp với nền tảng nào
         }
-        return match; // Trả về nguyên bản nếu không phải là video YouTube
-      });
-  
-      // Xử lý quotes, ví dụ tìm và thay thế thẻ blockquote
-      articleContent = articleContent.replace(/<blockquote>(.*?)<\/blockquote>/g, (match, quoteContent) => {
-        return `<div class="custom-quote">${quoteContent}</div>`;
-      });
-  
-      // Set lại content của bài viết sau khi thay thế thẻ oembed và quotes
+      );
+
+      // Tiếp tục các xử lý khác như cũ
+      articleContent = articleContent.replace(
+        /<blockquote>(.*?)<\/blockquote>/g,
+        (match, quoteContent) => {
+          return `<div class="custom-quote">${quoteContent}</div>`;
+        }
+      );
+
       setArticle({ ...response.data.article, content: articleContent });
-  
+      // console.log(articleContent);
       setView(response.data.view_count);
       setAuthor(response.data.article.user);
       setTags(response.data.article.tags.split(",").map((tag) => tag.trim()));
       setCategories(response.data.categories);
-  
-      // Fetch comments
+
       fetchComment(response.data.article.article_id);
-  
+
       const tags = response.data.article.tags
         .split(",")
         .map((tag) => tag.trim());
       const categoryIds = response.data.categories.map(
         (category) => category.category_id
       );
-  
-      // Fetch related articles
+
       fetchRelated(response.data.article.article_id, { categoryIds, tags });
-  
+
       try {
         const responseUser = await TaiKhoanServices.userByUsername(
           response.data.article.user_id
         );
         setUser(responseUser.data.user);
         setFollowerCount(responseUser.data.followerCount);
-  
+
         if (localStorage.getItem("token")) {
           fetchFollowed(responseUser.data.user.username);
         }
@@ -114,7 +138,7 @@ const BaiViet = () => {
       navigate("/404");
       console.error("Lỗi khi gọi API bài viết:", error);
     }
-  };  
+  };
 
   const fetchComment = async (id) => {
     try {
@@ -212,11 +236,7 @@ const BaiViet = () => {
               <div className="position-midded">
                 <div className="entry-meta meta-0 font-small mb-30">
                   {categories.map((category, index) => (
-                    <Link
-                      key={index}
-                      to={`/chuyen-muc/${category.slug}`}
-                      className="mr-15"
-                    >
+                    <Link key={index} to={`/chuyen-muc/${category.slug}`}>
                       <span
                         className={`post-cat ${
                           colors[index % colors.length]
@@ -230,9 +250,9 @@ const BaiViet = () => {
                 <h1 className="post-title mb-30 text-white">{article.title}</h1>
                 <div className="entry-meta meta-1 font-x-small color-grey text-uppercase text-white">
                   <span className="post-by text-white">
-                    Đăng bởi{"   "}
+                    Đăng bởi{" "}
                     <Link
-                      className="text-white font-medium"
+                      className="text-white"
                       to={`/nguoi-dung/${author.username}`}
                     >
                       {author.fullname}{" "}
@@ -446,15 +466,14 @@ const BaiViet = () => {
                         className="author-bio-link text-muted"
                         style={{ textTransform: "unset" }}
                       >
-                       <FontAwesomeIcon icon={faUser} /> Trang Cá Nhân
+                        <FontAwesomeIcon icon={faUser} /> Trang Cá Nhân
                       </Link>
                       <Link
                         to={`/chinh-sua/${article.article_id}`}
                         className="author-bio-link text-muted"
                         style={{ textTransform: "unset" }}
                       >
-                      <FontAwesomeIcon icon={faPenToSquare} />  Chỉnh Sửa Bài
-
+                        <FontAwesomeIcon icon={faPenToSquare} /> Chỉnh Sửa Bài
                       </Link>
                     </>
                   ) : (
@@ -473,7 +492,7 @@ const BaiViet = () => {
                         className="author-bio-link text-muted"
                         style={{ textTransform: "unset" }}
                       >
-                        {isFollower === true ? (
+                      {isFollower === true ? (
                           <>
                             <FontAwesomeIcon icon={faUserMinus} /> Hủy Theo
                             Dõi

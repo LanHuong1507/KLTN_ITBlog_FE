@@ -103,7 +103,7 @@ a.read-more{font-size:12px;border-radius:30px;border:1px solid #abd7ab;padding:5
 .widget_nav_menu li{text-align:right;display:table;width:100%;}
 .widget_categories li.cat-item a,
 .widget_archive li a,
-.widget_pages li a{text-align:left;float:left;padding:7px 0;font-size:13px;font-family:'Nunito',sans-serif;font-weight:600;}
+.widget_pages li a{text-align:left;float:left;padding:7px 0;font-size:16px;font-family:'Nunito',sans-serif;font-weight:600;}
 .text-muted a{color:#9babb6;}
 .widget_categories_2 li{padding:10px 0;}
 .widget_categories_2 li > a > span{width:25px;height:25px;display:inline-block;background:#ecf0f3;line-height:30px;text-align:center;border-radius:5px;font-size:15px;color:#91a2ae;transition-duration:0.2s;}
