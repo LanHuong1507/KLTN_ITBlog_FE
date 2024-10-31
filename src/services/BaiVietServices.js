@@ -81,7 +81,17 @@ const ChuyenMucServices = {
         } catch (error) {
             throw error;
         }
-    }
+    },
+
+    // Từ chối bài viết
+    reject: async (id, data) => {
+        try {
+            const response = await axiosInstance.patch(`/articles/${id}/reject`, data);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    },
 };
 
 export default ChuyenMucServices;

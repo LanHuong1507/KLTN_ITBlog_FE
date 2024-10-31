@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import DangKyServices from '../../services/User/DangKyServices';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const DangKy = () => {
@@ -18,6 +17,11 @@ const DangKy = () => {
         }
     }, [navigate]);
 
+    
+    const usernameRegex = /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/;
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    const fullnameRegex = /^[A-ZÀ-Ý][a-zà-ỹ]+(\s[A-ZÀ-Ý][a-zà-ỹ]+)*$/;
+
     // Hàm kiểm tra mật khẩu bằng regex
     const validatePassword = (password) => {
         const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -26,6 +30,22 @@ const DangKy = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        // Validate the inputs
+        if (!fullnameRegex.test(fullname)) {
+            toast.error('Họ tên không hợp lệ. Họ tên phải bắt đầu bằng chữ hoa và không chứa số.');
+            return;
+        }
+
+        if (!usernameRegex.test(username)) {
+            toast.error('Tài khoản không hợp lệ. Tài khoản phải bắt đầu bằng chữ cái và có từ 3 đến 15 ký tự.');
+            return;
+        }
+
+        if (!emailRegex.test(email)) {
+            toast.error('Email không hợp lệ.');
+            return;
+        }
 
         // Kiểm tra xem mật khẩu và mật khẩu xác nhận có khớp nhau không
         if (password !== confirmPassword) {

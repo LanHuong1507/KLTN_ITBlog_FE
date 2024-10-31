@@ -17,6 +17,9 @@ import XuHuongRoutes from './User/XuHuongRoutes'
 import TimKiemRoutes from './User/TimKiemRoutes'
 import VietBaiRoutes from './User/VietBaiRoutes'
 import ChinhSuaRoutes from './User/ChinhSuaRoutes'
+import TheoDoiRoutes from './User/TheoDoiRoutes'
+import UserChuyenMucRoutes from './User/ChuyenMucRoutes'
+import Page404Routes from './User/Page404Routes'
 
 
 const AppRoutes = () => {
@@ -39,6 +42,9 @@ const AppRoutes = () => {
       <Route path="/tim-kiem/*" element={<TimKiemRoutes />} />
       <Route path="/viet-bai/*" element={<VietBaiRoutes />} />
       <Route path="/chinh-sua/*" element={<ChinhSuaRoutes />} />
+      <Route path="/theo-doi/*" element={<TheoDoiRoutes />} />
+      <Route path="/chuyen-muc/*" element={<UserChuyenMucRoutes />} />
+      <Route path="/404/*" element={<Page404Routes />} />
     </Routes>
   );
 };

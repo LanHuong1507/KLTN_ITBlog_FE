@@ -8,6 +8,8 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useParams } from 'react-router-dom';
 import Select from 'react-select';
+import { Modal, Button, Form} from 'react-bootstrap';
+
 
 
 const Show = () => {
@@ -15,11 +17,15 @@ const Show = () => {
   const [slug, setSlug] = useState(''); 
   const [tags, setTags] = useState(''); 
   const [image, setImage] = useState(null);
-  const [content, setContent] = useState(''); // State cho phần content
+  const [content, setContent] = useState('');
   const [isDraft, setIsDraft] = useState(false);
+  const [privacy, setPrivacy] = useState('private');
   const [categories, setCategories] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
   const navigate = useNavigate(); 
+  const [rejectId, setRejectId] = useState(-1);
+  const [show, setShow] = useState(false);
+  const [reason, setReason] = useState('');
 
   const { id } = useParams();
 
@@ -71,11 +77,13 @@ const Show = () => {
     const fetchData = async () => {
       const detail = await BaiVietServices.detail(id);
       if(detail.status === 200){
-        setTitle(detail.data.article.title)
+        setTitle(detail.data.article.title) 
         setSlug(detail.data.article.slug)
         setTags(detail.data.article.tags)
         setContent(detail.data.article.content)
         setIsDraft(detail.data.article.is_draft)
+        setPrivacy(detail.data.article.privacy)
+
 
         const selectedCategoriesDefault = detail.data.categories.map(category => ({
             value: category.category_id,
@@ -127,7 +135,25 @@ const Show = () => {
   const handleCategoryChange = (selectedOptions) => {
     setSelectedCategories(selectedOptions);
   };
+  const handleShowReject = (id) => {
+    setShow(true);
+    setRejectId(id);
+  }
+  const handleReject = async () => {
+    if(!reason || rejectId === -1){
+      toast.error('Vui lòng chọn bài viết và nhập đủ nội dung từ chối!');
+      return;
+    }else{
+      try {
+        const response = await BaiVietServices.reject(rejectId, { reason });
+        toast.success(response.data.message);
+      } catch (error) {
+        console.error('Lỗi khi gọi API:', error);
+      }
+      setShow(false);
+    }
 
+  }
   return (
     <div className="content-wrapper" style={{ minHeight: '1203.31px' }}>
       <ContentHeader title='Chỉnh Sửa' breadcrumbs={breadcrumbs} />
@@ -272,15 +298,49 @@ const Show = () => {
                     </div>
                     <Link className="btn btn-success mr-2" to="/admin/bai-viet">Quay Lại</Link>
                     <button className="btn btn-info mr-2" onClick={(e) => handleSubmit(e, 1)}>Lưu Bản Nháp</button>
-                    <button className="btn btn-primary" onClick={(e) => handleSubmit(e)}>Đăng Bài Viết</button>
+                    <button className="btn btn-primary mr-2" onClick={(e) => handleSubmit(e)}>Đăng Bài Viết</button>
+                    {
+                      privacy === "private" ?
+                    <button className='btn btn-dark' onClick={() => handleShowReject(id)}><i className="fa-regular fa-circle-xmark"></i> Từ Chối</button>
+                    :
+                    <></>
+                    }
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+      <Modal show={show} onHide={() => setShow(false)} size='lg'>
+        <Modal.Header>
+          <Modal.Title>Từ Chối Bài Viết</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="reason" className="mb-3">
+              <Form.Control
+                as="textarea" // Change type to textarea
+                placeholder="Nhập lý do từ chối"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                rows={4} // Set the number of rows to adjust the height
+                required
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="btn btn-success" onClick={() => setShow(false)}>
+            Hủy
+          </Button>
+          <Button className="btn btn-dark" onClick={() => handleReject()}>
+            Từ Chối
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
+  
 };
 
 export default Show;

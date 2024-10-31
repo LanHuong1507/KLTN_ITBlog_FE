@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import TrangChuServices from "../../services/User/TrangChuServices";
 import { Link } from "react-router-dom";
-
+import axios from "axios";
 function getShortDescription(content, length = 100) {
   const plainText = content.replace(/<[^>]+>/g, "");
   return plainText.length > length
@@ -19,8 +19,52 @@ const TrangChu = () => {
   const [newUsers, setNewUsers] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [topPopularToday, setTopPopularToday] = useState({});
-  const [currentPage, setCurrentPage] = useState(1); 
+  const [currentPage, setCurrentPage] = useState(1);
   const [hoveredPage, setHoveredPage] = useState(null);
+  const [weather, setWeather] = useState({ temp: null, description: "" });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [currentTime, setCurrentTime] = useState("");
+
+  const fetchWeatherData = async () => {
+    const city = "Ho Chi Minh City";
+
+    try {
+      // Using wttr.in to get weather information
+      const response = await axios.get(`https://wttr.in/${city}?format=%t+%C`);
+      const data = response.data.split(" "); // Splitting the response
+      const temp = data[0]; // Get the temperature part
+      const description = data.slice(1).join(" "); // Join the rest as description
+
+      setWeather({ temp, description });
+    } catch (err) {
+      setError("Could not fetch weather data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchWeatherData();
+    const intervalId = setInterval(() => {
+      const now = new Date();
+      setCurrentTime(
+        now.toLocaleTimeString("vi-VN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })
+      );
+    }, 1000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
+  const currentDate = new Date().toLocaleDateString("vi-VN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   const fetchArticles = async (page = 1) => {
     try {
@@ -128,7 +172,27 @@ const TrangChu = () => {
             <div className="row">
               <div className="col-lg-12 col-md-12 order-1 order-md-2">
                 <div className="row">
-                  <div className="col-lg-8 col-md-12">
+                  <div class="col-lg-2 col-md-3 primary-sidebar sticky-sidebar sidebar-left ">
+                    <h4 className="widget-title mb-30">Thời Tiết</h4>
+                    <div class="sidebar-widget widget-weather border-radius-10 bg-white mb-30">
+                      <p className="text-success mb-10">
+                        <strong>Thành Phố Hồ Chí Minh</strong>
+                      </p>
+                      <p>{currentDate}</p>
+                      <p>{currentTime}</p>
+                      {loading ? (
+                        <p>Loading...</p>
+                      ) : error ? (
+                        <p>{error}</p>
+                      ) : (
+                        <>
+                          <h2>{weather.temp}</h2>
+                          <p>{weather.description}</p>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12">
                     {/* Featured posts */}
                     <div className="featured-post mb-50">
                       <h4 className="widget-title mb-30">
@@ -158,7 +222,7 @@ const TrangChu = () => {
                                 <div className="entry-meta meta-2 float-left">
                                   <a
                                     className="float-left mr-10 author-img"
-                                    href="author.html"
+                                    href={`/nguoi-dung/${topPopularToday.username}`}
                                     tabIndex={0}
                                   >
                                     <img
@@ -267,7 +331,7 @@ const TrangChu = () => {
                         <ul className="list-post">
                           {topInteracts.map((article, index) => (
                             <li key={index} className="mb-20">
-                              <div className="d-flex">
+                              <div className="d-flex align-items-center">
                                 <div className="post-thumb d-flex mr-15 border-radius-5 img-hover-scale">
                                   <Link
                                     className="color-white"
@@ -281,7 +345,7 @@ const TrangChu = () => {
                                   </Link>
                                 </div>
                                 <div className="post-content media-body">
-                                  <h6 className="post-title mb-10 text-limit-2-row">
+                                  <h6 className="post-title mb-5 text-limit-2-row">
                                     <Link to={`/bai-viet/${article.slug}`}>
                                       {article.title}
                                     </Link>
@@ -350,7 +414,7 @@ const TrangChu = () => {
                         </form>
                       </div>
                     </div>
-                    {/*Post aside style 2*/}
+                    {/*Social*/}
                     <div className="sidebar-widget">
                       <div className="widget-header mb-30">
                         <h5 className="widget-title">
@@ -364,7 +428,7 @@ const TrangChu = () => {
                               key={index}
                               className="mb-30 wow fadeIn animated"
                             >
-                              <div className="d-flex">
+                              <div className="d-flex align-items-center">
                                 <div className="post-thumb d-flex mr-15 border-radius-5 img-hover-scale">
                                   <Link
                                     className="color-white"
