@@ -241,12 +241,14 @@ const BaiViet = () => {
                         className={`post-cat ${
                           colors[index % colors.length]
                         } color-white`}
+                        style={{ marginRight: "10px" }} // Adjust the margin value as needed
                       >
                         {category.name}
                       </span>
                     </Link>
                   ))}
                 </div>
+
                 <h1 className="post-title mb-30 text-white">{article.title}</h1>
                 <div className="entry-meta meta-1 font-x-small color-grey text-uppercase text-white">
                   <span className="post-by text-white">
@@ -492,10 +494,9 @@ const BaiViet = () => {
                         className="author-bio-link text-muted"
                         style={{ textTransform: "unset" }}
                       >
-                      {isFollower === true ? (
+                        {isFollower === true ? (
                           <>
-                            <FontAwesomeIcon icon={faUserMinus} /> Hủy Theo
-                            Dõi
+                            <FontAwesomeIcon icon={faUserMinus} /> Hủy Theo Dõi
                           </>
                         ) : (
                           <>
@@ -508,8 +509,8 @@ const BaiViet = () => {
                         className="author-bio-link text-muted"
                         style={{ textTransform: "unset" }}
                       >
-                         <FontAwesomeIcon icon={faRss} /> {followerCount}{" "}
-                        Người Theo Dõi
+                        <FontAwesomeIcon icon={faRss} /> {followerCount} Người
+                        Theo Dõi
                       </Link>
                     </>
                   )}

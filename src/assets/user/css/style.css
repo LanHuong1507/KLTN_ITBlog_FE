@@ -308,15 +308,27 @@ span.notification{position:absolute;color:#fff;font-size:10px;font-weight:500;to
 .content-404{margin:0 auto;}
 .content-404 h1{font-size:8rem;}
 .content-404 input#search{max-width:450px;margin:0 auto;border-radius:40px;padding-left:25px;}
-.footer-link {margin: 0 15px;text-decoration: none;color: grey;}
-.footer-link:hover {text-decoration: underline;}
 .animated-text-container {position: relative;overflow: hidden;height: 900px;background: none;display: flex;flex-direction: column;align-items: center;}
 .animated-text {display: block;position: relative; bottom: -50px; font-size: 52px; font-weight: 700;margin: 5px 0; animation: slide-up 9s linear infinite;opacity: 0; animation-fill-mode: forwards; }
+.footer-area {background-color: white;padding: 20px 0;}
+.widget_categories {display: flex;justify-content: center;align-items: center;flex-wrap: nowrap;}
+.cat-item {margin: 0 10px;}
+.widget_categories a {color:#212d45;text-decoration: none;font-weight: 500;transition: color 0.3s; }
+.widget_categories a:hover {color: #f2546a;text-decoration: underline;}
+.separator {padding-left: 10px;color: #6c757d;}
+.footer-bottom-area {background-color: #343a40;color: white;padding: 20px 0; }
+@media screen and (max-width: 768px) {
+	.widget_categories {flex-wrap: wrap;flex-direction: column;}
+	.separator {display: none;}
+	.widget_categories a {margin: 8px 0;}
+}
 @keyframes slide-up {
 	0% {bottom: -50px; opacity: 0; }
 	10% { opacity: 1;}
 	90% {opacity: 1; }
 	100% {bottom: 100%; opacity: 0;}}
+	
+	
 	
 /*Pagination*/
 .pagination-area .page-item{margin:0}
@@ -387,7 +399,15 @@ iframe {width: 100%;max-width: 640px;height: 360px;margin: 0 auto;display: block
 .tab {padding: 10px 15px;cursor: pointer;transition:color 0.3s; color: #506172;font-size: large;font-weight: 500;}
 .tab:hover {color: #f2546a;}
 .tab.active {font-size: x-large;font-weight: bold;border-bottom: 5px solid #f2546a;}
-  
+@media screen and (max-width: 768px) {
+	.author-bio {flex-direction: column;}
+	.author-bio-link { margin-top: 20px; }
+	.tabs {overflow-x: auto; -webkit-overflow-scrolling: touch;	padding-bottom: 10px;margin-top: 20px;}
+	.tabs::-webkit-scrollbar {height: 4px;}
+	.tabs::-webkit-scrollbar-thumb {background: black; border-radius: 10px; }
+	.tabs::-webkit-scrollbar-track {background: transparent;}
+	.tab { flex-shrink: 0;padding: 10px 15px;margin-right: 10px;}
+} 
 /*comment*/
 .comments-area{background:transparent;border-top:1px solid #eee;padding:45px 0;margin-top:50px;}
 @media (max-width:414px){
