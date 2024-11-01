@@ -4,12 +4,12 @@ import ChuyenMucServices from '../../services/ChuyenMucServices';
 
 const Footer = () => {
     const [categories, setCategories] = useState([]);
-    const columns = 4; // Set the desired number of columns here (4 or 5)
+    const columns = 4;
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await ChuyenMucServices.list(); // Fetch all categories
+                const response = await ChuyenMucServices.list(); 
                 setCategories(response.data.categories);
             } catch (error) {
                 console.error("Error fetching categories:", error);
@@ -18,9 +18,8 @@ const Footer = () => {
         fetchCategories();
     }, []);
 
-    // Calculate items per column based on the total categories and number of columns
     const itemsPerColumn = Math.ceil(categories.length / columns);
-    const currentYear = new Date().getFullYear(); // Get the current year
+    const currentYear = new Date().getFullYear();
 
     return (
         <footer>
@@ -35,7 +34,7 @@ const Footer = () => {
                                             key={category.category_id} 
                                             className="cat-item" 
                                         >
-                                            <Link to={`/category/${category.slug}`}>{category.name}</Link>
+                                            <Link to={`/chuyen-muc/${category.slug}`}>{category.name}</Link>
                                         </li>
                                     ))}
                                 </ul>

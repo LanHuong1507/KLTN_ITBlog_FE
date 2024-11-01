@@ -42,6 +42,7 @@ const TaiKhoan = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [hoveredPage, setHoveredPage] = useState(null);
+  const [activeTab, setActiveTab] = useState("all");
 
   const fetchUser = async () => {
     try {
@@ -63,6 +64,7 @@ const TaiKhoan = () => {
       const response = await BaiVietServices.listArticles(page);
       setArticles(response.data.articles);
       setTotalPages(response.data.totalPages);
+      console.log(response.data.articles);
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
     }
@@ -150,14 +152,51 @@ const TaiKhoan = () => {
   const handleBackToInfo = () => {
     setIsChangePassword(false);
   };
+  const filterArticles = () => {
+    console.log("Current articles:", articles);
+    switch (activeTab) {
+      case "pending":
+        const pendingArticles = articles.filter(
+          (article) =>
+            article.privacy === "private" && article.is_draft === false
+        );
+        console.log("Pending Articles:", pendingArticles);
+        return pendingArticles;
 
+      case "rejected":
+        return articles.filter(
+          (article) =>
+            article.privacy === "private" &&
+            article.is_draft === true &&
+            article.slug === "[rejected]"
+        );
+
+      case "drafts":
+        return articles.filter(
+          (article) =>
+            article.privacy === "private" &&
+            article.is_draft === true &&
+            article.slug !== "[rejected]"
+        );
+
+      case "approved":
+        return articles.filter(
+          (article) =>
+            article.privacy === "public" && article.is_draft === false
+        );
+
+      default:
+        return articles;
+    }
+  };
+
+  const filteredArticles = filterArticles();
   return (
     <>
       <main className="position-relative">
         <div className="container">
           <div className="row mb-50">
             <div className="col-lg-2 d-none d-lg-block" />
-            {/* main content */}
             <div className="col-lg-8 col-md-12">
               <div className="author-bio border-radius-10 bg-white p-30 mb-50">
                 <div className="author-image mb-30">
@@ -222,152 +261,240 @@ const TaiKhoan = () => {
                   </a>
                 </div>
               </div>
-              {articles.length === 0 ? (
-                <h2>Chưa có bài viết</h2>
-              ) : (
-                <h2 id="list-articles-new">Danh sách bài viết</h2>
-              )}
-              <hr className="wp-block-separator is-style-wide" />
-              <div className="latest-post mb-50">
-                <div className="loop-list-style-1">
-                  {articles.map((article, index) =>
-                    index === 0 ? (
-                      <article
-                        key={index}
-                        className="first-post p-10 background-white border-radius-10 mb-30 wow fadeIn animated"
-                      >
-                        <div className="img-hover-slide border-radius-15 mb-30 position-relative overflow-hidden">
-                          <span className="top-right-icon bg-dark">
-                            <i className="mdi mdi-flash-on" />
-                          </span>
-                          <Link to={`/bai-viet/${article.slug}`}>
-                            <img
-                              style={{ height: "380px", width: "100%" }}
-                              src={`http://127.0.0.1:3001/${article.image_url}`}
-                              alt="post-slider"
-                            />
-                          </Link>
-                        </div>
-                        <div className="pr-10 pl-10">
-                          <h4 className="post-title mb-20">
-                            <Link to={`/bai-viet/${article.slug}`}>
-                              {article.title}
-                            </Link>
-                          </h4>
-                          <p className="post-exerpt font-medium text-muted mb-30">
-                            {getShortDescription(article.content, 150)}
-                          </p>
-                          <div className="mb-20 overflow-hidden">
-                            <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase">
-                              <span className="post-by">
-                                Đăng bởi <Link to="#">{user.fullname}</Link>
-                              </span>
-                              <span className="post-on">
-                                {new Date(article.createdAt).toLocaleDateString(
-                                  "vi-VN"
-                                )}
-                              </span>
-                            </div>
-                            <div className="float-right">
-                              <Link to={`/chinh-sua/${article.article_id}`}>
-                                {article.slug === "[rejected]" ? (
-                                  <>
-                                    <span className="mr-10">
-                                      <FontAwesomeIcon
-                                        icon={faCircleExclamation}
-                                      />
-                                    </span>
-                                    Bị Từ Chối
-                                  </>
-                                ) : (
-                                  <>
-                                    <span className="mr-10">
-                                      <FontAwesomeIcon icon={faPenToSquare} />
-                                    </span>
-                                    Chỉnh Sửa
-                                  </>
-                                )}
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                      </article>
-                    ) : (
-                      <article
-                        key={index}
-                        className="p-10 background-white border-radius-10 mb-30 wow fadeIn animated"
-                      >
-                        <div className="d-md-flex d-block">
-                          <div className="post-thumb post-thumb-big d-flex mr-15 border-radius-15 img-hover-scale">
-                            <Link
-                              className="color-white"
-                              to={`/bai-viet/${article.slug}`}
-                            >
-                              <img
-                                className="border-radius-15"
-                                src={`http://127.0.0.1:3001/${article.image_url}`}
-                                alt=""
-                              />
-                            </Link>
-                          </div>
-                          <div className="post-content media-body">
-                            <div className="entry-meta mb-15 mt-10">
-                              <Link className="entry-meta meta-2" to="#">
-                                <span className="post-in text-danger font-x-small">
-                                  {new Date(
-                                    article.createdAt
-                                  ).toLocaleDateString("vi-VN")}
-                                </span>
-                              </Link>
-                            </div>
-                            <h5 className="post-title mb-15 text-limit-2-row">
-                              <Link to={`/bai-viet/${article.slug}`}>
-                                {article.title}
-                              </Link>
-                            </h5>
-                            <p className="post-exerpt font-medium text-muted mb-30 d-none d-lg-block">
-                              {getShortDescription(article.content, 150)}
-                            </p>
-                            <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase">
-                              <span className="post-by">
-                                Đăng bởi <Link to="#">{user.fullname}</Link>
-                              </span>
-                              <Link to={`/bai-viet/${article.slug}`}>
-                                <span className="mr-10">
-                                  <FontAwesomeIcon icon={faAnglesRight} /> Xem
-                                  Thêm
-                                </span>
-                              </Link>
-                            </div>
-                          </div>
-                          <div className="float-right">
-                            <Link to={`/chinh-sua/${article.article_id}`}>
-                              {article.slug === "[rejected]" ? (
-                                <>
-                                  <span className="mr-10">
-                                    <FontAwesomeIcon
-                                      icon={faCircleExclamation}
-                                    />
-                                  </span>
-                                  Bị Từ Chối
-                                </>
-                              ) : (
-                                <>
-                                  <span className="mr-10">
-                                    <FontAwesomeIcon icon={faPenToSquare} />
-                                  </span>
-                                  Chỉnh Sửa
-                                </>
-                              )}
-                            </Link>
-                          </div>
-                        </div>
-                      </article>
-                    )
+              <div>
+                <div className="tabs">
+                  <div
+                    className={`tab ${activeTab === "all" ? "active" : ""}`}
+                    onClick={() => setActiveTab("all")}
+                  >
+                    Tất cả
+                  </div>
+                  <div
+                    className={`tab ${
+                      activeTab === "approved" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab("approved")}
+                  >
+                    Được Duyệt
+                  </div>
+                  <div
+                    className={`tab ${activeTab === "pending" ? "active" : ""}`}
+                    onClick={() => setActiveTab("pending")}
+                  >
+                    Chờ Duyệt
+                  </div>
+                  <div
+                    className={`tab ${
+                      activeTab === "rejected" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab("rejected")}
+                  >
+                    Bị Từ Chối
+                  </div>
+                  <div
+                    className={`tab ${activeTab === "drafts" ? "active" : ""}`}
+                    onClick={() => setActiveTab("drafts")}
+                  >
+                    Nháp
+                  </div>
+                </div>
+
+                <div className="tab-content">
+                  {filteredArticles.length === 0 ? (
+                    <h2>Chưa có bài viết</h2>
+                  ) : (
+                    <>
+                      {activeTab === "all" && (
+                        <h2>Danh sách tất cả bài viết</h2>
+                      )}
+                      {activeTab === "pending" && (
+                        <h2>Các bài viết đang chờ duyệt</h2>
+                      )}
+                      {activeTab === "rejected" && (
+                        <h2>Các bài viết bị từ chối</h2>
+                      )}
+                      {activeTab === "drafts" && <h2>Các bài viết nháp</h2>}
+                      {activeTab === "approved" && (
+                        <h2>Các bài viết đã được duyệt</h2>
+                      )}
+                    </>
                   )}
                 </div>
+
+                <main className="latest-post mb-50">
+                  <div className="loop-list-style-1">
+                    {filteredArticles.length === 0 ? null : (
+                      <>
+                        <hr className="wp-block-separator is-style-wide" />
+                        <div className="latest-post mb-50">
+                          <div className="loop-list-style-1">
+                            {filteredArticles.map((article, index) =>
+                              index === 0 ? (
+                                <article
+                                  key={article.article_id}
+                                  className="first-post p-10 background-white border-radius-10 mb-30 wow fadeIn animated"
+                                >
+                                  <div className="img-hover-slide border-radius-15 mb-30 position-relative overflow-hidden">
+                                    <span className="top-right-icon bg-dark">
+                                      <i className="mdi mdi-flash-on" />
+                                    </span>
+                                    <Link to={`/bai-viet/${article.slug}`}>
+                                      <img
+                                        style={{
+                                          height: "380px",
+                                          width: "100%",
+                                        }}
+                                        src={`http://127.0.0.1:3001/${article.image_url}`}
+                                        alt="post-slider"
+                                      />
+                                    </Link>
+                                  </div>
+                                  <div className="pr-10 pl-10">
+                                    <h4 className="post-title mb-20">
+                                      <Link to={`/bai-viet/${article.slug}`}>
+                                        {article.title}
+                                      </Link>
+                                    </h4>
+                                    <p className="post-exerpt font-medium text-muted mb-30">
+                                      {getShortDescription(
+                                        article.content,
+                                        150
+                                      )}
+                                    </p>
+                                    <div className="mb-20 overflow-hidden">
+                                      <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase">
+                                        <span className="post-by">
+                                          Đăng bởi{" "}
+                                          <Link to="#">{user.fullname}</Link>
+                                        </span>
+                                        <span className="post-on">
+                                          {new Date(
+                                            article.createdAt
+                                          ).toLocaleDateString("vi-VN")}
+                                        </span>
+                                      </div>
+                                      <div className="float-right">
+                                        <Link
+                                          to={`/chinh-sua/${article.article_id}`}
+                                        >
+                                          {article.slug === "[rejected]" ? (
+                                            <>
+                                              <span className="mr-10">
+                                                <FontAwesomeIcon
+                                                  icon={faCircleExclamation}
+                                                />
+                                              </span>
+                                              Bị Từ Chối
+                                            </>
+                                          ) : (
+                                            <>
+                                              <span className="mr-10">
+                                                <FontAwesomeIcon
+                                                  icon={faPenToSquare}
+                                                />
+                                              </span>
+                                              Chỉnh Sửa
+                                            </>
+                                          )}
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </article>
+                              ) : (
+                                <article
+                                  key={article.article_id}
+                                  className="p-10 background-white border-radius-10 mb-30 wow fadeIn animated"
+                                >
+                                  <div className="d-md-flex d-block">
+                                    <div className="post-thumb post-thumb-big d-flex mr-15 border-radius-15 img-hover-scale">
+                                      <Link
+                                        className="color-white"
+                                        to={`/bai-viet/${article.slug}`}
+                                      >
+                                        <img
+                                          className="border-radius-15"
+                                          src={`http://127.0.0.1:3001/${article.image_url}`}
+                                          alt=""
+                                        />
+                                      </Link>
+                                    </div>
+                                    <div className="post-content media-body">
+                                      <div className="entry-meta mb-15 mt-10">
+                                        <Link
+                                          className="entry-meta meta-2"
+                                          to="#"
+                                        >
+                                          <span className="post-in text-danger font-x-small">
+                                            {new Date(
+                                              article.createdAt
+                                            ).toLocaleDateString("vi-VN")}
+                                          </span>
+                                        </Link>
+                                      </div>
+                                      <h5 className="post-title mb-15 text-limit-2-row">
+                                        <Link to={`/bai-viet/${article.slug}`}>
+                                          {article.title}
+                                        </Link>
+                                      </h5>
+                                      <p className="post-exerpt font-medium text-muted mb-30 d-none d-lg-block">
+                                        {getShortDescription(
+                                          article.content,
+                                          150
+                                        )}
+                                      </p>
+                                      <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase">
+                                        <span className="post-by">
+                                          Đăng bởi{" "}
+                                          <Link to="#">{user.fullname}</Link>
+                                        </span>
+                                        <Link to={`/bai-viet/${article.slug}`}>
+                                          <span className="mr-10">
+                                            <FontAwesomeIcon
+                                              icon={faAnglesRight}
+                                            />{" "}
+                                            Xem Thêm
+                                          </span>
+                                        </Link>
+                                      </div>
+                                    </div>
+                                    <div className="float-right">
+                                      <Link
+                                        to={`/chinh-sua/${article.article_id}`}
+                                      >
+                                        {article.slug === "[rejected]" ? (
+                                          <>
+                                            <span className="mr-10">
+                                              <FontAwesomeIcon
+                                                icon={faCircleExclamation}
+                                              />
+                                            </span>
+                                            Bị Từ Chối
+                                          </>
+                                        ) : (
+                                          <>
+                                            <span className="mr-10">
+                                              <FontAwesomeIcon
+                                                icon={faPenToSquare}
+                                              />
+                                            </span>
+                                            Chỉnh Sửa
+                                          </>
+                                        )}
+                                      </Link>
+                                    </div>
+                                  </div>
+                                </article>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </main>
               </div>
-              {articles.length !== 0 ? (
+              {filteredArticles.length !== 0 ? (
                 <div className="pagination-area mb-30">
                   <nav aria-label="Page navigation example">
                     <ul

@@ -19,6 +19,7 @@ const XuHuong = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [lastComments, setLastComments] = useState([]);
   const [mostPopular, setMostPopular] = useState([]);
+  const [topTrendings, setTopTrendings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hoveredPage, setHoveredPage] = useState(null);
 
@@ -36,6 +37,14 @@ const XuHuong = () => {
     try {
       const response = await TrangChuServices.getLastComment();
       setLastComments(response.data.comments);
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+    }
+  };
+  const fetchTopTrendings = async () => {
+    try {
+      const response = await TrangChuServices.getTopTrending();
+      setTopTrendings(response.data.articles);
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
     }
@@ -64,6 +73,7 @@ const XuHuong = () => {
     fetchLastComments();
     fetchMostPopular();
     fetchNewArticles();
+    fetchTopTrendings();
   }, []);
 
   const handlePageChange = (page) => {
@@ -97,7 +107,7 @@ const XuHuong = () => {
                 <div className="col-lg-8 col-md-12">
                   <div className="latest-post mb-50">
                     <div className="loop-list-style-1">
-                      {articles.map((article, index) =>
+                      {topTrendings.map((article, index) =>
                         index === 0 ? (
                           <article
                             key={index}
