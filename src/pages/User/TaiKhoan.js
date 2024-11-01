@@ -305,17 +305,17 @@ const TaiKhoan = () => {
                   ) : (
                     <>
                       {activeTab === "all" && (
-                        <h2>Danh sách tất cả bài viết</h2>
+                        <h2 id="list-articles-new">Danh sách tất cả bài viết</h2>
                       )}
                       {activeTab === "pending" && (
-                        <h2>Các bài viết đang chờ duyệt</h2>
+                        <h2 id="list-articles-new">Các bài viết đang chờ duyệt</h2>
                       )}
                       {activeTab === "rejected" && (
-                        <h2>Các bài viết bị từ chối</h2>
+                       <h2 id="list-articles-new">Các bài viết bị từ chối</h2>
                       )}
-                      {activeTab === "drafts" && <h2>Các bài viết nháp</h2>}
+                      {activeTab === "drafts" && <h2 id="list-articles-new">Các bài viết nháp</h2>}
                       {activeTab === "approved" && (
-                        <h2>Các bài viết đã được duyệt</h2>
+                        <h2 id="list-articles-new">Các bài viết đã được duyệt</h2>
                       )}
                     </>
                   )}

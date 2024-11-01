@@ -25,6 +25,7 @@ const ChuyenMuc = () => {
             setArticles(response.data.articles);
             setTotalPages(response.data.totalPages)
             setCategoryName(response.data.categoryName)
+            console.log(response.data.categoryName)
         } catch (error) {
             console.error('Lỗi khi gọi API:', error);
         }

@@ -4,7 +4,6 @@ import ChuyenMucServices from '../../services/ChuyenMucServices';
 
 const Footer = () => {
     const [categories, setCategories] = useState([]);
-    const columns = 4;
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -18,37 +17,44 @@ const Footer = () => {
         fetchCategories();
     }, []);
 
-    const itemsPerColumn = Math.ceil(categories.length / columns);
     const currentYear = new Date().getFullYear();
+    const firstRowCategories = categories.slice(0, 6); 
+    const secondRowCategories = categories.slice(6, 10); 
 
     return (
-        <footer>
-            <div className="footer-area pt-50 bg-white">
-                <div className="container">
-                    <div className="row pb-30">
-                        {Array.from({ length: columns }, (_, colIndex) => (
-                            <div className="col" key={colIndex}>
-                                <ul className="float-left mr-30 font-medium widget_categories">
-                                    {categories.slice(colIndex * itemsPerColumn, (colIndex + 1) * itemsPerColumn).map(category => (
-                                        <li 
-                                            key={category.category_id} 
-                                            className="cat-item" 
-                                        >
-                                            <Link to={`/chuyen-muc/${category.slug}`}>{category.name}</Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
+        <footer className="footer-area">
+            <div className="container">
+                <div className="row justify-content-center pb-30">
+                    <div className="col-md-12">
+                        <div className="widget_categories text-center">
+                            {firstRowCategories.map((category, index) => (
+                                <span key={category.category_id} className="cat-item">
+                                   <Link to={`/chuyen-muc/${category.slug}`}>{category.name}</Link>
+                                    {index < firstRowCategories.length - 1 && <span className="separator"> || </span>} 
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <div className="row justify-content-center pb-30">
+                    <div className="col-md-12">
+                        <div className="widget_categories text-center">
+                            {secondRowCategories.map((category, index) => (
+                                <span key={category.category_id} className="cat-item">
+                                    <Link to={`/chuyen-muc/${category.slug}`}>{category.name}</Link>
+                                    {index < secondRowCategories.length - 1 && <span className="separator"> || </span>}
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="footer-bottom-area bg-white text-muted">
+            <div className="footer-bottom-area text-muted">
                 <div className="container">
-                    <div className="footer-border pt-20 pb-20 text-center">
+                    <div className="text-center">
                         <div className="footer-copy-right">
                             <p className="font-small text-muted mb-0"> 
-                                © {currentYear}, ITBlog| All rights reserved | Created by Huong Tien
+                                © {currentYear}, ITBlog | All rights reserved | Created by Huong Tien
                             </p>
                         </div>
                     </div>
