@@ -32,9 +32,9 @@ const TrangChu = () => {
     try {
       // Using wttr.in to get weather information
       const response = await axios.get(`https://wttr.in/${city}?format=%t+%C`);
-      const data = response.data.split(" "); // Splitting the response
-      const temp = data[0]; // Get the temperature part
-      const description = data.slice(1).join(" "); // Join the rest as description
+      const data = response.data.split(" ");
+      const temp = data[0];
+      const description = data.slice(1).join(" ");
 
       setWeather({ temp, description });
     } catch (err) {
@@ -57,7 +57,6 @@ const TrangChu = () => {
       );
     }, 1000);
 
-    // Clear interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
   const currentDate = new Date().toLocaleDateString("vi-VN", {

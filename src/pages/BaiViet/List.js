@@ -96,7 +96,7 @@ const List = () => {
           <Link
             to={`/admin/bai-viet/${item.article_id}`}
             className="btn btn-primary me-2 d-flex align-items-center"
-            style={{ color: "white", padding: "8px 12px" }} 
+            style={{ color: "white", padding: "8px 12px" }}
           >
             <i className="fas fa-edit" />
             <span className="pl-2">XEM</span>
@@ -114,7 +114,6 @@ const List = () => {
       </td>
     </>
   );
-
   // Xử lý duyệt bài viết
   const handlePublic = async (id) => {
     try {
