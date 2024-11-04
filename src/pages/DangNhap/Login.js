@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; 
-import DangNhapServices from '../../services/DangNhapServices';
-import { toast } from 'react-toastify';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import DangNhapServices from "../../services/DangNhapServices";
+import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faLock, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   React.useEffect(() => {
-    if (localStorage.getItem('token')) {
-      navigate('/admin/');
+    if (localStorage.getItem("token")) {
+      navigate("/admin/");
     }
   }, [navigate]);
   const handleSubmit = async (e) => {
@@ -22,23 +22,25 @@ const Login = () => {
       toast.error(login.response.data.message);
     } else {
       toast.success(login.data.message);
-      localStorage.setItem('token', login.data.token);
-      localStorage.setItem('refreshToken', login.data.refreshToken);
-      navigate('/admin/');
+      localStorage.setItem("token", login.data.token);
+      localStorage.setItem("refreshToken", login.data.refreshToken);
+      navigate("/admin/");
     }
   };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
-      <div className="card shadow-sm p-4" style={{ width: '500px' }}>
+      <div className="card shadow-sm p-4" style={{ width: "500px" }}>
         <div className="card-body text-center">
           <img
             src="../logo.png"
             alt="Logo"
-            style={{ width: '100px', height: '100px' }}
+            style={{ width: "100px", height: "100px" }}
             className="mb-3"
           />
-          <h3 className="text-center mb-4"><b>Đăng Nhập vào IT Blog</b></h3>
+          <h3 className="text-center mb-4">
+            <b>Đăng Nhập vào IT Blog</b>
+          </h3>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <div className="input-group">
@@ -94,9 +96,6 @@ const Login = () => {
               </div>
             </div>
           </form>
-          <p className="mt-3">
-            Chưa có tài khoản? <Link to="/admin/dang-ky">Đăng Ký</Link>
-          </p>
         </div>
       </div>
     </div>

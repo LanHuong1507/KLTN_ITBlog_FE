@@ -63,6 +63,16 @@ const NguoiDungServices = {
         } catch (error) {
             throw error;
         }
+    },
+    
+     // Thay đổi vai trò người dùng
+     toggleAdmin: async (id) => {
+        try {
+            const response = await axiosInstance.patch(`/users/${id}/toggleAdmin`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
     }
 };
 
