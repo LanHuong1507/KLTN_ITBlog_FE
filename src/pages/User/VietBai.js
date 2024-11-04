@@ -112,50 +112,50 @@ const VietBai = () => {
   const validateForm = () => {
     let errors = {};
     let valid = true;
-
+  
     if (!title) {
       errors.title = "Tiêu đề không được để trống.";
       valid = false;
     } else if (title.length < 5) {
       errors.title = "Tiêu đề bài viết phải có ít nhất 5 ký tự.";
-      valid = false; // Set valid to false when title is too short
+      valid = false;
     }
-
+  
     if (!slug) {
       errors.slug = "Đường dẫn không được để trống.";
       valid = false;
     } else if (!/^[a-z0-9-]+$/.test(slug)) {
-      errors.slug =
-        "Đường dẫn chỉ cho phép chữ thường, số và dấu gạch nối '-' và không được chứa ký tự đặc biệt như '[' hoặc ']'.";
+      errors.slug = "Đường dẫn chỉ cho phép chữ thường, số và dấu gạch nối '-'.";
       valid = false;
     }
-
+  
     if (!tags) {
       errors.tags = "Từ khóa không được để trống.";
       valid = false;
-    } else if (!/^([a-zA-Z0-9]+)(,[a-zA-Z0-9]+)*$/.test(tags)) {
+    } else if (!/^([a-zA-Z0-9]+)(,\s*[a-zA-Z0-9]+)*$/.test(tags)) {
       errors.tags =
-        "Từ khóa không hợp lệ. Vui lòng sử dụng ký tự chữ và số, cách nhau bởi dấu ','. Ví dụ: 'tag1,tag2'.";
+        "Từ khóa không hợp lệ. Vui lòng sử dụng chữ cái và số, cách nhau bởi dấu ','. Ví dụ: 'tag1, tag2'.";
+      valid = false; // Fix: Set valid to false if tags are invalid
     }
-
+  
     if (!content) {
       errors.content = "Nội dung không được để trống.";
       valid = false;
     }
-
+  
     if (selectedCategories.length === 0) {
       errors.categories = "Vui lòng chọn ít nhất một danh mục.";
       valid = false;
     }
-
+  
     if (!image) {
       errors.image = "Vui lòng chọn ảnh.";
       valid = false;
     }
-
+  
     setValidationErrors(errors);
     return valid;
-  };
+  };  
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {

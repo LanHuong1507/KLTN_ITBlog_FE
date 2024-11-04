@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import TaiKhoanServices from "../../services/User/TaiKhoanServices";
 import BaiVietServices from "../../services/User/BaiVietServices";
 import { toast } from "react-toastify";
-import { Modal, Button, Form, Image } from "react-bootstrap";
+import { Modal, Button, Form, Image, Nav } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faRss,
@@ -43,6 +43,11 @@ const TaiKhoan = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [hoveredPage, setHoveredPage] = useState(null);
   const [activeTab, setActiveTab] = useState("all");
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [activeTabFollower, setActiveTabFollower] = useState("followers");
 
   const fetchUser = async () => {
     try {
@@ -58,13 +63,35 @@ const TaiKhoan = () => {
       console.error("Lỗi khi gọi API:", error);
     }
   };
+  const fetchFollowersData = async () => {
+    try {
+      setLoading(true);
+      const response = await TaiKhoanServices.listFollowersAndFollowings(
+        user.user_id
+      );
+      if (response && response.followers && response.following) {
+        setFollowers(response.followers);
+        setFollowing(response.following);
+      } else {
+        console.error("Unexpected response structure:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching followers and following data:", error);
+    } finally {
+      setLoading(false);
+      setShowFollowers(true);
+    }
+  };
 
+  const handleLinkClick = (e) => {
+    e.preventDefault();
+    fetchFollowersData();
+  };
   const fetchArticles = async (page = 1) => {
     try {
       const response = await BaiVietServices.listArticles(page);
       setArticles(response.data.articles);
       setTotalPages(response.data.totalPages);
-      console.log(response.data.articles);
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
     }
@@ -153,7 +180,6 @@ const TaiKhoan = () => {
     setIsChangePassword(false);
   };
   const filterArticles = () => {
-    console.log("Current articles:", articles);
     switch (activeTab) {
       case "pending":
         const pendingArticles = articles.filter(
@@ -229,6 +255,7 @@ const TaiKhoan = () => {
                   </div>
                   <Link
                     to="#"
+                    onClick={handleLinkClick}
                     className="author-bio-link"
                     style={{ textTransform: "unset" }}
                   >
@@ -237,6 +264,125 @@ const TaiKhoan = () => {
                     </span>
                     {followerCount} người theo dõi
                   </Link>
+                  <Modal
+                    show={showFollowers}
+                    onHide={() => setShowFollowers(false)}
+                    size="lg"
+                  >
+                    <Modal.Header>
+                      <Modal.Title>
+                        Danh sách người theo dõi và người đang theo dõi
+                      </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      {loading ? (
+                        <p>Loading...</p>
+                      ) : (
+                        <>
+                          <Nav variant="tab-follower" defaultActiveKey="followers">
+                            <Nav.Item>
+                              <Nav.Link
+                                eventKey="followers"
+                                onClick={() =>
+                                  setActiveTabFollower("followers")
+                                }
+                                active={activeTabFollower === "followers"}
+                                className={`tab-fol ${
+                                  activeTabFollower === "followers"
+                                    ? "active"
+                                    : ""
+                                } `}
+                              >
+                                Người theo dõi
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link
+                                eventKey="following"
+                                onClick={() =>
+                                  setActiveTabFollower("following")
+                                }
+                                active={activeTabFollower === "following"}
+                                className={`tab-fol ${
+                                  activeTabFollower === "following"
+                                    ? "active"
+                                    : ""
+                                }` }
+                              >
+                                Đang theo dõi
+                              </Nav.Link>
+                            </Nav.Item>
+                          </Nav>
+
+                          {activeTabFollower === "followers" && (
+                            <>
+                              <ul>
+                                {followers.length === 0 ? (
+                                  <p>Không có người theo dõi nào.</p>
+                                ) : (
+                                  followers.map((follower) => (
+                                    <li
+                                      key={follower.user_id}
+                                      className="d-flex align-items-center mb-2 mt-20"
+                                    >
+                                      <img
+                                        src={`http://127.0.0.1:3001/${follower.avatar_url}`}
+                                        alt={follower.fullName}
+                                        className="rounded-circle"
+                                        width="50"
+                                        height="50"
+                                      />
+                                      <span className="ml-2">
+                                        {follower.username} ({follower.fullName}
+                                        )
+                                      </span>
+                                    </li>
+                                  ))
+                                )}
+                              </ul>
+                            </>
+                          )}
+                          {activeTabFollower === "following" && (
+                            <>
+                              <ul>
+                                {following.length === 0 ? (
+                                  <p>Không có ai đang theo dõi.</p>
+                                ) : (
+                                  following.map((followed) => (
+                                    <li
+                                      key={followed.user_id}
+                                      className="d-flex align-items-center mb-2 mt-20"
+                                    >
+                                      <img
+                                        src={`http://127.0.0.1:3001/${followed.avatar_url}`}
+                                        alt={followed.fullName}
+                                        className="rounded-circle"
+                                        width="50"
+                                        height="50"
+                                      />
+                                      <span className="ml-2">
+                                        {followed.username} ({followed.fullName}
+                                        )
+                                      </span>
+                                    </li>
+                                  ))
+                                )}
+                              </ul>
+                            </>
+                          )}
+                        </>
+                      )}
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button
+                        variant="secondary"
+                        onClick={() => setShowFollowers(false)}
+                      >
+                        Đóng
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+
                   <Link
                     to="#"
                     onClick={() => setShow(true)}
@@ -305,17 +451,25 @@ const TaiKhoan = () => {
                   ) : (
                     <>
                       {activeTab === "all" && (
-                        <h2 id="list-articles-new">Danh sách tất cả bài viết</h2>
+                        <h2 id="list-articles-new">
+                          Danh sách tất cả bài viết
+                        </h2>
                       )}
                       {activeTab === "pending" && (
-                        <h2 id="list-articles-new">Các bài viết đang chờ duyệt</h2>
+                        <h2 id="list-articles-new">
+                          Các bài viết đang chờ duyệt
+                        </h2>
                       )}
                       {activeTab === "rejected" && (
-                       <h2 id="list-articles-new">Các bài viết bị từ chối</h2>
+                        <h2 id="list-articles-new">Các bài viết bị từ chối</h2>
                       )}
-                      {activeTab === "drafts" && <h2 id="list-articles-new">Các bài viết nháp</h2>}
+                      {activeTab === "drafts" && (
+                        <h2 id="list-articles-new">Các bài viết nháp</h2>
+                      )}
                       {activeTab === "approved" && (
-                        <h2 id="list-articles-new">Các bài viết đã được duyệt</h2>
+                        <h2 id="list-articles-new">
+                          Các bài viết đã được duyệt
+                        </h2>
                       )}
                     </>
                   )}

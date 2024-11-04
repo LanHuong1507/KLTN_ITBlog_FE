@@ -76,10 +76,17 @@ const XuHuong = () => {
     fetchTopTrendings();
   }, []);
 
-  const handlePageChange = (page) => {
-    fetchArticles(page);
-    setCurrentPage(page);
-    window.scroll(0, 0);
+  const handlePageChange = async (page) => {
+    try {
+      await fetchArticles(page);
+      const element = document.getElementById("list-articles-new");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      setCurrentPage(page);
+    } catch (error) {
+      console.error("Error fetching articles:", error);
+    }
   };
 
   return (
@@ -220,53 +227,49 @@ const XuHuong = () => {
                       )}
                     </div>
                   </div>
-                  {articles.length !== 0 ? (
-                    <div className="pagination-area mb-30">
-                      <nav aria-label="Page navigation example">
-                        <ul
-                          style={{
-                            padding: "0",
-                            margin: "0",
-                            listStyle: "none",
-                            display: "flex",
-                          }}
-                        >
-                          {Array.from({ length: totalPages }, (_, index) => (
-                            <li key={index} style={{ margin: "0 5px" }}>
-                              <a
-                                onClick={() => handlePageChange(index + 1)}
-                                onMouseEnter={() => setHoveredPage(index + 1)}
-                                onMouseLeave={() => setHoveredPage(null)}
-                                style={{
-                                  display: "inline-flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  width: "40px",
-                                  height: "40px",
-                                  padding: "0",
-                                  backgroundColor:
-                                    currentPage === index + 1
-                                      ? "#FF2E2E"
-                                      : hoveredPage === index + 1
-                                      ? "#FF4C4C"
-                                      : "transparent",
-                                  color:
-                                    currentPage === index + 1
-                                      ? "white"
-                                      : "black",
-                                  borderRadius: "50%",
-                                  cursor: "pointer",
-                                  textDecoration: "none",
-                                }}
-                              >
-                                {index + 1}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </nav>
-                    </div>
-                  ) : null}
+                  <div className="pagination-area mb-30">
+                    <nav aria-label="Page navigation example">
+                      <ul
+                        style={{
+                          padding: "0",
+                          margin: "0",
+                          listStyle: "none",
+                          display: "flex",
+                        }}
+                      >
+                        {Array.from({ length: totalPages }, (_, index) => (
+                          <li key={index} style={{ margin: "0 5px" }}>
+                            <a
+                              onClick={() => handlePageChange(index + 1)}
+                              onMouseEnter={() => setHoveredPage(index + 1)}
+                              onMouseLeave={() => setHoveredPage(null)}
+                              style={{
+                                display: "inline-flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "40px",
+                                height: "40px",
+                                padding: "0",
+                                backgroundColor:
+                                  currentPage === index + 1
+                                    ? "#FF2E2E"
+                                    : hoveredPage === index + 1
+                                    ? "#FF4C4C"
+                                    : "transparent",
+                                color:
+                                  currentPage === index + 1 ? "white" : "black",
+                                borderRadius: "50%",
+                                cursor: "pointer",
+                                textDecoration: "none",
+                              }}
+                            >
+                              {index + 1}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </nav>
+                  </div>
                 </div>
                 <div className="col-lg-4 col-md-12 sidebar-right">
                   <div className="sidebar-widget mb-50">
