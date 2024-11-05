@@ -14,6 +14,8 @@ import {
   faAnglesRight,
   faCamera,
   faCircleExclamation,
+  faUserPlus,
+  faUserMinus,
 } from "@fortawesome/free-solid-svg-icons";
 
 function getShortDescription(content, length = 100) {
@@ -48,6 +50,7 @@ const TaiKhoan = () => {
   const [loading, setLoading] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [activeTabFollower, setActiveTabFollower] = useState("followers");
+  const [isFollower, setIsFollower] = useState(false);
 
   const fetchUser = async () => {
     try {
@@ -87,6 +90,37 @@ const TaiKhoan = () => {
     e.preventDefault();
     fetchFollowersData();
   };
+
+  const handelFollow = async (username) => {
+    if (!localStorage.getItem("token")) {
+      toast.error("Vui lòng đăng nhập để theo dõi!");
+      return;
+    }
+
+    try {
+      const response = await TaiKhoanServices.follow(username);
+      const newIsFollower = !isFollower;
+      setIsFollower(newIsFollower);
+
+      if (newIsFollower) {
+        const followedUser = followers.find(
+          (follower) => follower.username === username
+        );
+        if (followedUser) {
+          setFollowing((prevFollowing) => [...prevFollowing, followedUser]);
+        }
+        setFollowerCount(followerCount + 1);
+      } else {
+        setFollowing((prevFollowing) =>
+          prevFollowing.filter((followed) => followed.username !== username)
+        );
+        setFollowerCount(followerCount - 1);
+      }
+    } catch (error) {
+      console.error("Error while making the follow/unfollow API call:", error);
+    }
+  };
+
   const fetchArticles = async (page = 1) => {
     try {
       const response = await BaiVietServices.listArticles(page);
@@ -279,7 +313,10 @@ const TaiKhoan = () => {
                         <p>Loading...</p>
                       ) : (
                         <>
-                          <Nav variant="tab-follower" defaultActiveKey="followers">
+                          <Nav
+                            variant="tab-follower"
+                            defaultActiveKey="followers"
+                          >
                             <Nav.Item>
                               <Nav.Link
                                 eventKey="followers"
@@ -291,9 +328,9 @@ const TaiKhoan = () => {
                                   activeTabFollower === "followers"
                                     ? "active"
                                     : ""
-                                } `}
+                                }`}
                               >
-                                Người theo dõi
+                                Người theo dõi ({followers.length})
                               </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
@@ -307,9 +344,9 @@ const TaiKhoan = () => {
                                   activeTabFollower === "following"
                                     ? "active"
                                     : ""
-                                }` }
+                                }`}
                               >
-                                Đang theo dõi
+                                Đang theo dõi ({following.length})
                               </Nav.Link>
                             </Nav.Item>
                           </Nav>
@@ -320,28 +357,61 @@ const TaiKhoan = () => {
                                 {followers.length === 0 ? (
                                   <p>Không có người theo dõi nào.</p>
                                 ) : (
-                                  followers.map((follower) => (
-                                    <li
-                                      key={follower.user_id}
-                                      className="d-flex align-items-center mb-2 mt-20"
-                                    >
-                                      <img
-                                        src={`http://127.0.0.1:3001/${follower.avatar_url}`}
-                                        alt={follower.fullName}
-                                        className="rounded-circle"
-                                        width="50"
-                                        height="50"
-                                      />
-                                      <span className="ml-2">
-                                        {follower.username} ({follower.fullName}
-                                        )
-                                      </span>
-                                    </li>
-                                  ))
+                                  followers.map((follower) => {
+                                    // Check if the user is already following the follower
+                                    const isFollowingBack = following.some(
+                                      (followed) =>
+                                        followed.user_id === follower.user_id
+                                    );
+
+                                    return (
+                                      <li
+                                        key={follower.user_id}
+                                        className="d-flex align-items-center mb-2 mt-20"
+                                      >
+                                        <img
+                                          src={`http://127.0.0.1:3001/${follower.avatar_url}`}
+                                          alt={follower.fullName}
+                                          className="rounded-circle"
+                                          width="50"
+                                          height="50"
+                                        />
+                                        <div className="ml-2">
+                                          <strong>{follower.username}</strong>
+                                          <div>{follower.fullName}</div>
+                                        </div>
+                                        <Link
+                                          onClick={() =>
+                                            handelFollow(follower.username)
+                                          }
+                                          to="#"
+                                          className="ml-auto author-bio-link text-muted"
+                                          style={{ textTransform: "unset" }}
+                                        >
+                                          {isFollowingBack ? (
+                                            <>
+                                              <FontAwesomeIcon
+                                                icon={faUserMinus}
+                                              />{" "}
+                                              Hủy Theo Dõi
+                                            </>
+                                          ) : (
+                                            <>
+                                              <FontAwesomeIcon
+                                                icon={faUserPlus}
+                                              />{" "}
+                                              Theo Dõi
+                                            </>
+                                          )}
+                                        </Link>
+                                      </li>
+                                    );
+                                  })
                                 )}
                               </ul>
                             </>
                           )}
+
                           {activeTabFollower === "following" && (
                             <>
                               <ul>
@@ -360,10 +430,21 @@ const TaiKhoan = () => {
                                         width="50"
                                         height="50"
                                       />
-                                      <span className="ml-2">
-                                        {followed.username} ({followed.fullName}
-                                        )
-                                      </span>
+                                      <div className="ml-2">
+                                        <strong>{followed.username}</strong>
+                                        <div>{followed.fullName}</div>
+                                      </div>
+                                      <Link
+                                        onClick={() =>
+                                          handelFollow(followed.username)
+                                        }
+                                        to="#"
+                                        className="ml-auto author-bio-link text-muted"
+                                        style={{ textTransform: "unset" }}
+                                      >
+                                        <FontAwesomeIcon icon={faUserMinus} />{" "}
+                                        Hủy Theo Dõi
+                                      </Link>
                                     </li>
                                   ))
                                 )}
@@ -373,6 +454,7 @@ const TaiKhoan = () => {
                         </>
                       )}
                     </Modal.Body>
+
                     <Modal.Footer>
                       <Button
                         variant="secondary"
