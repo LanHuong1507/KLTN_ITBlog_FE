@@ -260,7 +260,7 @@ const TaiKhoan = () => {
             <div className="col-lg-8 col-md-12">
               <div className="author-bio border-radius-10 bg-white p-30 mb-50">
                 <div className="author-image mb-30">
-                  <a href="author.html">
+                  <a href={'/tai-khoan'}>
                     <img
                       src={`http://127.0.0.1:3001/${user.avatar_url}`}
                       alt=""
@@ -358,7 +358,6 @@ const TaiKhoan = () => {
                                   <p>Không có người theo dõi nào.</p>
                                 ) : (
                                   followers.map((follower) => {
-                                    // Check if the user is already following the follower
                                     const isFollowingBack = following.some(
                                       (followed) =>
                                         followed.user_id === follower.user_id
@@ -369,6 +368,8 @@ const TaiKhoan = () => {
                                         key={follower.user_id}
                                         className="d-flex align-items-center mb-2 mt-20"
                                       >
+                                        
+                                        <Link className="text-white" to={`/nguoi-dung/${follower.username}`}>
                                         <img
                                           src={`http://127.0.0.1:3001/${follower.avatar_url}`}
                                           alt={follower.fullName}
@@ -376,6 +377,8 @@ const TaiKhoan = () => {
                                           width="50"
                                           height="50"
                                         />
+                                        
+                                        </Link>
                                         <div className="ml-2">
                                           <strong>{follower.username}</strong>
                                           <div>{follower.fullName}</div>
@@ -423,13 +426,16 @@ const TaiKhoan = () => {
                                       key={followed.user_id}
                                       className="d-flex align-items-center mb-2 mt-20"
                                     >
-                                      <img
-                                        src={`http://127.0.0.1:3001/${followed.avatar_url}`}
-                                        alt={followed.fullName}
-                                        className="rounded-circle"
-                                        width="50"
-                                        height="50"
-                                      />
+                                      <Link className="text-white" to={`/nguoi-dung/${followed.username}`}>
+                                        <img
+                                          src={`http://127.0.0.1:3001/${followed.avatar_url}`}
+                                          alt={followed.fullName}
+                                          className="rounded-circle"
+                                          width="50"
+                                          height="50"
+                                        />
+                                        
+                                        </Link>
                                       <div className="ml-2">
                                         <strong>{followed.username}</strong>
                                         <div>{followed.fullName}</div>

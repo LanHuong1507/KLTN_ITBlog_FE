@@ -547,7 +547,7 @@ const TrangChu = () => {
                                     </Link>
                                   </span>
                                   <span className="post-on">
-                                    {article.views.length == 0
+                                    {article.views.length === 0
                                       ? 0
                                       : article.views[0].view_count}{" "}
                                     lượt xem
