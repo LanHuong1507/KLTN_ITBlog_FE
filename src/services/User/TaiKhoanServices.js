@@ -67,6 +67,14 @@ const TaiKhoanServices = {
             throw error;
         }
     },
+    listFollowersAndFollowings: async (id) => {
+        try {
+            const response = await axiosInstance.get(`/followers/${id}/listFollowerAndFollowing`);
+            return response.data; 
+        } catch (error) {
+            throw error;
+        }
+    },
 };
 
 export default TaiKhoanServices;

@@ -6,7 +6,7 @@ const Footer = () => {
 
   return (
     <footer className="main-footer">
-      <strong className='float-left'>&copy; {currentYear} - Trang dành cho <Link to="/">Quản trị viên</Link>.</strong>
+      <strong className='float-left'>&copy; {currentYear} - Trang dành cho <Link to="/admin">Quản trị viên</Link>.</strong>
       <div className="float-right d-none d-sm-inline-block">
         <b>Phiên bản</b> 1.0.0
       </div>

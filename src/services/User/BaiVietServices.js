@@ -58,6 +58,36 @@ const BaiVietServices = {
             throw error;
         }
     },
+
+    // Lấy tổng số lượt like
+    getLike: async (id) => {
+        try {
+            const response = await axiosInstance.get(`/likes/${id}/article`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    // Thực hiện like hoặc bỏ like
+    like: async (id) => {
+        try {
+            const response = await axiosInstance.post(`/likes/${id}/article`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    // Thực hiện kiếm tra đã liked bài viết chưa    
+    liked: async (id) => {
+        try {
+            const response = await axiosInstance.get(`/likes/${id}/liked`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    },
 };
 
 export default BaiVietServices;
