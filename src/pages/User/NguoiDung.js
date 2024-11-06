@@ -11,6 +11,7 @@ import {
   faUserPlus,
   faUserMinus,
 } from "@fortawesome/free-solid-svg-icons";
+import CryptoJS from "crypto-js";
 
 function getShortDescription(content, length = 100) {
   // Loại bỏ các thẻ HTML
@@ -32,6 +33,26 @@ const NguoiDung = () => {
   const [loading, setLoading] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [activeTabFollower, setActiveTabFollower] = useState("followers");
+  const [isAuthor, setIsAuthor] = useState(-1);
+  const decodeJWT = (token) => {
+    const parts = token.split(".");
+    if (parts.length !== 3) {
+      throw new Error("JWT không hợp lệ");
+    }
+
+    const payload = parts[1];
+    const decoded = CryptoJS.enc.Base64.parse(payload);
+    return JSON.parse(decoded.toString(CryptoJS.enc.Utf8));
+  };
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      const decoded = decodeJWT(localStorage.getItem("token"));
+      setIsAuthor(decoded.userId);
+    }
+    fetchArticles();
+    window.scroll(0, 0);
+  }, []);
+  
   const fetchUser = async () => {
     try {
       const response = await TaiKhoanServices.userByUsername(username);
@@ -101,7 +122,7 @@ const NguoiDung = () => {
 
     fetchUser();
     fetchArticles();
-  }, []);
+  }, [username]);
 
   const handelFollow = async () => {
     if (!localStorage.getItem("token")) {
@@ -118,6 +139,7 @@ const NguoiDung = () => {
       }
     }
   };
+  
 
   return (
     <>
@@ -222,33 +244,59 @@ const NguoiDung = () => {
                           {activeTabFollower === "followers" && (
                             <>
                               <ul>
-                                {followers.length === 0 ? (
-                                  <p>Không có người theo dõi nào.</p>
-                                ) : (
-                                  followers.map((follower) => (
-                                    <li
-                                      key={follower.user_id}
-                                      className="d-flex align-items-center mb-2 mt-20"
-                                    >
-                                      <Link
-                                        className="text-white"
-                                        to={`/nguoi-dung/${follower.username}`}
-                                      >
-                                        <img
-                                          src={`http://127.0.0.1:3001/${follower.avatar_url}`}
-                                          alt={follower.fullName}
-                                          className="rounded-circle"
-                                          width="50"
-                                          height="50"
-                                        />
-                                      </Link>
+                                {followers.map((follower) => (
+                                  <li
+                                    key={follower.user_id}
+                                    className="d-flex align-items-center justify-content-between mb-2 mt-20"
+                                  >
+                                    <div className="d-flex align-items-center">
+                                      {follower.user_id === isAuthor ? (
+                                        <Link
+                                          className="text-white"
+                                          to="/tai-khoan"
+                                          onClick={() =>
+                                            setShowFollowers(false)
+                                          }
+                                        >
+                                          <img
+                                            src={`http://127.0.0.1:3001/${follower.avatar_url}`}
+                                            alt={follower.fullName}
+                                            className="rounded-circle"
+                                            width="50"
+                                            height="50"
+                                          />
+                                        </Link>
+                                      ) : (
+                                        <Link
+                                          className="text-white"
+                                          to={`/nguoi-dung/${follower.username}`}
+                                          onClick={() =>
+                                            setShowFollowers(false)
+                                          }
+                                        >
+                                          <img
+                                            src={`http://127.0.0.1:3001/${follower.avatar_url}`}
+                                            alt={follower.fullName}
+                                            className="rounded-circle"
+                                            width="50"
+                                            height="50"
+                                          />
+                                        </Link>
+                                      )}
+
                                       <div className="ml-2">
                                         <strong>{follower.username}</strong>
                                         <div>{follower.fullName}</div>
                                       </div>
-                                    </li>
-                                  ))
-                                )}
+                                    </div>
+
+                                    {follower.user_id === isAuthor && (
+                                      <span className="text-danger mr-8 font-weight-bold">
+                                        YOU
+                                      </span>
+                                    )}
+                                  </li>
+                                ))}
                               </ul>
                             </>
                           )}
@@ -262,24 +310,54 @@ const NguoiDung = () => {
                                   following.map((followed) => (
                                     <li
                                       key={followed.user_id}
-                                      className="d-flex align-items-center mb-2 mt-20"
+                                      className="d-flex align-items-center justify-content-between mb-2 mt-20"
                                     >
-                                      <Link
-                                        className="text-white"
-                                        to={`/nguoi-dung/${followed.username}`}
-                                      >
-                                        <img
-                                          src={`http://127.0.0.1:3001/${followed.avatar_url}`}
-                                          alt={followed.fullName}
-                                          className="rounded-circle"
-                                          width="50"
-                                          height="50"
-                                        />
-                                      </Link>
-                                      <div className="ml-2">
-                                        <strong>{followed.username}</strong>
-                                        <div>{followed.fullName}</div>
+                                      <div className="d-flex align-items-center">
+                                        {followed.user_id === isAuthor ? (
+                                          <Link
+                                            className="text-white"
+                                            to="/tai-khoan"
+                                            onClick={() =>
+                                              setShowFollowers(false)
+                                            }
+                                          >
+                                            <img
+                                              src={`http://127.0.0.1:3001/${followed.avatar_url}`}
+                                              alt={followed.fullName}
+                                              className="rounded-circle"
+                                              width="50"
+                                              height="50"
+                                            />
+                                          </Link>
+                                        ) : (
+                                          <Link
+                                            className="text-white"
+                                            to={`/nguoi-dung/${followed.username}`}
+                                            onClick={() =>
+                                              setShowFollowers(false)
+                                            }
+                                          >
+                                            <img
+                                              src={`http://127.0.0.1:3001/${followed.avatar_url}`}
+                                              alt={followed.fullName}
+                                              className="rounded-circle"
+                                              width="50"
+                                              height="50"
+                                            />
+                                          </Link>
+                                        )}
+
+                                        <div className="ml-2">
+                                          <strong>{followed.username}</strong>
+                                          <div>{followed.fullName}</div>
+                                        </div>
                                       </div>
+
+                                      {followed.user_id === isAuthor && (
+                                        <span className="text-danger mr-8 font-weight-bold">
+                                          YOU
+                                        </span>
+                                      )}
                                     </li>
                                   ))
                                 )}

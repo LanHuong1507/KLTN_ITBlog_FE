@@ -50,7 +50,6 @@ const TaiKhoan = () => {
   const [loading, setLoading] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [activeTabFollower, setActiveTabFollower] = useState("followers");
-  const [isFollower, setIsFollower] = useState(false);
 
   const fetchUser = async () => {
     try {
@@ -99,10 +98,12 @@ const TaiKhoan = () => {
 
     try {
       const response = await TaiKhoanServices.follow(username);
-      const newIsFollower = !isFollower;
-      setIsFollower(newIsFollower);
-
-      if (newIsFollower) {
+      const isCurrentlyFollowing = following.some(
+        (followed) => followed.username === username
+      );
+      console.log(isCurrentlyFollowing);
+      if (isCurrentlyFollowing === false) {
+        // Theo dõi: thêm user vào danh sách following
         const followedUser = followers.find(
           (follower) => follower.username === username
         );
@@ -111,6 +112,7 @@ const TaiKhoan = () => {
         }
         setFollowerCount(followerCount + 1);
       } else {
+        // Hủy theo dõi: xóa user khỏi danh sách following
         setFollowing((prevFollowing) =>
           prevFollowing.filter((followed) => followed.username !== username)
         );
@@ -260,7 +262,7 @@ const TaiKhoan = () => {
             <div className="col-lg-8 col-md-12">
               <div className="author-bio border-radius-10 bg-white p-30 mb-50">
                 <div className="author-image mb-30">
-                  <a href={'/tai-khoan'}>
+                  <a href={"/tai-khoan"}>
                     <img
                       src={`http://127.0.0.1:3001/${user.avatar_url}`}
                       alt=""
@@ -358,6 +360,7 @@ const TaiKhoan = () => {
                                   <p>Không có người theo dõi nào.</p>
                                 ) : (
                                   followers.map((follower) => {
+                                    // Check if the user is already following the follower
                                     const isFollowingBack = following.some(
                                       (followed) =>
                                         followed.user_id === follower.user_id
@@ -368,16 +371,17 @@ const TaiKhoan = () => {
                                         key={follower.user_id}
                                         className="d-flex align-items-center mb-2 mt-20"
                                       >
-                                        
-                                        <Link className="text-white" to={`/nguoi-dung/${follower.username}`}>
-                                        <img
-                                          src={`http://127.0.0.1:3001/${follower.avatar_url}`}
-                                          alt={follower.fullName}
-                                          className="rounded-circle"
-                                          width="50"
-                                          height="50"
-                                        />
-                                        
+                                        <Link
+                                          className="text-white"
+                                          to={`/nguoi-dung/${follower.username}`}
+                                        >
+                                          <img
+                                            src={`http://127.0.0.1:3001/${follower.avatar_url}`}
+                                            alt={follower.fullName}
+                                            className="rounded-circle"
+                                            width="50"
+                                            height="50"
+                                          />
                                         </Link>
                                         <div className="ml-2">
                                           <strong>{follower.username}</strong>
@@ -426,7 +430,10 @@ const TaiKhoan = () => {
                                       key={followed.user_id}
                                       className="d-flex align-items-center mb-2 mt-20"
                                     >
-                                      <Link className="text-white" to={`/nguoi-dung/${followed.username}`}>
+                                      <Link
+                                        className="text-white"
+                                        to={`/nguoi-dung/${followed.username}`}
+                                      >
                                         <img
                                           src={`http://127.0.0.1:3001/${followed.avatar_url}`}
                                           alt={followed.fullName}
@@ -434,8 +441,7 @@ const TaiKhoan = () => {
                                           width="50"
                                           height="50"
                                         />
-                                        
-                                        </Link>
+                                      </Link>
                                       <div className="ml-2">
                                         <strong>{followed.username}</strong>
                                         <div>{followed.fullName}</div>
@@ -836,6 +842,7 @@ const TaiKhoan = () => {
                       <Form.Control
                         type="file"
                         className="d-none"
+                        accept="image/*"
                         onChange={handleAvatarChange}
                       />
                     </Form.Label>

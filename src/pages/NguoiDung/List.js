@@ -63,12 +63,6 @@ const List = () => {
   };
 
   const handleBlock = async (id) => {
-    const userToBlock = data.find((item) => item.user_id === id);
-    if (userToBlock.role === "admin") {
-      toast.error("Không thể cấm người dùng có vai trò quản trị viên.");
-      return;
-    }
-
     try {
       const response = await NguoiDungServices.block(id);
       if (response.status === 200) {
@@ -84,7 +78,6 @@ const List = () => {
         toast.error(response.data.message || "Có lỗi xảy ra.");
       }
     } catch (error) {
-      console.error("Lỗi khi cấm người dùng:", error);
       toast.error("Có lỗi xảy ra khi cấm tài khoản");
     }
   };
@@ -154,8 +147,8 @@ const List = () => {
             <span>
               {" "}
               {item.role === "admin"
-                ? "Chuyển thành Người dùng"
-                : "Chuyển thành Quản trị viên"}
+                ? "Chuyển thành User"
+                : "Chuyển thành Admin"}
             </span>
           </button>
         </div>

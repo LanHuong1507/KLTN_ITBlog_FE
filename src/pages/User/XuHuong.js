@@ -3,6 +3,7 @@ import TrangChuServices from "../../services/User/TrangChuServices";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesRight } from "@fortawesome/free-solid-svg-icons";
+import CryptoJS from "crypto-js";
 
 function getShortDescription(content, length = 100) {
   // Loại bỏ các thẻ HTML
@@ -22,6 +23,25 @@ const XuHuong = () => {
   const [topTrendings, setTopTrendings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hoveredPage, setHoveredPage] = useState(null);
+  const [isAuthor, setIsAuthor] = useState(-1);
+  const decodeJWT = (token) => {
+    const parts = token.split(".");
+    if (parts.length !== 3) {
+      throw new Error("JWT không hợp lệ");
+    }
+
+    const payload = parts[1];
+    const decoded = CryptoJS.enc.Base64.parse(payload);
+    return JSON.parse(decoded.toString(CryptoJS.enc.Utf8));
+  };
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      const decoded = decodeJWT(localStorage.getItem("token"));
+      setIsAuthor(decoded.userId);
+    }
+    fetchArticles();
+    window.scroll(0, 0);
+  }, []);
 
   const fetchArticles = async (page = 1) => {
     try {
@@ -114,7 +134,7 @@ const XuHuong = () => {
                 <div className="col-lg-8 col-md-12">
                   <div className="latest-post mb-50">
                     <div className="loop-list-style-1">
-                      {topTrendings.map((article, index) =>
+                      {articles.map((article, index) =>
                         index === 0 ? (
                           <article
                             key={index}
@@ -146,7 +166,11 @@ const XuHuong = () => {
                                   <span className="post-by">
                                     Đăng bởi{" "}
                                     <Link
-                                      to={`/nguoi-dung/${article.username}`}
+                                      to={
+                                        article.user_id === isAuthor
+                                          ? "/tai-khoan"
+                                          : `/nguoi-dung/${article.username}`
+                                      }
                                     >
                                       {article.fullname}
                                     </Link>
@@ -208,7 +232,11 @@ const XuHuong = () => {
                                   <span className="post-by">
                                     Đăng bởi{" "}
                                     <Link
-                                      to={`/nguoi-dung/${article.username}`}
+                                      to={
+                                        article.user_id === isAuthor
+                                          ? "/tai-khoan"
+                                          : `/nguoi-dung/${article.username}`
+                                      }
                                     >
                                       {article.fullname}
                                     </Link>
@@ -312,7 +340,11 @@ const XuHuong = () => {
                                   <span className="post-by">
                                     Đăng bởi{" "}
                                     <Link
-                                      to={`/nguoi-dung/${article.user.username}`}
+                                      to={
+                                        article.user_id === isAuthor
+                                          ? "/tai-khoan"
+                                          : `/nguoi-dung/${article.user.username}`
+                                      }
                                     >
                                       {article.user.fullname}
                                     </Link>
@@ -364,7 +396,13 @@ const XuHuong = () => {
                               <span className="post-in">TOP {index + 1}</span>
                               <span className="post-by">
                                 Bởi{" "}
-                                <Link to={`/nguoi-dung/${article.username}`}>
+                                <Link
+                                  to={
+                                    article.user_id === isAuthor
+                                      ? "/tai-khoan"
+                                      : `/nguoi-dung/${article.username}`
+                                  }
+                                >
                                   {article.fullname}
                                 </Link>
                               </span>
@@ -392,7 +430,11 @@ const XuHuong = () => {
                           <span className="item-count vertical-align">
                             <Link
                               className="red-tooltip author-avatar"
-                              to={`/nguoi-dung/${comment.user.username}`}
+                              to={
+                                comment.user_id === isAuthor
+                                  ? "/tai-khoan"
+                                  : `/nguoi-dung/${comment.user.username}`
+                              }
                               data-toggle="tooltip"
                               data-placement="top"
                               title={comment.user.fullname}
@@ -413,7 +455,11 @@ const XuHuong = () => {
                               <span className="post-by">
                                 Bởi{" "}
                                 <Link
-                                  to={`/nguoi-dung/${comment.user.username}`}
+                                  to={
+                                    comment.user_id === isAuthor
+                                      ? "/tai-khoan"
+                                      : `/nguoi-dung/${comment.user.username}`
+                                  }
                                 >
                                   {comment.user.fullname}
                                 </Link>
