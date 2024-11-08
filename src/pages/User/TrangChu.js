@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import TrangChuServices from "../../services/User/TrangChuServices";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import CryptoJS from "crypto-js";
 function getShortDescription(content, length = 100) {
   const plainText = content.replace(/<[^>]+>/g, "");
   return plainText.length > length
@@ -25,7 +26,7 @@ const TrangChu = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentTime, setCurrentTime] = useState("");
-
+  const [isAuthor, setIsAuthor] = useState(-1);
   const fetchWeatherData = async () => {
     const city = "Ho Chi Minh City";
 
@@ -74,6 +75,24 @@ const TrangChu = () => {
       console.error("Lỗi khi gọi API:", error);
     }
   };
+  const decodeJWT = (token) => {
+    const parts = token.split(".");
+    if (parts.length !== 3) {
+      throw new Error("JWT không hợp lệ");
+    }
+
+    const payload = parts[1];
+    const decoded = CryptoJS.enc.Base64.parse(payload);
+    return JSON.parse(decoded.toString(CryptoJS.enc.Utf8));
+  };
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      const decoded = decodeJWT(localStorage.getItem("token"));
+      setIsAuthor(decoded.userId);
+    }
+    fetchArticles();
+    window.scroll(0, 0);
+  }, []);
 
   const fetchTopTrendings = async () => {
     try {
@@ -155,9 +174,9 @@ const TrangChu = () => {
       await fetchArticles(page);
       const element = document.getElementById("list-articles-new");
       if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" }); 
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-      setCurrentPage(page); 
+      setCurrentPage(page);
     } catch (error) {
       console.error("Error fetching articles:", error);
     }
@@ -198,7 +217,7 @@ const TrangChu = () => {
                           className="animated-text"
                           style={{
                             color: `hsl(${(index * 30) % 360}, 100%, 50%)`,
-                          }} 
+                          }}
                         >
                           {char}
                         </span>
@@ -348,7 +367,11 @@ const TrangChu = () => {
                                 <div className="post-thumb d-flex mr-15 border-radius-5 img-hover-scale">
                                   <Link
                                     className="color-white"
-                                    to={`/nguoi-dung/${article.username}`}
+                                    to={
+                                      article.user_id === isAuthor
+                                        ? "/tai-khoan"
+                                        : `/nguoi-dung/${article.username}`
+                                    }
                                   >
                                     <img
                                       style={{ height: "50px", width: "50px" }}
@@ -464,7 +487,11 @@ const TrangChu = () => {
                                     <span className="post-by">
                                       Bởi{" "}
                                       <Link
-                                        to={`/nguoi-dung/${article.username}`}
+                                        to={
+                                          article.user_id === isAuthor
+                                            ? "/tai-khoan"
+                                            : `/nguoi-dung/${article.username}`
+                                        }
                                       >
                                         {article.fullname}
                                       </Link>
@@ -541,13 +568,17 @@ const TrangChu = () => {
                                   <span className="post-by">
                                     Đăng bởi{" "}
                                     <Link
-                                      to={`/nguoi-dung/${article.user.username}`}
+                                      to={
+                                        article.user_id === isAuthor
+                                          ? "/tai-khoan"
+                                          : `/nguoi-dung/${article.user.username}`
+                                      }
                                     >
                                       {article.user.fullname}
                                     </Link>
                                   </span>
                                   <span className="post-on">
-                                    {article.views.length == 0
+                                    {article.views.length === 0
                                       ? 0
                                       : article.views[0].view_count}{" "}
                                     lượt xem
@@ -639,7 +670,13 @@ const TrangChu = () => {
                                 <span className="post-in">TOP {index + 1}</span>
                                 <span className="post-by">
                                   Bởi{" "}
-                                  <Link to={`/nguoi-dung/${article.username}`}>
+                                  <Link
+                                    to={
+                                      article.user_id === isAuthor
+                                        ? "/tai-khoan"
+                                        : `/nguoi-dung/${article.username}`
+                                    }
+                                  >
                                     {article.fullname}
                                   </Link>
                                 </span>
@@ -667,7 +704,11 @@ const TrangChu = () => {
                             <span className="item-count vertical-align">
                               <Link
                                 className="red-tooltip author-avatar"
-                                to={`/nguoi-dung/${comment.user.username}`}
+                                to={
+                                  comment.user_id === isAuthor
+                                    ? "/tai-khoan"
+                                    : `/nguoi-dung/${comment.user.username}`
+                                }
                                 data-toggle="tooltip"
                                 data-placement="top"
                                 title={comment.user.fullname}
@@ -688,7 +729,11 @@ const TrangChu = () => {
                                 <span className="post-by">
                                   Bởi{" "}
                                   <Link
-                                    to={`/nguoi-dung/${comment.user.username}`}
+                                    to={
+                                      comment.user_id === isAuthor
+                                        ? "/tai-khoan"
+                                        : `/nguoi-dung/${comment.user.username}`
+                                    }
                                   >
                                     {comment.user.fullname}
                                   </Link>

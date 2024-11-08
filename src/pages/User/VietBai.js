@@ -108,7 +108,6 @@ const VietBai = () => {
       .replace(/\s+/g, "-")
       .replace(/(^-|-$)/g, "");
   };
-
   const validateForm = () => {
     let errors = {};
     let valid = true;
@@ -129,13 +128,10 @@ const VietBai = () => {
       valid = false;
     }
   
-    if (!tags) {
-      errors.tags = "Từ khóa không được để trống.";
-      valid = false;
-    } else if (!/^([a-zA-Z0-9]+)(,\s*[a-zA-Z0-9]+)*$/.test(tags)) {
+    if (tags && !/^([a-zA-Z0-9]+)(,\s*[a-zA-Z0-9]+)*$/.test(tags)) {
       errors.tags =
         "Từ khóa không hợp lệ. Vui lòng sử dụng chữ cái và số, cách nhau bởi dấu ','. Ví dụ: 'tag1, tag2'.";
-      valid = false; // Fix: Set valid to false if tags are invalid
+      valid = false;
     }
   
     if (!content) {
@@ -156,7 +152,6 @@ const VietBai = () => {
     setValidationErrors(errors);
     return valid;
   };  
-
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       navigate("/dang-nhap");

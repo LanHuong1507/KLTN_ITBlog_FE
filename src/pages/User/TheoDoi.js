@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import TrangChuServices from "../../services/User/TrangChuServices";
 import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAnglesRight } from "@fortawesome/free-solid-svg-icons";
+import CryptoJS from "crypto-js";
 
 function getShortDescription(content, length = 100) {
   // Loại bỏ các thẻ HTML
@@ -20,6 +23,25 @@ const TheoDoi = () => {
   const [mostPopular, setMostPopular] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hoveredPage, setHoveredPage] = useState(null);
+  const [isAuthor, setIsAuthor] = useState(-1);
+  const decodeJWT = (token) => {
+    const parts = token.split(".");
+    if (parts.length !== 3) {
+      throw new Error("JWT không hợp lệ");
+    }
+
+    const payload = parts[1];
+    const decoded = CryptoJS.enc.Base64.parse(payload);
+    return JSON.parse(decoded.toString(CryptoJS.enc.Utf8));
+  };
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      const decoded = decodeJWT(localStorage.getItem("token"));
+      setIsAuthor(decoded.userId);
+    }
+    fetchArticles();
+    window.scroll(0, 0);
+  }, []);
 
   const fetchArticles = async (page = 1) => {
     try {
@@ -145,14 +167,20 @@ const TheoDoi = () => {
                               <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase">
                                 <span className="post-by">
                                   Đăng bởi{" "}
-                                  <Link to={`/nguoi-dung/${article.username}`}>
+                                  <Link
+                                    to={
+                                      article.user_id === isAuthor
+                                        ? "/tai-khoan"
+                                        : `/nguoi-dung/${article.username}`
+                                    }
+                                  >
                                     {article.fullname}
                                   </Link>
                                 </span>
                                 <Link to={`/bai-viet/${article.slug}`}>
                                   <span className="mr-10">
-                                    <i className="fa-solid fa-angles-right"></i>{" "}
-                                    Xem Thêm
+                                    <FontAwesomeIcon icon={faAnglesRight} /> Xem
+                                    Thêm
                                   </span>
                                 </Link>
                               </div>
@@ -247,7 +275,11 @@ const TheoDoi = () => {
                                   <span className="post-by">
                                     Đăng bởi{" "}
                                     <Link
-                                      to={`/nguoi-dung/${article.user.username}`}
+                                      to={
+                                        article.user_id === isAuthor
+                                          ? "/tai-khoan"
+                                          : `/nguoi-dung/${article.user.username}`
+                                      }
                                     >
                                       {article.user.fullname}
                                     </Link>
@@ -299,9 +331,15 @@ const TheoDoi = () => {
                               <span className="post-in">TOP {index + 1}</span>
                               <span className="post-by">
                                 Bởi{" "}
-                                <Link to={`/nguoi-dung/${article.username}`}>
-                                  {article.fullname}
-                                </Link>
+                                <Link
+                                      to={
+                                        article.user_id === isAuthor
+                                          ? "/tai-khoan"
+                                          : `/nguoi-dung/${article.username}`
+                                      }
+                                    >
+                                      {article.fullname}
+                                    </Link>
                               </span>
                               <span className="post-on">
                                 {article.total_views} lượt xem
@@ -327,7 +365,11 @@ const TheoDoi = () => {
                           <span className="item-count vertical-align">
                             <Link
                               className="red-tooltip author-avatar"
-                              to={`/nguoi-dung/${comment.user.username}`}
+                              to={
+                                comment.user_id === isAuthor
+                                  ? "/tai-khoan"
+                                  : `/nguoi-dung/${comment.user.username}`
+                              }
                               data-toggle="tooltip"
                               data-placement="top"
                               title={comment.user.fullname}
@@ -348,7 +390,11 @@ const TheoDoi = () => {
                               <span className="post-by">
                                 Bởi{" "}
                                 <Link
-                                  to={`/nguoi-dung/${comment.user.username}`}
+                                  to={
+                                    comment.user_id === isAuthor
+                                      ? "/tai-khoan"
+                                      : `/nguoi-dung/${comment.user.username}`
+                                  }
                                 >
                                   {comment.user.fullname}
                                 </Link>
