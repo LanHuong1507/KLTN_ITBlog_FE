@@ -19,9 +19,19 @@ const ChinhSua = () => {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [isDraft, setIsDraft] = useState(false);
     const navigate = useNavigate();
-
+    const [data, setData] = useState([]);
     const { id } = useParams();
 
+  // Xử lý xóa bài viết
+  const handleDelete = async (id) => {
+    try {
+      const destroy = await BaiVietServices.delete(id);
+      setData(data.filter((item) => item.article_id !== id));
+      toast.success(destroy.data.message);
+    } catch (error) {
+      toast.error("Lỗi khi xóa bài viết");
+    }
+  };
     const getCategories = async () => {
         const response = await ChungServices.list_categories();
         const categoriesOptions = response.data.categories.map((category) => ({
@@ -341,6 +351,7 @@ const ChinhSua = () => {
                                                     <>
                                                         <button className="btn-profile-update btn btn-primary" style={{ zIndex: 0 }} onClick={(e) => handleSubmit(e, 1)}>Lưu Bản Nháp</button>
                                                         <button className="btn-profile-update btn btn-primary float-right" style={{ zIndex: 0 }} onClick={(e) => handleSubmit(e)}>Đăng Bài Viết</button>
+                                                        <button className="btn-profile-update btn btn-danger float-center mt-5"  style={{ zIndex: 0 }} onClick={() => handleDelete(id)}>Xóa Bài Viết</button>
                                                     </>
                                             }
                                             

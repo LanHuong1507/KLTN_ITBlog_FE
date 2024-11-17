@@ -103,7 +103,6 @@ const TaiKhoan = () => {
       );
       console.log(isCurrentlyFollowing);
       if (isCurrentlyFollowing === false) {
-        // Theo dõi: thêm user vào danh sách following
         const followedUser = followers.find(
           (follower) => follower.username === username
         );
@@ -112,7 +111,6 @@ const TaiKhoan = () => {
         }
         setFollowerCount(followerCount + 1);
       } else {
-        // Hủy theo dõi: xóa user khỏi danh sách following
         setFollowing((prevFollowing) =>
           prevFollowing.filter((followed) => followed.username !== username)
         );

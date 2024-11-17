@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import BaiVietServices from "../../services/User/BaiVietServices";
 import TaiKhoanServices from "../../services/User/TaiKhoanServices";
+import BinhLuanServices from "../../services/BinhLuanServices";
 import { toast } from "react-toastify";
 import CryptoJS from "crypto-js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -33,6 +34,7 @@ const colors = [
   "bg-dark",
 ];
 const BaiViet = () => {
+  const [data, setData] = useState([]);
   const [article, setArticle] = useState({});
   const [author, setAuthor] = useState({});
   const [view, setView] = useState(0);
@@ -51,7 +53,17 @@ const BaiViet = () => {
   const [liked, setLiked] = useState(false);
 
   const currentUrl = window.location.href;
-
+  const handleDelete = async (id) => {
+    try {
+      setComments(comments.filter(comment => comment.comment_id !== id));
+      const destroy = await BinhLuanServices.delete(id);
+      toast.success(destroy.data.message);
+    } catch (error) {
+      setComments([...comments]);
+      toast.error("Lỗi khi xóa bình luận");
+    }
+  };
+  
   const fetchArticle = async (slugArticle = slug) => {
     try {
       const response = await BaiVietServices.showArticle(slugArticle);
@@ -669,7 +681,6 @@ const BaiViet = () => {
                   ))}
                 </div>
               </div>
-              {/*Comments*/}
               <div className="comments-area">
                 <h3 className="mb-30" id="list-comments-new">
                   Bình Luận ({comments.length})
@@ -710,6 +721,14 @@ const BaiViet = () => {
                                 )}
                               </p>
                             </div>
+                            {comment.user_id === isAuthor && (
+                              <i
+                                className="fas fa-trash-alt text-danger pl-20"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => handleDelete(comment.comment_id)}
+                                title="Xóa Bình Luận"
+                              ></i>
+                            )}
                           </div>
                         </div>
                       </div>

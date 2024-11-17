@@ -11,12 +11,16 @@ import {
   faPenToSquare,
   faBell,
   faUser,
+  faSun,
+  faMoon,
 } from "@fortawesome/free-regular-svg-icons";
+import { useTheme } from "../../context/ThemeContext";
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -28,19 +32,24 @@ const Header = () => {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
   };
+  const textStyle = {
+    color: theme === "dark" ? "white" : "black",
+  };
 
   return (
     <header
-      className="main-header header-style-2 mb-40"
+      className={`main-header header-style-2 mb-40 ${
+        theme === "dark" ? "dark-theme" : "light-theme"
+      }`}
       style={{
         marginLeft: 0,
         position: "sticky",
         top: 0,
         zIndex: 999,
-        backgroundColor: "white",
+        backgroundColor: theme === "dark" ? "#121212" : "white",
       }}
     >
-      <div className="header-bottom header-sticky background-white text-center">
+      <div className="header-bottom header-sticky text-center">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-2 col-md-3 d-flex justify-content-between align-items-center">
@@ -66,7 +75,7 @@ const Header = () => {
                 <nav>
                   <ul className="main-menu float-right">
                     <li>
-                      <Link to="/">
+                      <Link to="/" style={textStyle}>
                         <span className="mr-15">
                           <FontAwesomeIcon icon={faHouse} />
                         </span>
@@ -74,7 +83,7 @@ const Header = () => {
                       </Link>
                     </li>
                     <li>
-                      <Link to="/xu-huong">
+                      <Link to="/xu-huong" style={textStyle}>
                         <span className="mr-15">
                           <FontAwesomeIcon icon={faArrowTrendUp} />
                         </span>
@@ -88,6 +97,7 @@ const Header = () => {
                             ? "/dang-nhap"
                             : "/theo-doi"
                         }
+                        style={textStyle}
                       >
                         <span className="mr-15">
                           <FontAwesomeIcon icon={faFire} />
@@ -102,7 +112,7 @@ const Header = () => {
                 <form
                   action="#"
                   method="get"
-                  className="search-form position-relative mr-20"
+                  className="search-form position-relative mr-20 border-radius-10"
                   onSubmit={handleSearch}
                 >
                   <input
@@ -112,11 +122,22 @@ const Header = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     name="s"
+                    style={{
+                      color: theme === "dark" ? "white" : "black",
+                      border:
+                        theme === "dark" ? "1px solid #444" : "1px solid #ccc",
+                    }}
                   />
-                  <span className="search-icon">
+                  <span
+                    className="search-icon"
+                    style={{
+                      color: theme === "dark" ? "black" : "black",
+                    }}
+                  >
                     <i className="ti-search mr-5" />
                   </span>
                 </form>
+
                 <div className="d-inline tools-icon">
                   <Link
                     className="red-tooltip text-danger"
@@ -162,6 +183,22 @@ const Header = () => {
                       style={{ fontSize: 20 }}
                     />
                   </Link>
+                  <Link
+                    onClick={toggleTheme}
+                    className="red-tooltip ml-15"
+                    title="Toggle Theme"
+                    style={{
+                      color: theme === "light" ? "black" : "white",
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={theme === "light" ? faMoon : faSun}
+                      style={{
+                        fontSize: 20,
+                        color: theme === "light" ? "black" : "white",
+                      }}
+                    />
+                  </Link>
                 </div>
               </div>
             </div>
@@ -171,7 +208,7 @@ const Header = () => {
               <nav>
                 <ul className="main-menu">
                   <li>
-                    <Link to="/">
+                    <Link to="/" style={textStyle}>
                       <span className="mr-15">
                         <FontAwesomeIcon icon={faHouse} />
                       </span>
@@ -179,7 +216,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/xu-huong">
+                    <Link to="/xu-huong" style={textStyle}>
                       <span className="mr-15">
                         <FontAwesomeIcon icon={faArrowTrendUp} />
                       </span>
@@ -193,6 +230,7 @@ const Header = () => {
                           ? "/dang-nhap"
                           : "/theo-doi"
                       }
+                      style={textStyle}
                     >
                       <span className="mr-15">
                         <FontAwesomeIcon icon={faFire} />
