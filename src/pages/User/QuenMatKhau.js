@@ -19,7 +19,7 @@ const QuenMatKhau = () => {
         e.preventDefault();
         // Handle login logic here (e.g., API call)
         const password_reset = await DangNhapServices.password_reset({ email });
-        if(password_reset.response && password_reset.response.status === 400){
+        if(password_reset.response && password_reset.response.status !== 200){
           //Hiển thị thông báo login.response.data.message
           toast.error(password_reset.response.data.message);
         }else{

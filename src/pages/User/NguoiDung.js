@@ -170,6 +170,10 @@ const NguoiDung = () => {
 
   const handlePageChange = (page) => {
     fetchArticles(page);
+    const element = document.getElementById("list-articles-new");
+    if (element) {
+      element.scrollIntoView({ behavior: "instant", block: "start" });
+    }
   };
 
   useEffect(() => {
@@ -419,45 +423,47 @@ const NguoiDung = () => {
                                         </div>
                                       </div>
                                       {followed.user_id !== isAuthor && (
-                                       <div className="d-flex align-items-center">
-                                       <Link
-                                         onClick={() => {
-                                           if (
-                                             isFollowedByAuthor(
-                                               followed.user_id
-                                             )
-                                           ) {
-                                             handleUnfollow(followed.username); // If already followed, call unfollow
-                                           } else {
-                                             handleFollow(
-                                               followed.username,
-                                               followed.user_id
-                                             ); // Otherwise, follow
-                                           }
-                                         }}
-                                         to="#"
-                                         className="ml-auto author-bio-link text-muted"
-                                         style={{ textTransform: "unset" }}
-                                       >
-                                         {isFollowedByAuthor(
-                                           followed.user_id
-                                         ) ? (
-                                           <>
-                                             <FontAwesomeIcon
-                                               icon={faUserMinus}
-                                             />{" "}
-                                             Hủy Theo Dõi
-                                           </>
-                                         ) : (
-                                           <>
-                                             <FontAwesomeIcon
-                                               icon={faUserPlus}
-                                             />{" "}
-                                             Theo Dõi
-                                           </>
-                                         )}
-                                       </Link>
-                                     </div>
+                                        <div className="d-flex align-items-center">
+                                          <Link
+                                            onClick={() => {
+                                              if (
+                                                isFollowedByAuthor(
+                                                  followed.user_id
+                                                )
+                                              ) {
+                                                handleUnfollow(
+                                                  followed.username
+                                                ); // If already followed, call unfollow
+                                              } else {
+                                                handleFollow(
+                                                  followed.username,
+                                                  followed.user_id
+                                                ); // Otherwise, follow
+                                              }
+                                            }}
+                                            to="#"
+                                            className="ml-auto author-bio-link text-muted"
+                                            style={{ textTransform: "unset" }}
+                                          >
+                                            {isFollowedByAuthor(
+                                              followed.user_id
+                                            ) ? (
+                                              <>
+                                                <FontAwesomeIcon
+                                                  icon={faUserMinus}
+                                                />{" "}
+                                                Hủy Theo Dõi
+                                              </>
+                                            ) : (
+                                              <>
+                                                <FontAwesomeIcon
+                                                  icon={faUserPlus}
+                                                />{" "}
+                                                Theo Dõi
+                                              </>
+                                            )}
+                                          </Link>
+                                        </div>
                                       )}
 
                                       {followed.user_id === isAuthor && (
@@ -531,7 +537,11 @@ const NguoiDung = () => {
                   </div>
                 </div>
               </div>
-              <h2>Danh sách bài viết</h2>
+              {articles.length == 0 ? (
+                <h2>Chưa có bài viết</h2>
+              ) : (
+                <h2 id="list-articles-new">Danh sách bài viết</h2>
+              )}
               <hr className="wp-block-separator is-style-wide" />
               <div className="latest-post mb-50">
                 <div className="loop-list-style-1">
