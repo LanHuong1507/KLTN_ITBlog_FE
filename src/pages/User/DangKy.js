@@ -3,6 +3,7 @@ import DangKyServices from "../../services/User/DangKyServices";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTheme } from "../../context/ThemeContext";
 
 const DangKy = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const DangKy = () => {
     password: "",
     confirmPassword: "",
   });
-
+  const { theme } = useTheme();
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/tai-khoan");
@@ -29,7 +30,7 @@ const DangKy = () => {
   }, [navigate]);
 
   const usernameRegex = /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/;
-  const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/; // Updated regex for email
+  const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const fullnameRegex = /^[A-ZÀ-Ý][a-zà-ỹ]+(\s[A-ZÀ-Ý][a-zà-ỹ]+)*$/;
 
   const validatePassword = (password) => {
@@ -47,7 +48,7 @@ const DangKy = () => {
         Math.floor(Math.random() * characters.length)
       );
     }
-    setCaptchaText(captcha); 
+    setCaptchaText(captcha);
     return captcha;
   };
 
@@ -59,12 +60,12 @@ const DangKy = () => {
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    const padding = 10; 
+    const padding = 10;
     const totalWidth =
       captchaText.length * 30 + padding * (captchaText.length - 1);
-    const startX = (canvasRef.current.width - totalWidth) / 2; 
+    const startX = (canvasRef.current.width - totalWidth) / 2;
     for (let i = 0; i < captchaText.length; i++) {
-      const x = startX + i * (30 + padding); 
+      const x = startX + i * (30 + padding);
       const y = canvasRef.current.height / 2;
       ctx.save();
       ctx.translate(x, y);
@@ -82,7 +83,7 @@ const DangKy = () => {
     event.preventDefault();
     if (captchaAnswer !== captchaText) {
       toast.error("Câu trả lời CAPTCHA không chính xác!");
-      drawCaptcha(); 
+      drawCaptcha();
       return;
     }
     setErrorMessages({
@@ -93,7 +94,6 @@ const DangKy = () => {
       confirmPassword: "",
     });
 
-    // Check for empty fields
     if (!fullname || !username || !email || !password || !confirmPassword) {
       toast.error("Vui lòng nhập đầy đủ thông tin.");
       return;
@@ -166,7 +166,13 @@ const DangKy = () => {
         <div className="archive-header text-center mb-30">
           <div className="container">
             <h2>
-              <span className="text-dark">Đăng Ký</span>
+              <span
+                style={{
+                  color: theme === "dark" ? "#fff" : "#333",
+                }}
+              >
+                Đăng Ký
+              </span>
             </h2>
             <div className="breadcrumb">Tạo tài khoản để truy cập hệ thống</div>
           </div>
@@ -301,8 +307,20 @@ const DangKy = () => {
               </button>
             </div>
             <div className="form-group mt-25 w-100">
-              <div className="text-center">
-                Đã có tài khoản? <Link to="/dang-nhap">Đăng Nhập</Link>
+              <div
+                className="text-center"
+                style={{ color: theme === "dark" ? "#fff" : "#333" }}
+              >
+                Đã có tài khoản?{" "}
+                <Link
+                  to="/dang-nhap"
+                  style={{
+                    color: theme === "dark" ? "#fff" : "#333",
+                    hover: { color: theme === "dark" ? "#fff" : "#333" },
+                  }}
+                >
+                  Đăng Nhập
+                </Link>
               </div>
             </div>
           </form>
