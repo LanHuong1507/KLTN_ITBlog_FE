@@ -3,6 +3,8 @@ import TrangChuServices from "../../services/User/TrangChuServices";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import { useTheme } from "../../context/ThemeContext";
+
 function getShortDescription(content, length = 100) {
   const plainText = content.replace(/<[^>]+>/g, "");
   return plainText.length > length
@@ -27,11 +29,12 @@ const TrangChu = () => {
   const [error, setError] = useState("");
   const [currentTime, setCurrentTime] = useState("");
   const [isAuthor, setIsAuthor] = useState(-1);
+  const { theme } = useTheme();
+
   const fetchWeatherData = async () => {
     const city = "Ho Chi Minh City";
 
     try {
-      // Using wttr.in to get weather information
       const response = await axios.get(`https://wttr.in/${city}?format=%t+%C`);
       const data = response.data.split(" ");
       const temp = data[0];
@@ -184,14 +187,26 @@ const TrangChu = () => {
 
   return (
     <>
-      <div className="main-wrap">
+      <div
+        className={`main-wrap ${
+          theme === "dark" ? "dark-theme" : "light-theme"
+        }`}
+      >
         <main className="position-relative">
           <div className="container">
             <div className="row">
               <div className="col-lg-12 col-md-12 order-1 order-md-2">
                 <div className="row">
                   <div className="col-lg-2 col-md-3 primary-sidebar sticky-sidebar sidebar-left">
-                    <h4 className="widget-title mb-30">Thời Tiết</h4>
+                    <h4
+                      className="widget-title mb-30"
+                      style={{
+                        color: theme === "dark" ? "white" : "black",
+                      }}
+                    >
+                      Thời Tiết
+                    </h4>
+
                     <div className="sidebar-widget widget-weather border-radius-10 bg-white mb-30">
                       <p className="text-success mb-10">
                         <strong>Thành Phố Hồ Chí Minh</strong>
@@ -227,9 +242,22 @@ const TrangChu = () => {
                   <div className="col-lg-6 col-md-12">
                     {/* Featured posts */}
                     <div className="featured-post mb-50">
-                      <h4 className="widget-title mb-30">
-                        Nổi Bật <span>Trong Ngày</span>
+                      <h4
+                        className="widget-title mb-30"
+                        style={{
+                          color: theme === "dark" ? "white" : "black",
+                        }}
+                      >
+                        Nổi Bật{" "}
+                        <span
+                          style={{
+                            color: theme === "dark" ? "white" : "black",
+                          }}
+                        >
+                          Trong Ngày
+                        </span>
                       </h4>
+
                       <div className="featured-slider-1 border-radius-10">
                         <div className="featured-slider-1-items">
                           <div className="slider-single p-10">
@@ -302,8 +330,20 @@ const TrangChu = () => {
                       <div className="widget-header position-relative mb-20">
                         <div className="row">
                           <div className="col-7">
-                            <h5 className="widget-title mb-0">
-                              Top <span>Chuyên Mục</span>
+                            <h5
+                              className="widget-title mb-0"
+                              style={{
+                                color: theme === "dark" ? "white" : "black",
+                              }}
+                            >
+                              Top{" "}
+                              <span
+                                style={{
+                                  color: theme === "dark" ? "white" : "black",
+                                }}
+                              >
+                                Chuyên Mục
+                              </span>
                             </h5>
                           </div>
                         </div>
@@ -314,9 +354,17 @@ const TrangChu = () => {
                             <div
                               key={index}
                               className="slider-single col-md-6 mb-30"
+                              style={{
+                                color: theme === "dark" ? "white" : "black",
+                              }}
                             >
                               <div className="img-hover-scale border-radius-10">
-                                <span className="top-right-icon background10">
+                                <span
+                                  className="top-right-icon background10"
+                                  style={{
+                                    color: theme === "dark" ? "white" : "black",
+                                  }}
+                                >
                                   <i className="mdi mdi-share" />
                                 </span>
                                 <Link to={`/chuyen-muc/${category.slug}`}>
@@ -324,12 +372,25 @@ const TrangChu = () => {
                                     className="border-radius-10"
                                     src={`http://127.0.0.1:3001/${category.image_url}`}
                                     alt="post-slider"
-                                    style={{ height: "250px", width: "100%" }}
+                                    style={{
+                                      height: "250px",
+                                      width: "100%",
+                                    }}
                                   />
                                 </Link>
                               </div>
-                              <h5 className="post-title pr-5 pl-5 mb-10 mt-15 text-limit-2-row">
-                                <Link to={`/chuyen-muc/${category.slug}`}>
+                              <h5
+                                className="post-title pr-5 pl-5 mb-10 mt-15 text-limit-2-row"
+                                style={{
+                                  color: theme === "dark" ? "white" : "black",
+                                }}
+                              >
+                                <Link
+                                  to={`/chuyen-muc/${category.slug}`}
+                                  style={{
+                                    color: theme === "dark" ? "white" : "black",
+                                  }}
+                                >
                                   {category.name}
                                 </Link>
                               </h5>
@@ -337,7 +398,13 @@ const TrangChu = () => {
                                 <span>
                                   Số bài viết: {category.article_count} bài
                                 </span>
-                                <a className="float-right" href="#">
+                                <a
+                                  className="float-right"
+                                  href="#"
+                                  style={{
+                                    color: theme === "dark" ? "white" : "black",
+                                  }}
+                                >
                                   <i className="ti-bookmark" />
                                 </a>
                               </div>
@@ -353,13 +420,25 @@ const TrangChu = () => {
                       <div className="widget-header position-relative mb-30">
                         <div className="row">
                           <div className="col-7">
-                            <h4 className="widget-title mb-0">
-                              Top <span>Tương Tác</span>
+                            <h4
+                              className="widget-title mb-0"
+                              style={{
+                                color: theme === "dark" ? "white" : "black",
+                              }}
+                            >
+                              Top{" "}
+                              <span
+                                style={{
+                                  color: theme === "dark" ? "white" : "black",
+                                }}
+                              >
+                                Tương Tác
+                              </span>
                             </h4>
                           </div>
                         </div>
                       </div>
-                      <div className="post-aside-style-1 border-radius-10 p-20 bg-white">
+                      <div className="post-aside-style-1 border-radius-10 p-20">
                         <ul className="list-post">
                           {topInteracts.map((article, index) => (
                             <li key={index} className="mb-20">
@@ -381,7 +460,13 @@ const TrangChu = () => {
                                   </Link>
                                 </div>
                                 <div className="post-content media-body">
-                                  <h6 className="post-title mb-5 text-limit-2-row">
+                                  <h6
+                                    className="post-title mb-5 mt-2 text-limit-2-row"
+                                    style={{
+                                      color:
+                                        theme === "dark" ? "white" : "black",
+                                    }}
+                                  >
                                     <Link to={`/bai-viet/${article.slug}`}>
                                       {article.title}
                                     </Link>
@@ -395,10 +480,30 @@ const TrangChu = () => {
                     </div>
                     {/*Top authors*/}
                     <div className="sidebar-widget mb-30">
-                      <div className="widget-top-auhor border-radius-10 p-20 bg-white">
-                        <div className="widget-header widget-header-style-1 position-relative mb-15">
-                          <h5 className="widget-title pl-5">
-                            Tác Giả <span>Mới</span>
+                      <div className="widget-top-auhor border-radius-10 p-20">
+                        <div
+                          className="widget-header widget-header-style-1 position-relative mb-15"
+                          style={{
+                            borderBottom:
+                              theme === "dark"
+                                ? "1px solid #444"
+                                : "1px solid #ddd",
+                          }}
+                        >
+                          <h5
+                            className="widget-title pl-5"
+                            style={{
+                              color: theme === "dark" ? "white" : "black",
+                            }}
+                          >
+                            Tác Giả{" "}
+                            <span
+                              style={{
+                                color: theme === "dark" ? "white" : "black",
+                              }}
+                            >
+                              Mới
+                            </span>
                           </h5>
                         </div>
                         {newUsers.map((user, index) => (
@@ -408,24 +513,43 @@ const TrangChu = () => {
                             data-toggle="tooltip"
                             data-placement="top"
                             title={user.fullname}
-                            data-original-title="Emma - 1034 posts"
                             key={index}
                           >
                             <img
                               src={`http://127.0.0.1:3001/${user.avatar_url}`}
                               alt=""
+                              style={{
+                                borderRadius: "50%",
+                              }}
                             />
                           </Link>
                         ))}
                       </div>
                     </div>
+
                     {/*Newsletter*/}
-                    <div className="sidebar-widget widget_newsletter border-radius-10 p-20 bg-white mb-30">
+                    <div
+                      className={`sidebar-widget widget_newsletter border-radius-10 p-20 mb-30 ${
+                        theme === "dark" ? "dark-theme" : "light-theme"
+                      }`}
+                    >
                       <div className="widget-header widget-header-style-1 position-relative mb-15">
-                        <h5 className="widget-title">Đăng Ký Nhận Tin</h5>
+                        <h5
+                          className="widget-title"
+                          style={{
+                            color: theme === "dark" ? "white" : "black",
+                          }}
+                        >
+                          Đăng Ký Nhận Tin
+                        </h5>
                       </div>
                       <div className="newsletter">
-                        <p className="font-medium">
+                        <p
+                          className="font-medium"
+                          style={{
+                            color: theme === "dark" ? "white" : "black",
+                          }}
+                        >
                           Đăng ký để không bỏ lỡ tin tức mới
                         </p>
                         <form
@@ -441,8 +565,20 @@ const TrangChu = () => {
                                 name="EMAIL"
                                 placeholder="Nhập email của bạn"
                                 required=""
+                                style={{
+                                  backgroundColor:
+                                    theme === "dark" ? "#333" : "white",
+                                  color: theme === "dark" ? "white" : "black",
+                                  borderColor:
+                                    theme === "dark" ? "white" : "#ccc",
+                                }}
                               />
-                              <button type="submit">
+                              <button
+                                type="submit"
+                                style={{
+                                  color: theme === "dark" ? "white" : "red",
+                                }}
+                              >
                                 <i className="ti ti-email" />
                               </button>
                             </div>
@@ -450,10 +586,14 @@ const TrangChu = () => {
                         </form>
                       </div>
                     </div>
-                    {/*Social*/}
                     <div className="sidebar-widget">
                       <div className="widget-header mb-30">
-                        <h5 className="widget-title">
+                        <h5
+                          className="widget-title pl-5"
+                          style={{
+                            color: theme === "dark" ? "white" : "black",
+                          }}
+                        >
                           Đang <span>Xu Hướng</span>
                         </h5>
                       </div>
@@ -478,12 +618,23 @@ const TrangChu = () => {
                                   </Link>
                                 </div>
                                 <div className="post-content media-body">
-                                  <h6 className="post-title mb-10 text-limit-2-row">
+                                  <h6
+                                    className="post-title mb-10 text-limit-2-row"
+                                    style={{
+                                      color:
+                                        theme === "dark" ? "white" : "#333",
+                                    }}
+                                  >
                                     <Link to={`/bai-viet/${article.slug}`}>
                                       {article.title}
                                     </Link>
                                   </h6>
-                                  <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase">
+                                  <div
+                                    className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase"
+                                    style={{
+                                      color: theme === "dark" ? "#bbb" : "#777",
+                                    }}
+                                  >
                                     <span className="post-by">
                                       Bởi{" "}
                                       <Link
@@ -492,6 +643,10 @@ const TrangChu = () => {
                                             ? "/tai-khoan"
                                             : `/nguoi-dung/${article.username}`
                                         }
+                                        style={{
+                                          color:
+                                            theme === "dark" ? "#fff" : "#333", // User link color
+                                        }}
                                       >
                                         {article.fullname}
                                       </Link>
@@ -639,7 +794,12 @@ const TrangChu = () => {
                   <div className="col-lg-4 col-md-12 sidebar-right">
                     <div className="sidebar-widget mb-50">
                       <div className="widget-header mb-30">
-                        <h5 className="widget-title">
+                        <h5
+                          className="widget-title"
+                          style={{
+                            color: theme === "dark" ? "white" : "black",
+                          }}
+                        >
                           Đang <span>Phổ Biến</span>
                         </h5>
                       </div>
@@ -647,7 +807,10 @@ const TrangChu = () => {
                         {mostPopular.map((article, index) => (
                           <article
                             key={index}
-                            className="bg-white border-radius-15 mb-30 p-10 wow fadeIn animated"
+                            className="border-radius-15 mb-30 p-10 wow fadeIn animated"
+                            style={{
+                              color: theme === "dark" ? "white" : "black", // Text color based on theme
+                            }}
                           >
                             <div className="post-thumb d-flex mb-15 border-radius-15 img-hover-scale">
                               <Link
@@ -655,18 +818,36 @@ const TrangChu = () => {
                                 style={{ width: "100%" }}
                               >
                                 <img
-                                  style={{ height: "250px", width: "100%" }}
+                                  style={{
+                                    height: "250px",
+                                    width: "100%",
+                                    filter:
+                                      theme === "dark"
+                                        ? "brightness(0.7)"
+                                        : "none",
+                                  }}
                                   src={`http://127.0.0.1:3001/${article.image_url}`}
+                                  alt={article.title}
                                 />
                               </Link>
                             </div>
                             <div className="pl-10 pr-10">
-                              <h5 className="post-title mb-15">
+                              <h5
+                                className="post-title mb-15"
+                                style={{
+                                  color: theme === "dark" ? "white" : "#333", // Title color based on theme
+                                }}
+                              >
                                 <Link to={`/bai-viet/${article.slug}`}>
                                   {article.title}
                                 </Link>
                               </h5>
-                              <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase mb-10">
+                              <div
+                                className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase mb-10"
+                                style={{
+                                  color: theme === "dark" ? "#bbb" : "#777", // Meta text color based on theme
+                                }}
+                              >
                                 <span className="post-in">TOP {index + 1}</span>
                                 <span className="post-by">
                                   Bởi{" "}
@@ -676,6 +857,9 @@ const TrangChu = () => {
                                         ? "/tai-khoan"
                                         : `/nguoi-dung/${article.username}`
                                     }
+                                    style={{
+                                      color: theme === "dark" ? "#fff" : "#333", // User link color based on theme
+                                    }}
                                   >
                                     {article.fullname}
                                   </Link>

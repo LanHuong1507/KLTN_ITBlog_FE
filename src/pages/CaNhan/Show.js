@@ -3,6 +3,8 @@ import ContentHeader from '../../components/ContentHeader';
 import { Link, useNavigate } from 'react-router-dom';
 import NguoiDungServices from '../../services/NguoiDungServices';
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
 
 const Show = () => {
   const [fullname, setFulname] = useState('');
@@ -96,7 +98,7 @@ const Show = () => {
                       htmlFor='avatar'
                       style={{ fontWeight: '500', cursor: 'pointer' }}
                     >
-                      Chọn Ảnh
+                      <FontAwesomeIcon icon={faCamera} /> Chọn ảnh
                     </label>
                     <input
                       type='file'
@@ -142,7 +144,7 @@ const Show = () => {
                       <label htmlFor='name'>Email</label>
                       <input
                         type='text'
-                        className='form-control bg-white '
+                        className='form-control bg-white'
                         id='email'
                         name='email'
                         value={email ?? ''}

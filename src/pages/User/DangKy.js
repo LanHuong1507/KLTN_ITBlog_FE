@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import DangKyServices from "../../services/User/DangKyServices";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTheme } from "../../context/ThemeContext";
 
 const DangKy = () => {
   const navigate = useNavigate();
@@ -10,8 +12,9 @@ const DangKy = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  // State for error messages
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
+  const [captchaText, setCaptchaText] = useState("");
+  const canvasRef = useRef(null);
   const [errorMessages, setErrorMessages] = useState({
     fullname: "",
     username: "",
@@ -19,7 +22,7 @@ const DangKy = () => {
     password: "",
     confirmPassword: "",
   });
-
+  const { theme } = useTheme();
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/tai-khoan");
@@ -27,7 +30,7 @@ const DangKy = () => {
   }, [navigate]);
 
   const usernameRegex = /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/;
-  const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/; // Updated regex for email
+  const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const fullnameRegex = /^[A-ZÀ-Ý][a-zà-ỹ]+(\s[A-ZÀ-Ý][a-zà-ỹ]+)*$/;
 
   const validatePassword = (password) => {
@@ -35,11 +38,54 @@ const DangKy = () => {
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     return regex.test(password);
   };
+  const generateCaptcha = () => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const captchaLength = Math.floor(Math.random() * 3) + 4;
+    let captcha = "";
+    for (let i = 0; i < captchaLength; i++) {
+      captcha += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    setCaptchaText(captcha);
+    return captcha;
+  };
+
+  const drawCaptcha = () => {
+    const captchaText = generateCaptcha();
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    const padding = 10;
+    const totalWidth =
+      captchaText.length * 30 + padding * (captchaText.length - 1);
+    const startX = (canvasRef.current.width - totalWidth) / 2;
+    for (let i = 0; i < captchaText.length; i++) {
+      const x = startX + i * (30 + padding);
+      const y = canvasRef.current.height / 2;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(Math.random() * 0.5 - 0.25);
+      ctx.fillText(captchaText.charAt(i), 0, 0);
+      ctx.restore();
+    }
+  };
+
+  useEffect(() => {
+    drawCaptcha();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Reset error messages
+    if (captchaAnswer !== captchaText) {
+      toast.error("Câu trả lời CAPTCHA không chính xác!");
+      drawCaptcha();
+      return;
+    }
     setErrorMessages({
       fullname: "",
       username: "",
@@ -48,15 +94,12 @@ const DangKy = () => {
       confirmPassword: "",
     });
 
-    // Check for empty fields
     if (!fullname || !username || !email || !password || !confirmPassword) {
       toast.error("Vui lòng nhập đầy đủ thông tin.");
       return;
     }
 
     let hasError = false;
-
-    // Validate each field
     if (!fullnameRegex.test(fullname)) {
       setErrorMessages((prev) => ({
         ...prev,
@@ -102,15 +145,13 @@ const DangKy = () => {
     }
 
     if (hasError) return;
-
-    // Perform registration
     const register = await DangKyServices.register({
       fullname,
       username,
       email,
       password,
+      confirmPassword,
     });
-
     if (register.response && register.response.status === 400) {
       toast.error(register.response.data.message);
     } else {
@@ -125,7 +166,13 @@ const DangKy = () => {
         <div className="archive-header text-center mb-30">
           <div className="container">
             <h2>
-              <span className="text-dark">Đăng Ký</span>
+              <span
+                style={{
+                  color: theme === "dark" ? "#fff" : "#333",
+                }}
+              >
+                Đăng Ký
+              </span>
             </h2>
             <div className="breadcrumb">Tạo tài khoản để truy cập hệ thống</div>
           </div>
@@ -141,13 +188,14 @@ const DangKy = () => {
               <div className="col-sm-12">
                 <div className="form-group">
                   <input
-                    className="form-control"
+                    className="form-control border-radius-15"
                     name="fullname"
                     id="fullname"
                     type="text"
                     placeholder="Họ tên"
                     value={fullname}
                     onChange={(e) => setFullname(e.target.value)}
+                    required
                   />
                   {errorMessages.fullname && (
                     <small className="text-danger">
@@ -159,13 +207,14 @@ const DangKy = () => {
               <div className="col-sm-12">
                 <div className="form-group">
                   <input
-                    className="form-control"
+                    className="form-control border-radius-15"
                     name="email"
                     id="email"
                     type="email"
                     placeholder="Nhập email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
                   {errorMessages.email && (
                     <small className="text-danger">{errorMessages.email}</small>
@@ -175,13 +224,14 @@ const DangKy = () => {
               <div className="col-sm-12">
                 <div className="form-group">
                   <input
-                    className="form-control"
+                    className="form-control border-radius-15"
                     name="username"
                     id="username"
                     type="text"
                     placeholder="Nhập tài khoản"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    required
                   />
                   {errorMessages.username && (
                     <small className="text-danger">
@@ -193,13 +243,14 @@ const DangKy = () => {
               <div className="col-sm-12">
                 <div className="form-group">
                   <input
-                    className="form-control"
+                    className="form-control border-radius-15"
                     name="password"
                     id="password"
                     type="password"
                     placeholder="Nhập mật khẩu"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required
                   />
                   {errorMessages.password && (
                     <small className="text-danger">
@@ -211,19 +262,42 @@ const DangKy = () => {
               <div className="col-sm-12">
                 <div className="form-group">
                   <input
-                    className="form-control"
+                    className="form-control border-radius-15"
                     name="confirmPassword"
                     id="confirmPassword"
                     type="password"
                     placeholder="Xác nhận mật khẩu"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
                   />
                   {errorMessages.confirmPassword && (
                     <small className="text-danger">
                       {errorMessages.confirmPassword}
                     </small>
                   )}
+                </div>
+              </div>
+              <div className="col-sm-12 mt-15">
+                <div className="form-group d-flex align-items-center">
+                  <canvas
+                    ref={canvasRef}
+                    width="250"
+                    height="50"
+                    style={{
+                      border: "1px solid #ccc",
+                      background: "white",
+                      borderRadius: 15,
+                    }}
+                  />
+                  <input
+                    className="form-control ml-3"
+                    type="text"
+                    placeholder="Nhập câu trả lời CAPTCHA"
+                    value={captchaAnswer}
+                    onChange={(e) => setCaptchaAnswer(e.target.value)}
+                    style={{ maxWidth: "200px" }}
+                  />
                 </div>
               </div>
             </div>
@@ -233,8 +307,20 @@ const DangKy = () => {
               </button>
             </div>
             <div className="form-group mt-25 w-100">
-              <div className="text-center">
-                Đã có tài khoản? <Link to="/dang-nhap">Đăng Nhập</Link>
+              <div
+                className="text-center"
+                style={{ color: theme === "dark" ? "#fff" : "#333" }}
+              >
+                Đã có tài khoản?{" "}
+                <Link
+                  to="/dang-nhap"
+                  style={{
+                    color: theme === "dark" ? "#fff" : "#333",
+                    hover: { color: theme === "dark" ? "#fff" : "#333" },
+                  }}
+                >
+                  Đăng Nhập
+                </Link>
               </div>
             </div>
           </form>
@@ -243,5 +329,4 @@ const DangKy = () => {
     </>
   );
 };
-
 export default DangKy;

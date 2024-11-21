@@ -6,6 +6,7 @@ import NguoiDungRoutes from './NguoiDungRoutes';
 import CaNhanRoutes from './CaNhanRoutes';
 import BinhLuanRoutes from './BinhLuanRoutes';
 import DangNhapRoutes from './DangNhapRoutes';
+import ThongKeRoutes from './ThongKeRoutes';
 
 import TrangChuRoutes from './User/TrangChuRoutes'
 import UserDangNhapRoutes from './User/DangNhapRoutes'
@@ -20,6 +21,8 @@ import ChinhSuaRoutes from './User/ChinhSuaRoutes'
 import TheoDoiRoutes from './User/TheoDoiRoutes'
 import UserChuyenMucRoutes from './User/ChuyenMucRoutes'
 import Page404Routes from './User/Page404Routes'
+import QuenMatKhauRoutes from './User/QuenMatKhauRoutes'
+import MatKhauMoiRoutes from './User/MatKhauMoiRoutes'
 
 
 const AppRoutes = () => {
@@ -31,6 +34,7 @@ const AppRoutes = () => {
       <Route path="admin/ca-nhan/*" element={<CaNhanRoutes />} />
       <Route path="admin/binh-luan/*" element={<BinhLuanRoutes />} />
       <Route path="admin/dang-nhap/" element={<DangNhapRoutes />} />
+      <Route path="admin/*" element={<ThongKeRoutes />} />
 
       <Route path="/" element={<TrangChuRoutes />} />
       <Route path="/dang-nhap" element={<UserDangNhapRoutes />} />
@@ -44,6 +48,8 @@ const AppRoutes = () => {
       <Route path="/chinh-sua/*" element={<ChinhSuaRoutes />} />
       <Route path="/theo-doi/*" element={<TheoDoiRoutes />} />
       <Route path="/chuyen-muc/*" element={<UserChuyenMucRoutes />} />
+      <Route path="/quen-mat-khau/*" element={<QuenMatKhauRoutes />} />
+      <Route path="/doi-mat-khau/*" element={<MatKhauMoiRoutes />} />
       <Route path="/404/*" element={<Page404Routes />} />
     </Routes>
   );

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ChungServices from "../../services/ChungServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHouse,
@@ -11,12 +12,56 @@ import {
   faPenToSquare,
   faBell,
   faUser,
+  faSun,
+  faMoon,
+  faTrashCan,
 } from "@fortawesome/free-regular-svg-icons";
+import { toast } from "react-toastify";
+import { useTheme } from "../../context/ThemeContext";
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
+
+  useEffect(() => {
+    if (isDropdownOpen) {
+      fetchNotifications();
+    }
+  }, [isDropdownOpen]);
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await ChungServices.notification();
+      if (response.status === 200) {
+        setNotifications(response.data.notifications);
+      } else {
+        console.error("Failed to fetch notifications");
+      }
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
+  const toggleDropdown = () => {
+    if (!localStorage.getItem("token")) {
+      toast.error("Vui lòng đăng nhập!");
+      return;
+    }
+
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleHiddenNoti = () => {
+    if (!localStorage.getItem("token")) {
+      toast.error("Vui lòng đăng nhập!");
+      return;
+    }
+    setIsDropdownOpen(false);
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -29,18 +74,53 @@ const Header = () => {
     setIsMobileMenuOpen((prev) => !prev);
   };
 
+  const textStyle = {
+    color: theme === "dark" ? "white" : "black",
+  };
+  const handleDeleteNotification = async (id) => {
+    try {
+      const response = await ChungServices.deleteNotificationById(id);
+      if (response.status === 200) {
+        setNotifications((prevNotifications) =>
+          prevNotifications.filter(
+            (notification) => notification.notification_id !== id
+          )
+        );
+        toast.success("Thông báo đã được xóa");
+      } else {
+        toast.error("Không thể xóa thông báo");
+      }
+    } catch (error) {
+      toast.error("Lỗi khi xóa thông báo");
+    }
+  };
+  const handleDeleteAllNotifications = async () => {
+    try {
+      const response = await ChungServices.deleteAllNotificationsByUser();
+      if (response.status === 200) {
+        setNotifications([]);
+        toast.success("Tất cả thông báo đã được xóa");
+      } else {
+        toast.error("Không thể xóa tất cả thông báo");
+      }
+    } catch (error) {
+      toast.error("Lỗi khi xóa tất cả thông báo");
+    }
+  };
   return (
     <header
-      className="main-header header-style-2 mb-40"
+      className={`main-header header-style-2 mb-40 ${
+        theme === "dark" ? "dark-theme" : "light-theme"
+      }`}
       style={{
         marginLeft: 0,
         position: "sticky",
         top: 0,
         zIndex: 999,
-        backgroundColor: "white",
+        backgroundColor: theme === "dark" ? "#121212" : "white",
       }}
     >
-      <div className="header-bottom header-sticky background-white text-center">
+      <div className="header-bottom header-sticky text-center">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-2 col-md-3 d-flex justify-content-between align-items-center">
@@ -66,7 +146,7 @@ const Header = () => {
                 <nav>
                   <ul className="main-menu float-right">
                     <li>
-                      <Link to="/">
+                      <Link to="/" style={textStyle}>
                         <span className="mr-15">
                           <FontAwesomeIcon icon={faHouse} />
                         </span>
@@ -74,7 +154,7 @@ const Header = () => {
                       </Link>
                     </li>
                     <li>
-                      <Link to="/xu-huong">
+                      <Link to="/xu-huong" style={textStyle}>
                         <span className="mr-15">
                           <FontAwesomeIcon icon={faArrowTrendUp} />
                         </span>
@@ -88,6 +168,7 @@ const Header = () => {
                             ? "/dang-nhap"
                             : "/theo-doi"
                         }
+                        style={textStyle}
                       >
                         <span className="mr-15">
                           <FontAwesomeIcon icon={faFire} />
@@ -102,7 +183,8 @@ const Header = () => {
                 <form
                   action="#"
                   method="get"
-                  className="search-form position-relative mr-20"
+                  className="search-form position-relative mr-20 border-radius-10"
+                  onClick={handleHiddenNoti}
                   onSubmit={handleSearch}
                 >
                   <input
@@ -112,11 +194,22 @@ const Header = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     name="s"
+                    style={{
+                      color: theme === "dark" ? "white" : "black",
+                      border:
+                        theme === "dark" ? "1px solid #444" : "1px solid #ccc",
+                    }}
                   />
-                  <span className="search-icon">
+                  <span
+                    className="search-icon"
+                    style={{
+                      color: theme === "dark" ? "black" : "black",
+                    }}
+                  >
                     <i className="ti-search mr-5" />
                   </span>
                 </form>
+
                 <div className="d-inline tools-icon">
                   <Link
                     className="red-tooltip text-danger"
@@ -124,6 +217,7 @@ const Header = () => {
                     data-toggle="tooltip"
                     data-placement="top"
                     title="Viết bài mới"
+                    onClick={handleHiddenNoti}
                   >
                     <FontAwesomeIcon
                       icon={faPenToSquare}
@@ -133,7 +227,8 @@ const Header = () => {
                   </Link>
                   <Link
                     className="red-tooltip text-success"
-                    to="/thong-bao"
+                    to="#"
+                    onClick={toggleDropdown}
                     data-toggle="tooltip"
                     data-placement="top"
                     title="Thông báo"
@@ -143,8 +238,154 @@ const Header = () => {
                       className="ml-15"
                       style={{ fontSize: 20 }}
                     />
-                    <span className="notification bg-success">5</span>
                   </Link>
+                  {isDropdownOpen && (
+                    <div
+                      className="notification-dropdown"
+                      style={{
+                        position: "absolute",
+                        top: "100%",
+                        right: 0,
+                        background: "white",
+                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                        borderRadius: 4,
+                        width: 330,
+                        zIndex: 1000,
+                        padding: 10,
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <h4 style={{ margin: 0 }}>Thông báo</h4>
+                        <button
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            color: "#ff0000",
+                            fontSize: 14,
+                            cursor: "pointer",
+                          }}
+                          onClick={handleDeleteAllNotifications}
+                        >
+                          Xóa tất cả
+                        </button>
+                      </div>
+                      {notifications.length > 0 ? (
+                        <ul
+                          style={{ listStyle: "none", padding: 0, margin: 0 }}
+                        >
+                          {notifications.map((notification) => (
+                            <li
+                              key={notification.notification_id}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                padding: "8px 0",
+                                justifyContent: "space-between",
+                                borderBottom: "1px solid #f0f0f0",
+                              }}
+                            >
+                              <img
+                                src={
+                                  notification.type === "comment" ||
+                                  notification.type === "like"
+                                    ? `http://127.0.0.1:3001/${notification.article.image_url}`
+                                    : `http://127.0.0.1:3001/${notification.user.avatar_url}`
+                                }
+                                alt={notification.user.fullname}
+                                style={{
+                                  width: 50,
+                                  height: 50,
+                                  borderRadius: "100%",
+                                  marginRight: 10,
+                                }}
+                              />
+                              <Link
+                                style={{ padding: 0, lineHeight: "30px" }}
+                                to={
+                                  notification.type === "comment" ||
+                                  notification.type === "like"
+                                    ? `/bai-viet/${notification.article.slug}`
+                                    : `/tai-khoan`
+                                }
+                                onClick={handleHiddenNoti}
+                              >
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontSize: 14,
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  <strong>
+                                    <Link
+                                      style={{ padding: 0 }}
+                                      to={`/nguoi-dung/${notification.user.username}`}
+                                      onClick={handleHiddenNoti}
+                                    >
+                                      {notification.user.fullname}
+                                    </Link>
+                                  </strong>
+                                  {notification.type === "comment"
+                                    ? " đã bình luận!"
+                                    : null}
+                                  {notification.type === "like"
+                                    ? " đã thích bài viết!"
+                                    : null}
+                                  {notification.type === "follow"
+                                    ? " đã theo dõi bạn!"
+                                    : null}
+                                </p>
+
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontSize: 12,
+                                    color: "#888",
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  {new Date(
+                                    notification.createdAt
+                                  ).toLocaleString()}
+                                </p>
+                              </Link>
+                              <button
+                                style={{
+                                  background: "transparent",
+                                  border: "none",
+                                  color: "#ff0000",
+                                  fontSize: 14,
+                                  cursor: "pointer",
+                                }}
+                                onClick={() =>
+                                  handleDeleteNotification(
+                                    notification.notification_id
+                                  )
+                                }
+                              >
+                                <FontAwesomeIcon
+                                  icon={faTrashCan}
+                                  className="ml-15"
+                                  style={{ fontSize: 20 }}
+                                />
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p style={{ textAlign: "center", margin: 0 }}>
+                          Không có thông báo nào.
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   <Link
                     className="red-tooltip text-primary"
                     to={
@@ -155,11 +396,28 @@ const Header = () => {
                     data-toggle="tooltip"
                     data-placement="top"
                     title="Tài khoản"
+                    onClick={handleHiddenNoti}
                   >
                     <FontAwesomeIcon
                       icon={faUser}
                       className="ml-15"
                       style={{ fontSize: 20 }}
+                    />
+                  </Link>
+                  <Link
+                    onClick={toggleTheme}
+                    className="red-tooltip ml-15"
+                    title="Toggle Theme"
+                    style={{
+                      color: theme === "light" ? "black" : "white",
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={theme === "light" ? faMoon : faSun}
+                      style={{
+                        fontSize: 20,
+                        color: theme === "light" ? "black" : "white",
+                      }}
                     />
                   </Link>
                 </div>
@@ -171,7 +429,7 @@ const Header = () => {
               <nav>
                 <ul className="main-menu">
                   <li>
-                    <Link to="/">
+                    <Link to="/" style={textStyle}>
                       <span className="mr-15">
                         <FontAwesomeIcon icon={faHouse} />
                       </span>
@@ -179,7 +437,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/xu-huong">
+                    <Link to="/xu-huong" style={textStyle}>
                       <span className="mr-15">
                         <FontAwesomeIcon icon={faArrowTrendUp} />
                       </span>
@@ -193,6 +451,7 @@ const Header = () => {
                           ? "/dang-nhap"
                           : "/theo-doi"
                       }
+                      style={textStyle}
                     >
                       <span className="mr-15">
                         <FontAwesomeIcon icon={faFire} />

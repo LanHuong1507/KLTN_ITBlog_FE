@@ -61,14 +61,14 @@ const TimKiem = () => {
                 <span className="text-success">Tìm kiếm cho "{search}"</span>
               </h2>
               <div className="breadcrumb">
-                {articles.length === 0 ? (
-                  <span className="no-arrow">Không tìm thấy bài viết nào</span>
-                ) : (
-                  <span className="no-arrow">
-                    tìm thấy {totalPages * 1} bài viết dành cho bạn
-                  </span>
-                )}
-              </div>
+              {articles.length === 0 ? (
+                <span className="no-arrow">Không tìm thấy bài viết nào</span>
+              ) : (
+                <span className="no-arrow">
+                  Có <strong className="text-black font-large">{articles.length}</strong> bài viết được tìm thấy phù hợp với kết quả tìm kiếm
+                </span>
+              )}
+            </div>
             </div>
           </div>
         </div>
