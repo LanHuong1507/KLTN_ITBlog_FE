@@ -28,6 +28,8 @@ const ChinhSua = () => {
       const destroy = await BaiVietServices.delete(id);
       setData(data.filter((item) => item.article_id !== id));
       toast.success(destroy.data.message);
+      navigate("/tai-khoan");
+
     } catch (error) {
       toast.error("Lỗi khi xóa bài viết");
     }
@@ -346,7 +348,10 @@ const ChinhSua = () => {
                                             {
                                                 slug === '[rejected]'
                                                 ?
-                                                    null
+                                                <>
+                                                        <button className="btn-profile-update btn btn-danger float-center mt-5"  style={{ zIndex: 0 }} onClick={() => handleDelete(id)}>Xóa Bài Viết</button>
+
+                                                </>
                                                 :
                                                     <>
                                                         <button className="btn-profile-update btn btn-primary" style={{ zIndex: 0 }} onClick={(e) => handleSubmit(e, 1)}>Lưu Bản Nháp</button>

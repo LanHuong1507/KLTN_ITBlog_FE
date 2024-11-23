@@ -36,6 +36,9 @@ const NguoiDung = () => {
 
   const [isAuthor, setIsAuthor] = useState(-1);
   const [authorFollowing, setAuthorFollowing] = useState([]);
+  const [hoveredPage, setHoveredPage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const fetchAuthorFollowData = async () => {
     try {
       const response = await TaiKhoanServices.listFollowersAndFollowings(
@@ -174,6 +177,7 @@ const NguoiDung = () => {
     if (element) {
       element.scrollIntoView({ behavior: "instant", block: "start" });
     }
+    setCurrentPage(page);
   };
 
   useEffect(() => {
@@ -651,12 +655,39 @@ const NguoiDung = () => {
               {articles.length !== 0 ? (
                 <div className="pagination-area mb-30">
                   <nav aria-label="Page navigation example">
-                    <ul className="pagination justify-content-start">
+                    <ul
+                      style={{
+                        padding: "0",
+                        margin: "0",
+                        listStyle: "none",
+                        display: "flex",
+                      }}
+                    >
                       {Array.from({ length: totalPages }, (_, index) => (
-                        <li key={index} className="page-item active">
+                        <li key={index} style={{ margin: "0 5px" }}>
                           <a
-                            className="page-link"
                             onClick={() => handlePageChange(index + 1)}
+                            onMouseEnter={() => setHoveredPage(index + 1)}
+                            onMouseLeave={() => setHoveredPage(null)}
+                            style={{
+                              display: "inline-flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: "40px",
+                              height: "40px",
+                              padding: "0",
+                              backgroundColor:
+                                currentPage === index + 1
+                                  ? "#FF2E2E"
+                                  : hoveredPage === index + 1
+                                  ? "#FF4C4C"
+                                  : "transparent",
+                              color:
+                                currentPage === index + 1 ? "white" : "black",
+                              borderRadius: "50%",
+                              cursor: "pointer",
+                              textDecoration: "none",
+                            }}
                           >
                             {index + 1}
                           </a>

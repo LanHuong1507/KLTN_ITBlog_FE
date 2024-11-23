@@ -24,6 +24,15 @@ const ChuyenMucServices = {
             throw error;
         }
     },
+    // Lấy danh sách chuyên mục không phân trang
+    listAll: async () => {
+        try {
+            const response = await axiosInstance.get(`others/list_categories`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    },
 
     // Lấy chi tiết chuyên mục
     show: async (id) => {
