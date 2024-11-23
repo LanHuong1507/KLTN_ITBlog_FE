@@ -51,7 +51,7 @@ const List = () => {
       <td>{index + 1}</td>
       <td>
         <img
-          src={`http://127.0.0.1:3001/${item.image_url}`}
+          src={`${process.env.REACT_APP_API_URL}/${item.image_url}`}
           alt={item.title}
           style={{ width: "200px", height: "100px" }}
         />

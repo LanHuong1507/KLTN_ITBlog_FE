@@ -492,7 +492,7 @@ const BaiViet = () => {
                     }
                   >
                     <img
-                      src={`http://127.0.0.1:3001/${user.avatar_url}`}
+                      src={`${process.env.REACT_APP_API_URL}/${user.avatar_url}`}
                       alt={`${user.fullname}'s avatar`}
                       className="avatar"
                     />
@@ -632,7 +632,7 @@ const BaiViet = () => {
                             <img
                               className="border-radius-15"
                               style={{ height: "183px", width: "261px" }}
-                              src={`http://127.0.0.1:3001/${article.image_url}`}
+                              src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                               alt=""
                             />
                           </Link>
@@ -694,7 +694,7 @@ const BaiViet = () => {
                       <div className="user justify-content-between d-flex">
                         <div className="thumb">
                           <img
-                            src={`http://127.0.0.1:3001/${comment.user.avatar_url}`}
+                            src={`${process.env.REACT_APP_API_URL}/${comment.user.avatar_url}`}
                             alt=""
                           />
                         </div>

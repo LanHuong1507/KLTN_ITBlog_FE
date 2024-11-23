@@ -29,7 +29,7 @@ const Show = () => {
         setUsername(show.data.user.username);
         setEmail(show.data.user.email);
         setBio(show.data.user.bio);
-        setAvatar(`http://127.0.0.1:3001/${show.data.user.avatar_url}`);
+        setAvatar(`${process.env.REACT_APP_API_URL}/${show.data.user.avatar_url}`);
       } else {
         navigate('/admin');
       }

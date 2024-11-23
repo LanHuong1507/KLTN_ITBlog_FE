@@ -100,7 +100,7 @@ const TimKiem = () => {
                               >
                                 <img
                                   className="border-radius-15"
-                                  src={`http://127.0.0.1:3001/${article.image_url}`}
+                                  src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                                   alt=""
                                 />
                               </Link>
