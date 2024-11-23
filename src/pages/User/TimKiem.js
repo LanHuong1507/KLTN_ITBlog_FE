@@ -17,6 +17,7 @@ const TimKiem = () => {
   const [articles, setArticles] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalResult, setTotalResult] = useState(0);
   const [hoveredPage, setHoveredPage] = useState(null);
 
   const location = useLocation();
@@ -28,6 +29,7 @@ const TimKiem = () => {
       const response = await TrangChuServices.getListArticles(page, search);
       setArticles(response.data.articles);
       setTotalPages(response.data.totalPages);
+      setTotalResult(response.data.totalArticles);
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
     }
@@ -65,7 +67,7 @@ const TimKiem = () => {
                 <span className="no-arrow">Không tìm thấy bài viết nào</span>
               ) : (
                 <span className="no-arrow">
-                  Có <strong className="text-black font-large">{articles.length}</strong> bài viết được tìm thấy phù hợp với kết quả tìm kiếm
+                  Có <strong className="text-black font-large">{totalResult}</strong> bài viết được tìm thấy phù hợp với kết quả tìm kiếm
                 </span>
               )}
             </div>

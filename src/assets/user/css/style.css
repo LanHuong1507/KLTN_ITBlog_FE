@@ -311,12 +311,13 @@ span.notification{position:absolute;color:#fff;font-size:10px;font-weight:500;to
 .animated-text-container {position: relative;overflow: hidden;height: 900px;background: none;display: flex;flex-direction: column;align-items: center;}
 .animated-text {display: block;position: relative; bottom: -50px; font-size: 52px; font-weight: 700;margin: 5px 0; animation: slide-up 9s linear infinite;opacity: 0; animation-fill-mode: forwards; }
 .footer-area {background-color: white;padding-top: 20px;padding-bottom: 10px;}
-.widget_categories {display: flex;justify-content: center;align-items: center;flex-wrap: nowrap;}
-.cat-item {margin: 0 10px;}
-.widget_categories a {color:#212d45;text-decoration: none;font-weight: 500;transition: color 0.3s; }
-.widget_categories a:hover {color: #f2546a;text-decoration: underline;}
+.widget_categories { display: flex; justify-content: center; align-items: flex-start;flex-wrap: wrap; gap: 10px;}
+.cat-item {  margin: 0;padding: 5px 0;  text-align: center;width: 100%;}
+.widget_categories a { color: #212d45; text-decoration: none;font-weight: 500;transition: color 0.3s ease;}
+.widget_categories a:hover { color: #f2546a;text-decoration: underline;}
 .separator {padding-left: 10px;color: #6c757d;}
-.footer-bottom-area {background-color: #343a40;color: white;padding: 20px 0; }
+.footer-bottom-area { transition: background-color 0.3s ease, color 0.3s ease;}
+.footer-bottom-area p { font-size: 0.875rem;  margin-bottom: 0;}
 @media screen and (max-width: 768px) {
 	.widget_categories {flex-wrap: wrap;flex-direction: column;}
 	.separator {display: none;}
@@ -328,9 +329,6 @@ span.notification{position:absolute;color:#fff;font-size:10px;font-weight:500;to
 	10% { opacity: 1;}
 	90% {opacity: 1; }
 	100% {bottom: 100%; opacity: 0;}}
-	
-	
-	
 /*Pagination*/
 .pagination-area .page-item{margin:0}
 .pagination-area .page-item:first-child{margin:0}
