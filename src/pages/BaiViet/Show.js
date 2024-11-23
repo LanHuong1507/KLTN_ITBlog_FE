@@ -271,7 +271,7 @@ const Show = () => {
                             },
                             ckfinder: {
                               uploadUrl:
-                                "http://127.0.0.1:3001/articles/uploadImage",
+                                "${process.env.REACT_APP_API_URL}/articles/uploadImage",
                             },
                           }}
                         />

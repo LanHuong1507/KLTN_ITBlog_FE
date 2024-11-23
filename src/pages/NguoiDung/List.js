@@ -87,7 +87,7 @@ const List = () => {
       <td>{index + 1}</td>
       <td>
         <img
-          src={`http://127.0.0.1:3001/${item.avatar_url}`}
+          src={`${process.env.REACT_APP_API_URL}/${item.avatar_url}`}
           alt={item.fullname}
           style={{ width: "100px", height: "100px" }}
         />

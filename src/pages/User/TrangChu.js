@@ -267,7 +267,7 @@ const TrangChu = () => {
                               </span>
                               <Link to={`/bai-viet/${topPopularToday.slug}`}>
                                 <img
-                                  src={`http://127.0.0.1:3001/${topPopularToday.image_url}`}
+                                  src={`${process.env.REACT_APP_API_URL}/${topPopularToday.image_url}`}
                                   alt="post-slider"
                                 />
                               </Link>
@@ -286,7 +286,7 @@ const TrangChu = () => {
                                     tabIndex={0}
                                   >
                                     <img
-                                      src={`http://127.0.0.1:3001/${topPopularToday.avatar_url}`}
+                                      src={`${process.env.REACT_APP_API_URL}/${topPopularToday.avatar_url}`}
                                       alt=""
                                     />
                                   </a>
@@ -370,7 +370,7 @@ const TrangChu = () => {
                                 <Link to={`/chuyen-muc/${category.slug}`}>
                                   <img
                                     className="border-radius-10"
-                                    src={`http://127.0.0.1:3001/${category.image_url}`}
+                                    src={`${process.env.REACT_APP_API_URL}/${category.image_url}`}
                                     alt="post-slider"
                                     style={{
                                       height: "250px",
@@ -454,7 +454,7 @@ const TrangChu = () => {
                                   >
                                     <img
                                       style={{ height: "50px", width: "50px" }}
-                                      src={`http://127.0.0.1:3001/${article.avatar_url}`}
+                                      src={`${process.env.REACT_APP_API_URL}/${article.avatar_url}`}
                                       alt=""
                                     />
                                   </Link>
@@ -516,7 +516,7 @@ const TrangChu = () => {
                             key={index}
                           >
                             <img
-                              src={`http://127.0.0.1:3001/${user.avatar_url}`}
+                              src={`${process.env.REACT_APP_API_URL}/${user.avatar_url}`}
                               alt=""
                               style={{
                                 borderRadius: "50%",
@@ -612,7 +612,7 @@ const TrangChu = () => {
                                   >
                                     <img
                                       style={{ height: "150px" }}
-                                      src={`http://127.0.0.1:3001/${article.image_url}`}
+                                      src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                                       alt=""
                                     />
                                   </Link>
@@ -696,7 +696,7 @@ const TrangChu = () => {
                                   <img
                                     style={{ width: "200px", height: "200px" }}
                                     className="border-radius-15"
-                                    src={`http://127.0.0.1:3001/${article.image_url}`}
+                                    src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                                     alt={article.title}
                                   />
                                 </Link>
@@ -826,7 +826,7 @@ const TrangChu = () => {
                                         ? "brightness(0.7)"
                                         : "none",
                                   }}
-                                  src={`http://127.0.0.1:3001/${article.image_url}`}
+                                  src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                                   alt={article.title}
                                 />
                               </Link>
@@ -898,7 +898,7 @@ const TrangChu = () => {
                                 title={comment.user.fullname}
                               >
                                 <img
-                                  src={`http://127.0.0.1:3001/${comment.user.avatar_url}`}
+                                  src={`${process.env.REACT_APP_API_URL}/${comment.user.avatar_url}`}
                                   alt=""
                                 />
                               </Link>

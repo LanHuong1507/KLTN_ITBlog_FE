@@ -218,7 +218,7 @@ const NguoiDung = () => {
                 <div className="author-image mb-30">
                   <Link to="#">
                     <img
-                      src={`http://127.0.0.1:3001/${user.avatar_url}`}
+                      src={`${process.env.REACT_APP_API_URL}/${user.avatar_url}`}
                       alt=""
                       className="avatar"
                       style={{ width: "90px", height: "90px" }}
@@ -325,7 +325,7 @@ const NguoiDung = () => {
                                         onClick={() => setShowFollowers(false)}
                                       >
                                         <img
-                                          src={`http://127.0.0.1:3001/${follower.avatar_url}`}
+                                          src={`${process.env.REACT_APP_API_URL}/${follower.avatar_url}`}
                                           alt={follower.fullName}
                                           className="rounded-circle"
                                           width="50"
@@ -414,7 +414,7 @@ const NguoiDung = () => {
                                           }
                                         >
                                           <img
-                                            src={`http://127.0.0.1:3001/${followed.avatar_url}`}
+                                            src={`${process.env.REACT_APP_API_URL}/${followed.avatar_url}`}
                                             alt={followed.fullName}
                                             className="rounded-circle"
                                             width="50"
@@ -562,7 +562,7 @@ const NguoiDung = () => {
                           <Link to={`/bai-viet/${article.slug}`}>
                             <img
                               style={{ height: "380px", width: "100%" }}
-                              src={`http://127.0.0.1:3001/${article.image_url}`}
+                              src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                               alt="post-slider"
                             />
                           </Link>
@@ -611,7 +611,7 @@ const NguoiDung = () => {
                             >
                               <img
                                 className="border-radius-15"
-                                src={`http://127.0.0.1:3001/${article.image_url}`}
+                                src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                                 alt=""
                               />
                             </Link>

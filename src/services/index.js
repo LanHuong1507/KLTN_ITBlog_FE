@@ -1,7 +1,8 @@
 import axios from 'axios';
+const apiUrl = process.env.REACT_APP_API_URL;
 
 // URL API backend
-const API_URL = 'http://127.0.0.1:3001'; // Đổi thành URL của bạn
+const API_URL = apiUrl; // Đổi thành URL của bạn
 
 // Lấy access token từ localStorage
 const getAccessToken = () => localStorage.getItem('token');

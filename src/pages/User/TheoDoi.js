@@ -141,7 +141,7 @@ const TheoDoi = () => {
                               >
                                 <img
                                   className="border-radius-15"
-                                  src={`http://127.0.0.1:3001/${article.image_url}`}
+                                  src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                                   alt=""
                                 />
                               </Link>
@@ -259,7 +259,7 @@ const TheoDoi = () => {
                                   to={`/bai-viet/${article.slug}`}
                                 >
                                   <img
-                                    src={`http://127.0.0.1:3001/${article.image_url}`}
+                                    src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                                     style={{ height: "80px", width: "80px" }}
                                     alt=""
                                   />
@@ -317,7 +317,7 @@ const TheoDoi = () => {
                             >
                               <img
                                 style={{ height: "250px", width: "100%" }}
-                                src={`http://127.0.0.1:3001/${article.image_url}`}
+                                src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                               />
                             </Link>
                           </div>
@@ -375,7 +375,7 @@ const TheoDoi = () => {
                               title={comment.user.fullname}
                             >
                               <img
-                                src={`http://127.0.0.1:3001/${comment.user.avatar_url}`}
+                                src={`${process.env.REACT_APP_API_URL}/${comment.user.avatar_url}`}
                                 alt=""
                               />
                             </Link>

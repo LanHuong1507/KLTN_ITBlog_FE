@@ -216,7 +216,7 @@ const ChinhSua = () => {
                                                         contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
                                                     },
                                                     ckfinder: {
-                                                        uploadUrl: 'http://127.0.0.1:3001/articles/uploadImage'
+                                                        uploadUrl: '${process.env.REACT_APP_API_URL}/articles/uploadImage'
                                                     },
                                                 }}
                                             />

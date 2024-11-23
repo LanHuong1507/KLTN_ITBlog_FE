@@ -294,8 +294,8 @@ const Header = () => {
                                 src={
                                   notification.type === "comment" ||
                                   notification.type === "like"
-                                    ? `http://127.0.0.1:3001/${notification.article.image_url}`
-                                    : `http://127.0.0.1:3001/${notification.user.avatar_url}`
+                                    ? `${process.env.REACT_APP_API_URL}/${notification.article.image_url}`
+                                    : `${process.env.REACT_APP_API_URL}/${notification.user.avatar_url}`
                                 }
                                 alt={notification.user.fullname}
                                 style={{
