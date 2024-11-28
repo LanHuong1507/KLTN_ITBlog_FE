@@ -194,7 +194,7 @@ const ChinhSua = () => {
                                                 data={content || ''}
                                                 onChange={(event, editor) => {
                                                     const data = editor.getData();
-                                                    setContent(data); // Cập nhật state content
+                                                    setContent(data);
                                                 }}
                                                 config={{
                                                     toolbar: [
@@ -276,7 +276,7 @@ const ChinhSua = () => {
                                                         <Select
                                                             isMulti
                                                             name="categories"
-                                                            options={categories} // Danh sách các tùy chọn
+                                                            options={categories} 
                                                             className="basic-multi-select"
                                                             classNamePrefix="select"
                                                             value={selectedCategories}
