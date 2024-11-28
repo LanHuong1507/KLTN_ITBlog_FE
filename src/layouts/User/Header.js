@@ -128,8 +128,12 @@ const Header = () => {
                 <Link to="/">
                   <img
                     className="logo-img d-inline"
-                    src="https://i.imgur.com/LshhZtk.png"
-                    alt=""
+                    src={
+                      theme === "dark"
+                        ? "https://i.imgur.com/wQivGlw.jpeg"
+                        : "https://i.imgur.com/LshhZtk.png"
+                    }
+                    alt="Logo"
                     style={{ height: "60px", objectFit: "contain" }}
                   />
                 </Link>

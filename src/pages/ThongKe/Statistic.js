@@ -40,7 +40,8 @@ const Statistic = () => {
     // Call API
     const fetchStatistics = async () => {
       try {
-        const response = await fetch("${process.env.REACT_APP_API_URL}/others/statistics");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/others/statistics`);
+        // console.log(`${process.env.REACT_APP_API_URL}/others/statistics`)
         if (response.ok) {
           const result = await response.json();
           setData(result);

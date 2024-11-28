@@ -136,7 +136,7 @@ const Add = () => {
                               contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
                             },
                             ckfinder: {
-                              uploadUrl: '${process.env.REACT_APP_API_URL}/articles/uploadImage'
+                              uploadUrl: `${process.env.REACT_APP_API_URL}/articles/uploadImage`
                             },
                           }}
                         />

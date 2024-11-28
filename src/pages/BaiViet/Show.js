@@ -270,8 +270,7 @@ const Show = () => {
                               ],
                             },
                             ckfinder: {
-                              uploadUrl:
-                                "${process.env.REACT_APP_API_URL}/articles/uploadImage",
+                              uploadUrl: `${process.env.REACT_APP_API_URL}/articles/uploadImage`
                             },
                           }}
                         />

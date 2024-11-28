@@ -33,7 +33,7 @@ const Login = () => {
       <div className="card shadow-sm p-4" style={{ width: "500px" }}>
         <div className="card-body text-center">
           <img
-            src="../logo.png"
+            src="https://i.imgur.com/dIENKyH.png"
             alt="Logo"
             style={{ width: "100px", height: "100px" }}
             className="mb-3"

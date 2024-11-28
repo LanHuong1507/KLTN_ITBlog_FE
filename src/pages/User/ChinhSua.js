@@ -188,7 +188,7 @@ const ChinhSua = () => {
                             <div className="row mb-50">
                                 <div className="col-lg-8 col-md-12">
                                     <div className="sidebar-widget mb-50">
-                                        <div className="widget-header bg-white border-radius-10 p-15">
+                                        <div className="form-group">
                                             <CKEditor
                                                 editor={ClassicEditor}
                                                 data={content || ''}
@@ -216,7 +216,7 @@ const ChinhSua = () => {
                                                         contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
                                                     },
                                                     ckfinder: {
-                                                        uploadUrl: '${process.env.REACT_APP_API_URL}/articles/uploadImage'
+                                                        uploadUrl: `${process.env.REACT_APP_API_URL}/articles/uploadImage`
                                                     },
                                                 }}
                                             />
@@ -285,12 +285,12 @@ const ChinhSua = () => {
                                                             styles={{
                                                                 control: (provided) => ({
                                                                     ...provided,
-                                                                    width: '100%', // Chiều rộng 100%
-                                                                    border: '1px solid #eee', // Đường viền xám nhạt
-                                                                    borderRadius: '5px', // Bo tròn các góc
-                                                                    minHeight: '48px', // Khoảng cách bên trong
+                                                                    width: '100%',
+                                                                    border: '1px solid #eee', 
+                                                                    borderRadius: '5px',
+                                                                    minHeight: '48px',
                                                                     paddingLeft: '7px',
-                                                                    backgroundColor: 'white', // Màu nền trắng
+                                                                    backgroundColor: 'white',
                                                                     fontSize: '13px'
                                                                 }),
                                                             }}
