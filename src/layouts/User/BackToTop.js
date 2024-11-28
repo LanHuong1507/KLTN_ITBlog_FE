@@ -33,8 +33,8 @@ const BackToTop = () => {
       style={{
         display: isVisible ? "block" : "none",
         position: "fixed",
-        bottom: "20px",
-        right: "20px",
+        bottom: "95px",
+        right: "35px",
         backgroundColor: "#FF2E2E",
         border: "none",
         borderRadius: "50%",
