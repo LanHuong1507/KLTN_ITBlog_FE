@@ -235,7 +235,7 @@ const VietBai = () => {
               <div className="row mb-50">
                 <div className="col-lg-8 col-md-12">
                   <div className="sidebar-widget mb-50">
-                    <div className="widget-header bg-white border-radius-10 p-15">
+                    <div className="form-group">
                       <CKEditor
                         editor={ClassicEditor}
                         data={content || ""}
@@ -271,7 +271,17 @@ const VietBai = () => {
                             "redo",
                             "|",
                           ],
-                          language: "vi",
+                          image: {
+                            toolbar: [
+                                'imageTextAlternative', 'imageStyle:inline', 'imageStyle:block', 'imageStyle:side', 'linkImage'
+                            ]
+                        },
+                        table: {
+                            contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+                        },
+                        ckfinder: {
+                            uploadUrl: `${process.env.REACT_APP_API_URL}/articles/uploadImage`
+                        },
                         }}
                       />
                     </div>
