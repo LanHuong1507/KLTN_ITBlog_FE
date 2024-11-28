@@ -107,6 +107,13 @@ const BaiViet = () => {
           return match; // Trả về nguyên bản nếu không khớp với nền tảng nào
         }
       );
+      const baseUrl = process.env.REACT_APP_API_URL;
+      articleContent = articleContent.replace(
+        /<img\s+[^>]*src="(\uploads\/[^"]+)"[^>]*>/g,
+        (match,path)=>{
+          return match.replace(path,`${baseUrl}/${path}`);
+        }
+      );
 
       // Định dạng trích dẫn
       articleContent = articleContent.replace(
