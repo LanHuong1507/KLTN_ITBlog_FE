@@ -12,23 +12,30 @@ const Footer = () => {
         const fetchCategories = async () => {
             try {
                 const response = await ChuyenMucServices.listAll();
-                setCategories(response.data.categories);
+                setCategories(response.data.categories || []);
             } catch (error) {
-                console.error("Error fetching categories:", error);
+                console.error('Error fetching categories:', error);
             }
         };
         fetchCategories();
     }, []);
 
-    const chunkArray = (array, size) => {
-        const chunks = [];
-        for (let i = 0; i < array.length; i += size) {
-            chunks.push(array.slice(i, i + size));
+    const splitIntoColumns = (categories, itemsPerColumn) => {
+        // Lấp đầy các danh mục còn thiếu để luôn đủ 15 mục
+        const totalItems = itemsPerColumn * 3; // 3 cột, mỗi cột 5 mục
+        const filledCategories = [...categories];
+
+        while (filledCategories.length < totalItems) {
+            filledCategories.push({ category_id: `placeholder-${filledCategories.length}`, name: null, slug: null });
         }
-        return chunks;
+
+        // Chia thành 3 cột
+        return [0, 1, 2].map((colIndex) =>
+            filledCategories.slice(colIndex * itemsPerColumn, (colIndex + 1) * itemsPerColumn)
+        );
     };
 
-    const categoryChunks = chunkArray(categories, 5);
+    const columns = splitIntoColumns(categories, 5);
 
     return (
         <footer
@@ -40,57 +47,69 @@ const Footer = () => {
         >
             <div className="container">
                 <div className="row justify-content-center pb-30">
-                    {categoryChunks.slice(0, 3).map((chunk, colIndex) => (
+                    {columns.map((column, colIndex) => (
                         <div
                             key={`col-${colIndex}`}
                             className="col-md-4 d-flex flex-column align-items-center"
                         >
                             <div className="widget_categories text-center">
-                                {chunk.map((category) => (
-                                    <span
-                                        key={category.category_id}
-                                        className="cat-item mb-2"
-                                    >
-                                        <Link
-                                            to={`/chuyen-muc/${category.slug}`}
+                                {column.map((category) =>
+                                    category.name ? (
+                                        <span
+                                            key={category.category_id}
+                                            className="cat-item mb-2"
+                                        >
+                                            <Link
+                                                to={`/chuyen-muc/${category.slug}`}
+                                                style={{
+                                                    color: theme === 'dark' ? 'white' : 'black',
+                                                }}
+                                            >
+                                                {category.name}
+                                            </Link>
+                                        </span>
+                                    ) : (
+                                        <span
+                                            key={category.category_id}
+                                            className="cat-item mb-2"
                                             style={{
-                                                color: theme === 'dark' ? 'white' : 'black',
+                                                color: theme === 'dark' ? 'gray' : 'lightgray',
+                                                fontStyle: 'italic',
                                             }}
                                         >
-                                            {category.name}
-                                        </Link>
-                                    </span>
-                                ))}
+                                            Nội dung trống
+                                        </span>
+                                    )
+                                )}
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
             <div
-    className="footer-bottom-area"
-    style={{
-        backgroundColor: theme === 'dark' ? '#1c1c1c' : '#f8f9fa', // Nền tối đẹp hơn
-        color: theme === 'dark' ? '#e0e0e0' : '#6c757d', // Màu chữ rõ ràng
-        borderTop: theme === 'dark' ? '1px solid #333' : '1px solid #ddd', // Đường viền trên
-        padding: '20px 0', // Tăng khoảng cách
-    }}
->
-    <div className="container">
-        <div className="text-center">
-            <div className="footer-copy-right">
-                <p
-                    className="font-small mb-0"
-                    style={{
-                        color: theme === 'dark' ? '#d1d1d1' : '#6c757d',
-                    }}
-                >
-                    © {currentYear}, ITBlog | All rights reserved | Created by Huong Tien
-                </p>
+                className="footer-bottom-area"
+                style={{
+                    backgroundColor: theme === 'dark' ? '#1c1c1c' : '#f8f9fa',
+                    color: theme === 'dark' ? '#e0e0e0' : '#6c757d',
+                    borderTop: theme === 'dark' ? '1px solid #333' : '1px solid #ddd',
+                    padding: '20px 0',
+                }}
+            >
+                <div className="container">
+                    <div className="text-center">
+                        <div className="footer-copy-right">
+                            <p
+                                className="font-small mb-0"
+                                style={{
+                                    color: theme === 'dark' ? '#d1d1d1' : '#6c757d',
+                                }}
+                            >
+                                © {currentYear}, ITBlog | All rights reserved | Created by Huong Tien
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-
         </footer>
     );
 };

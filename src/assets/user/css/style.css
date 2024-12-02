@@ -1442,65 +1442,84 @@ span.notification {
 	animation: slide-up 9s linear infinite;
 	opacity: 0;
 	animation-fill-mode: forwards;
-}
-
-.footer-area {
-	background-color: white;
-	padding-top: 20px;
-	padding-bottom: 10px;
+}.footer-area {
+    background-color: white;
+    padding-top: 20px;
+    padding-bottom: 10px;
 }
 
 .widget_categories {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-wrap: nowrap;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+    height: 100%;
 }
 
 .cat-item {
-	margin: 0 10px;
+    margin-bottom: 10px; 
 }
 
 .widget_categories a {
-	color: #212d45;
-	text-decoration: none;
-	font-weight: 500;
-	transition: color 0.3s;
+    color: #212d45;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
 }
 
 .widget_categories a:hover {
-	color: #f2546a;
-	text-decoration: underline;
+    color: #f2546a;
+    text-decoration: underline;
 }
 
 .separator {
-	padding-left: 10px;
-	color: #6c757d;
+    padding-left: 10px;
+    color: #6c757d;
 }
 
 .footer-bottom-area {
-	background-color: #343a40;
-	color: white;
-	padding: 20px 0;
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
 }
 
+.footer-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.footer-columns .widget_categories {
+    height: 100%;
+}
 @media screen and (max-width: 768px) {
-	.widget_categories {
-		flex-wrap: wrap;
-		flex-direction: column;
-	}
+    .footer-columns {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
 
-	.separator {
-		display: none;
-	}
+    .widget_categories {
+        align-items: center;
+        text-align: center; 
+    }
 
-	.widget_categories a {
-		margin: 8px 0;
-	}
+    .cat-item {
+        margin-bottom: 8px; 
+    }
 
-	.animated-text-container {
-		display: none;
-	}
+    .separator {
+        display: none; 
+    }
+
+    .widget_categories a {
+        display: block;
+        margin: 5px 0; 
+    }
+
+    .footer-bottom-area {
+        font-size: 14px;
+    }
 }
 
 @keyframes slide-up {
