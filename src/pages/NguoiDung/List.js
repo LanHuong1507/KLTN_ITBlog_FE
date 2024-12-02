@@ -176,7 +176,7 @@ const List = () => {
         data={data}
         onSearch={handleSearch}
       />
-      <ul className="pagination pagination-sm mr-3 mt-1 float-right">
+      <ul className="pagination pagination-sm ml-3 mt-1 float-left">
         {Array.from({ length: totalPages }, (_, index) => (
           <li key={index}>
             <button

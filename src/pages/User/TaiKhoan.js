@@ -16,6 +16,7 @@ import {
   faCircleExclamation,
   faUserPlus,
   faUserMinus,
+  faChartSimple
 } from "@fortawesome/free-solid-svg-icons";
 
 function getShortDescription(content, length = 100) {
@@ -486,6 +487,20 @@ const TaiKhoan = () => {
                     </span>
                     Cập nhật thông tin
                   </Link>
+                  <Link
+                    to={
+                      !localStorage.getItem("token")
+                        ? "/dang-nhap"
+                        : "/thong-ke"
+                    }
+                    className="author-bio-link"
+                    style={{ textTransform: "unset" }}
+                  >
+                    <span className="mr-5 font-x-small">
+                      <FontAwesomeIcon icon={faChartSimple} />{" "}
+                    </span>
+                    Thống kê
+                  </Link>
                   <a
                     href="author.html"
                     onClick={(e) => handelLogout(e)}
@@ -497,6 +512,7 @@ const TaiKhoan = () => {
                     </span>
                     Đăng xuất
                   </a>
+                
                 </div>
               </div>
               <div>

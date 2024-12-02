@@ -23,6 +23,7 @@ import UserChuyenMucRoutes from './User/ChuyenMucRoutes'
 import Page404Routes from './User/Page404Routes'
 import QuenMatKhauRoutes from './User/QuenMatKhauRoutes'
 import MatKhauMoiRoutes from './User/MatKhauMoiRoutes'
+import ThongKeUserRoutes from './User/ThongKeUserRoutes';
 
 
 const AppRoutes = () => {
@@ -51,6 +52,8 @@ const AppRoutes = () => {
       <Route path="/quen-mat-khau/*" element={<QuenMatKhauRoutes />} />
       <Route path="/doi-mat-khau/*" element={<MatKhauMoiRoutes />} />
       <Route path="/404/*" element={<Page404Routes />} />
+      <Route path="/thong-ke/*" element={<ThongKeUserRoutes />} />
+
     </Routes>
   );
 };
