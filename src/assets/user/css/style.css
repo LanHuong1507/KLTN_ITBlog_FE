@@ -1442,7 +1442,8 @@ span.notification {
 	animation: slide-up 9s linear infinite;
 	opacity: 0;
 	animation-fill-mode: forwards;
-}.footer-area {
+}
+.footer-area {
     background-color: white;
     padding-top: 20px;
     padding-bottom: 10px;

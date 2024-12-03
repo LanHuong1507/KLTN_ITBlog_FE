@@ -675,8 +675,18 @@ const TrangChu = () => {
                             <h4
                               className="widget-title mb-0"
                               id="list-articles-new"
+                              style={{
+                                color: theme === "dark" ? "white" : "black",
+                              }}
                             >
-                              Bài Viết <span>Mới</span>
+                              Bài Viết{" "}
+                              <span
+                                style={{
+                                  color: theme === "dark" ? "white" : "black",
+                                }}
+                              >
+                                Mới
+                              </span>
                             </h4>
                           </div>
                         </div>
@@ -686,6 +696,11 @@ const TrangChu = () => {
                           <article
                             key={index}
                             className="p-10 background-white border-radius-10 mb-30 wow fadeIn animated"
+                            style={{
+                              backgroundColor:
+                                theme === "dark" ? "#333" : "white",
+                              color: theme === "dark" ? "white" : "black",
+                            }}
                           >
                             <div className="d-flex">
                               <div className="post-thumb d-flex mr-15 border-radius-15 img-hover-scale">
@@ -694,7 +709,10 @@ const TrangChu = () => {
                                   to={`/bai-viet/${article.slug}`}
                                 >
                                   <img
-                                    style={{ width: "200px", height: "200px" }}
+                                    style={{
+                                      width: "200px",
+                                      height: "200px",
+                                    }}
                                     className="border-radius-15"
                                     src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                                     alt={article.title}
@@ -704,22 +722,49 @@ const TrangChu = () => {
                               <div className="post-content media-body">
                                 <div className="entry-meta mb-15 mt-10">
                                   <Link className="entry-meta meta-2" to="#">
-                                    <span className="post-in text-danger font-x-small">
+                                    <span
+                                      className="post-in text-danger font-x-small"
+                                      style={{
+                                        color:
+                                          theme === "dark" ? "#bbb" : "#777",
+                                      }}
+                                    >
                                       {new Date(
                                         article.createdAt
                                       ).toLocaleDateString("vi-VN")}
                                     </span>
                                   </Link>
                                 </div>
-                                <h5 className="post-title mb-15 text-limit-2-row">
-                                  <Link to={`/bai-viet/${article.slug}`}>
+                                <h5
+                                  className="post-title mb-15 text-limit-2-row"
+                                  style={{
+                                    color: theme === "dark" ? "white" : "#333",
+                                  }}
+                                >
+                                  <Link
+                                    to={`/bai-viet/${article.slug}`}
+                                    style={{
+                                      color:
+                                        theme === "dark" ? "white" : "#333",
+                                    }}
+                                  >
                                     {article.title}
                                   </Link>
                                 </h5>
-                                <p className="post-exerpt font-medium text-muted mb-30 d-none d-lg-block">
+                                <p
+                                  className="post-exerpt font-medium text-muted mb-30 d-none d-lg-block"
+                                  style={{
+                                    color: theme === "dark" ? "#bbb" : "#777",
+                                  }}
+                                >
                                   {getShortDescription(article.content, 150)}
                                 </p>
-                                <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase">
+                                <div
+                                  className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase"
+                                  style={{
+                                    color: theme === "dark" ? "#bbb" : "#777",
+                                  }}
+                                >
                                   <span className="post-by">
                                     Đăng bởi{" "}
                                     <Link
@@ -728,6 +773,10 @@ const TrangChu = () => {
                                           ? "/tai-khoan"
                                           : `/nguoi-dung/${article.user.username}`
                                       }
+                                      style={{
+                                        color:
+                                          theme === "dark" ? "#fff" : "#333",
+                                      }}
                                     >
                                       {article.user.fullname}
                                     </Link>
@@ -774,7 +823,8 @@ const TrangChu = () => {
                                         ? "#FF4C4C"
                                         : "transparent",
                                     color:
-                                      currentPage === index + 1
+                                      currentPage === index + 1 ||
+                                      theme === "dark"
                                         ? "white"
                                         : "black",
                                     borderRadius: "50%",
@@ -809,7 +859,7 @@ const TrangChu = () => {
                             key={index}
                             className="border-radius-15 mb-30 p-10 wow fadeIn animated"
                             style={{
-                              color: theme === "dark" ? "white" : "black", // Text color based on theme
+                              color: theme === "dark" ? "white" : "black",
                             }}
                           >
                             <div className="post-thumb d-flex mb-15 border-radius-15 img-hover-scale">
@@ -835,7 +885,7 @@ const TrangChu = () => {
                               <h5
                                 className="post-title mb-15"
                                 style={{
-                                  color: theme === "dark" ? "white" : "#333", // Title color based on theme
+                                  color: theme === "dark" ? "white" : "#333",
                                 }}
                               >
                                 <Link to={`/bai-viet/${article.slug}`}>
@@ -845,7 +895,7 @@ const TrangChu = () => {
                               <div
                                 className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase mb-10"
                                 style={{
-                                  color: theme === "dark" ? "#bbb" : "#777", // Meta text color based on theme
+                                  color: theme === "dark" ? "#bbb" : "#777",
                                 }}
                               >
                                 <span className="post-in">TOP {index + 1}</span>
@@ -858,7 +908,7 @@ const TrangChu = () => {
                                         : `/nguoi-dung/${article.username}`
                                     }
                                     style={{
-                                      color: theme === "dark" ? "#fff" : "#333", // User link color based on theme
+                                      color: theme === "dark" ? "#fff" : "#333",
                                     }}
                                   >
                                     {article.fullname}
@@ -873,9 +923,14 @@ const TrangChu = () => {
                         ))}
                       </div>
                     </div>
-                    <div className="sidebar-widget p-20 border-radius-15 bg-white widget-latest-comments wow fadeIn animated">
+                    <div className="sidebar-widget p-20 border-radius-15 widget-latest-comments wow fadeIn animated">
                       <div className="widget-header mb-30">
-                        <h5 className="widget-title">
+                        <h5
+                          className="widget-title"
+                          style={{
+                            color: theme === "dark" ? "white" : "black",
+                          }}
+                        >
                           Bình Luận <span>Mới</span>
                         </h5>
                       </div>
@@ -884,6 +939,9 @@ const TrangChu = () => {
                           <div
                             key={index}
                             className="last-comment mb-20 d-flex wow fadeIn animated"
+                            style={{
+                              color: theme === "dark" ? "white" : "black",
+                            }}
                           >
                             <span className="item-count vertical-align">
                               <Link
@@ -900,16 +958,36 @@ const TrangChu = () => {
                                 <img
                                   src={`${process.env.REACT_APP_API_URL}/${comment.user.avatar_url}`}
                                   alt=""
+                                  style={{
+                                    borderRadius: "50%",
+                                    width: "40px",
+                                    height: "40px",
+                                  }}
                                 />
                               </Link>
                             </span>
                             <div className="alith_post_title_small">
-                              <p className="font-medium mb-10">
-                                <Link to={`/bai-viet/${comment.article.slug}`}>
+                              <p
+                                className="font-medium mb-10"
+                                style={{
+                                  color: theme === "dark" ? "white" : "#333",
+                                }}
+                              >
+                                <Link
+                                  to={`/bai-viet/${comment.article.slug}`}
+                                  style={{
+                                    color: theme === "dark" ? "white" : "#333",
+                                  }}
+                                >
                                   {comment.content}
                                 </Link>
                               </p>
-                              <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase mb-10">
+                              <div
+                                className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase mb-10"
+                                style={{
+                                  color: theme === "dark" ? "#bbb" : "#777",
+                                }}
+                              >
                                 <span className="post-by">
                                   Bởi{" "}
                                   <Link
@@ -918,6 +996,9 @@ const TrangChu = () => {
                                         ? "/tai-khoan"
                                         : `/nguoi-dung/${comment.user.username}`
                                     }
+                                    style={{
+                                      color: theme === "dark" ? "#fff" : "#333",
+                                    }}
                                   >
                                     {comment.user.fullname}
                                   </Link>

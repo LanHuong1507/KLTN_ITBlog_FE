@@ -20,22 +20,18 @@ const Footer = () => {
         fetchCategories();
     }, []);
 
-    const splitIntoColumns = (categories, itemsPerColumn) => {
-        // Lấp đầy các danh mục còn thiếu để luôn đủ 15 mục
-        const totalItems = itemsPerColumn * 3; // 3 cột, mỗi cột 5 mục
-        const filledCategories = [...categories];
+    const splitIntoColumns = (categories, minColumns = 3, maxColumns = 5) => {
+        const totalCategories = categories.length;
+        const numColumns = Math.min(Math.max(Math.ceil(totalCategories / 5), minColumns), maxColumns);
+        const columns = Array.from({ length: numColumns }, () => []);
+        categories.forEach((category, index) => {
+            columns[index % numColumns].push(category);
+        });
 
-        while (filledCategories.length < totalItems) {
-            filledCategories.push({ category_id: `placeholder-${filledCategories.length}`, name: null, slug: null });
-        }
-
-        // Chia thành 3 cột
-        return [0, 1, 2].map((colIndex) =>
-            filledCategories.slice(colIndex * itemsPerColumn, (colIndex + 1) * itemsPerColumn)
-        );
+        return columns;
     };
 
-    const columns = splitIntoColumns(categories, 5);
+    const columns = splitIntoColumns(categories);
 
     return (
         <footer
@@ -68,18 +64,7 @@ const Footer = () => {
                                                 {category.name}
                                             </Link>
                                         </span>
-                                    ) : (
-                                        <span
-                                            key={category.category_id}
-                                            className="cat-item mb-2"
-                                            style={{
-                                                color: theme === 'dark' ? 'gray' : 'lightgray',
-                                                fontStyle: 'italic',
-                                            }}
-                                        >
-                                            Nội dung trống
-                                        </span>
-                                    )
+                                    ) : null
                                 )}
                             </div>
                         </div>

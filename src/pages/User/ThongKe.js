@@ -50,7 +50,7 @@ const ThongKe = () => {
     const fetchStatistics = async () => {
       try {
         const token = localStorage.getItem("token"); // Lấy token từ localStorage (hoặc sessionStorage)
-        const response = await fetch("http://127.0.0.1:3001/others/statistics/user", {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/others/statistics/user`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -159,7 +159,7 @@ const ThongKe = () => {
   };
 
   return (
-    <div className="content-wrapper" style={{ minHeight: "1203.31px" }}>
+    <div className="content-wrapper" style={{ minHeight: "1203.31px"}}>
       <section className="content">
         <div className="container-fluid">
           <div className="row">
