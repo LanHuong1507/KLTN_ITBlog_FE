@@ -12,6 +12,7 @@ import {
   faUserMinus,
 } from "@fortawesome/free-solid-svg-icons";
 import CryptoJS from "crypto-js";
+import { useTheme } from "../../context/ThemeContext";
 
 function getShortDescription(content, length = 100) {
   // Loại bỏ các thẻ HTML
@@ -33,7 +34,7 @@ const NguoiDung = () => {
   const [loading, setLoading] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [activeTabFollower, setActiveTabFollower] = useState("followers");
-
+  const { theme } = useTheme();
   const [isAuthor, setIsAuthor] = useState(-1);
   const [authorFollowing, setAuthorFollowing] = useState([]);
   const [hoveredPage, setHoveredPage] = useState(null);
@@ -212,9 +213,8 @@ const NguoiDung = () => {
         <div className="container">
           <div className="row mb-50">
             <div className="col-lg-2 d-none d-lg-block" />
-            {/* main content */}
             <div className="col-lg-8 col-md-12">
-              <div className="author-bio border-radius-10 bg-white p-30 mb-50">
+              <div className="author-bio border-radius-10 p-30 mb-50">
                 <div className="author-image mb-30">
                   <Link to="#">
                     <img
@@ -226,23 +226,45 @@ const NguoiDung = () => {
                   </Link>
                 </div>
                 <div className="author-info">
-                  <h3>
+                  <h3
+                    style={{
+                      color: theme === "dark" ? "white" : "black", // Adjust text color
+                    }}
+                  >
                     <span className="vcard author">
                       <span className="fn">
-                        <Link to="#" title="Posts by Robert" rel="author">
+                        <Link
+                          to="#"
+                          title={`Posts by ${user.fullname}`}
+                          rel="author"
+                          style={{
+                            color: theme === "dark" ? "white" : "black",
+                          }}
+                        >
                           {user.fullname}
                         </Link>
                       </span>
                     </span>
                   </h3>
-                  <h5 className="text-muted">
+                  <h5
+                    className="text-muted"
+                    style={{
+                      color: theme === "dark" ? "black" : "white",
+                    }}
+                  >
                     <span className="mr-15">{user.email}</span>
                   </h5>
-                  <div className="author-description">
+                  <div
+                    className="author-description"
+                    style={{
+                      color: theme === "dark" ? "white" : "black",
+                    }}
+                  >
                     {user.bio == null
                       ? "Chưa có thông tin giới thiệu."
                       : user.bio}
                   </div>
+
                   <Link
                     to="#"
                     className="author-bio-link"
@@ -346,12 +368,12 @@ const NguoiDung = () => {
                                                 follower.user_id
                                               )
                                             ) {
-                                              handleUnfollow(follower.username); // If already followed, call unfollow
+                                              handleUnfollow(follower.username);
                                             } else {
                                               handleFollow(
                                                 follower.username,
                                                 follower.user_id
-                                              ); // Otherwise, follow
+                                              );
                                             }
                                           }}
                                           to="#"
@@ -437,12 +459,12 @@ const NguoiDung = () => {
                                               ) {
                                                 handleUnfollow(
                                                   followed.username
-                                                ); // If already followed, call unfollow
+                                                );
                                               } else {
                                                 handleFollow(
                                                   followed.username,
                                                   followed.user_id
-                                                ); // Otherwise, follow
+                                                );
                                               }
                                             }}
                                             to="#"
@@ -504,36 +526,59 @@ const NguoiDung = () => {
                         <span className="mr-5 font-x-small">
                           <FontAwesomeIcon icon={faUserMinus} />
                         </span>
-                        Hủy Follow
+                        Hủy Theo Dõi
                       </>
                     ) : (
                       <>
                         <span className="mr-5 font-x-small">
                           <FontAwesomeIcon icon={faUserPlus} />
                         </span>
-                        Follow
+                        Theo Dõi
                       </>
                     )}
                   </Link>
                   <div className="author-social">
-                    <ul className="author-social-icons">
+                    <ul
+                      className="author-social-icons"
+                      style={{ display: "flex", gap: "10px" }}
+                    >
                       <li className="author-social-link-facebook">
-                        <Link to="#">
+                        <Link
+                          to="#"
+                          style={{
+                            color: theme === "dark" ? "#4267B2" : "#3b5998",
+                          }}
+                        >
                           <i className="ti-facebook" />
                         </Link>
                       </li>
                       <li className="author-social-link-twitter">
-                        <Link to="#">
+                        <Link
+                          to="#"
+                          style={{
+                            color: theme === "dark" ? "#1DA1F2" : "#00acee",
+                          }}
+                        >
                           <i className="ti-twitter-alt" />
                         </Link>
                       </li>
                       <li className="author-social-link-pinterest">
-                        <Link to="#">
+                        <Link
+                          to="#"
+                          style={{
+                            color: theme === "dark" ? "#E60023" : "#BD081C",
+                          }}
+                        >
                           <i className="ti-pinterest" />
                         </Link>
                       </li>
                       <li className="author-social-link-instagram">
-                        <Link to="#">
+                        <Link
+                          to="#"
+                          style={{
+                            color: theme === "dark" ? "#E1306C" : "#C13584",
+                          }}
+                        >
                           <i className="ti-instagram" />
                         </Link>
                       </li>
@@ -541,11 +586,25 @@ const NguoiDung = () => {
                   </div>
                 </div>
               </div>
-              {articles.length == 0 ? (
-                <h2>Chưa có bài viết</h2>
+              {articles.length === 0 ? (
+                <h2
+                  style={{
+                    color: theme === "dark" ? "white" : "black",
+                  }}
+                >
+                  Chưa có bài viết
+                </h2>
               ) : (
-                <h2 id="list-articles-new">Danh sách bài viết</h2>
+                <h2
+                  id="list-articles-new"
+                  style={{
+                    color: theme === "dark" ? "white" : "black",
+                  }}
+                >
+                  Danh sách bài viết
+                </h2>
               )}
+
               <hr className="wp-block-separator is-style-wide" />
               <div className="latest-post mb-50">
                 <div className="loop-list-style-1">
@@ -553,10 +612,18 @@ const NguoiDung = () => {
                     index === 0 ? (
                       <article
                         key={index}
-                        className="first-post p-10 background-white border-radius-10 mb-30 wow fadeIn animated"
+                        className="first-post mb-30 wow fadeIn animated"
+                        style={{
+                          color: theme === "dark" ? "#f0f0f0" : "#000",
+                        }}
                       >
                         <div className="img-hover-slide border-radius-15 mb-30 position-relative overflow-hidden">
-                          <span className="top-right-icon bg-dark">
+                          <span
+                            className="top-right-icon"
+                            style={{
+                              color: theme === "dark" ? "#fff" : "#f0f0f0",
+                            }}
+                          >
                             <i className="mdi mdi-flash-on" />
                           </span>
                           <Link to={`/bai-viet/${article.slug}`}>
@@ -569,17 +636,40 @@ const NguoiDung = () => {
                         </div>
                         <div className="pr-10 pl-10">
                           <h4 className="post-title mb-20">
-                            <Link to={`/bai-viet/${article.slug}`}>
+                            <Link
+                              to={`/bai-viet/${article.slug}`}
+                              style={{
+                                color: theme === "dark" ? "#e0e0e0" : "#000",
+                              }}
+                            >
                               {article.title}
                             </Link>
                           </h4>
-                          <p className="post-exerpt font-medium text-muted mb-30">
+                          <p
+                            className="post-exerpt font-medium mb-30"
+                            style={{
+                              color: theme === "dark" ? "#ccc" : "#6c757d",
+                            }}
+                          >
                             {getShortDescription(article.content, 150)}
                           </p>
                           <div className="mb-20 overflow-hidden">
-                            <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase">
+                            <div
+                              className="entry-meta meta-1 font-x-small float-left text-uppercase"
+                              style={{
+                                color: theme === "dark" ? "#999" : "#6c757d",
+                              }}
+                            >
                               <span className="post-by">
-                                Đăng bởi <Link to="#">{user.fullname}</Link>
+                                Đăng bởi{" "}
+                                <Link
+                                  to="#"
+                                  style={{
+                                    color: theme === "dark" ? "#fff" : "#000",
+                                  }}
+                                >
+                                  {user.fullname}
+                                </Link>
                               </span>
                               <span className="post-on">
                                 {new Date(article.createdAt).toLocaleDateString(
@@ -590,9 +680,20 @@ const NguoiDung = () => {
                             <div className="float-right">
                               <Link to={`/bai-viet/${article.slug}`}>
                                 <span className="mr-10">
-                                  <FontAwesomeIcon icon={faAnglesRight} />
+                                  <FontAwesomeIcon
+                                    icon={faAnglesRight}
+                                    style={{
+                                      color: theme === "dark" ? "#fff" : "#000",
+                                    }}
+                                  />
                                 </span>
-                                ĐỌC THÊM
+                                <span
+                                  style={{
+                                    color: theme === "dark" ? "#fff" : "#000",
+                                  }}
+                                >
+                                  ĐỌC THÊM
+                                </span>
                               </Link>
                             </div>
                           </div>
@@ -601,13 +702,19 @@ const NguoiDung = () => {
                     ) : (
                       <article
                         key={index}
-                        className="p-10 background-white border-radius-10 mb-30 wow fadeIn animated"
+                        className="mb-30 wow fadeIn animated"
+                        style={{
+                          color: theme === "dark" ? "#e0e0e0" : "#000",
+                        }}
                       >
                         <div className="d-md-flex d-block">
                           <div className="post-thumb post-thumb-big d-flex mr-15 border-radius-15 img-hover-scale">
                             <Link
                               className="color-white"
                               to={`/bai-viet/${article.slug}`}
+                              style={{
+                                color: theme === "dark" ? "#fff" : "#000",
+                              }}
                             >
                               <img
                                 className="border-radius-15"
@@ -618,8 +725,15 @@ const NguoiDung = () => {
                           </div>
                           <div className="post-content media-body">
                             <div className="entry-meta mb-15 mt-10">
-                              <Link className="entry-meta meta-2" to="#">
-                                <span className="post-in text-danger font-x-small">
+                              <Link
+                                className="entry-meta meta-2"
+                                to="#"
+                                style={{
+                                  color:
+                                    theme === "dark" ? "#ff6666" : "#dc3545",
+                                }}
+                              >
+                                <span className="post-in font-x-small">
                                   {new Date(
                                     article.createdAt
                                   ).toLocaleDateString("vi-VN")}
@@ -627,21 +741,50 @@ const NguoiDung = () => {
                               </Link>
                             </div>
                             <h5 className="post-title mb-15 text-limit-2-row">
-                              <Link to={`/bai-viet/${article.slug}`}>
+                              <Link
+                                to={`/bai-viet/${article.slug}`}
+                                style={{
+                                  color: theme === "dark" ? "#e0e0e0" : "#000",
+                                }}
+                              >
                                 {article.title}
                               </Link>
                             </h5>
-                            <p className="post-exerpt font-medium text-muted mb-30 d-none d-lg-block">
+                            <p
+                              className="post-exerpt font-medium mb-30 d-none d-lg-block"
+                              style={{
+                                color: theme === "dark" ? "#ccc" : "#6c757d",
+                              }}
+                            >
                               {getShortDescription(article.content, 150)}
                             </p>
-                            <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase">
+                            <div className="entry-meta meta-1 font-x-small float-left text-uppercase">
                               <span className="post-by">
-                                Đăng bởi <Link to="#">{user.fullname}</Link>
+                                Đăng bởi{" "}
+                                <Link
+                                  to="#"
+                                  style={{
+                                    color: theme === "dark" ? "#fff" : "#000",
+                                  }}
+                                >
+                                  {user.fullname}
+                                </Link>
                               </span>
                               <Link to={`/bai-viet/${article.slug}`}>
                                 <span className="mr-10">
-                                  <FontAwesomeIcon icon={faAnglesRight} /> Xem
-                                  Thêm
+                                  <FontAwesomeIcon
+                                    icon={faAnglesRight}
+                                    style={{
+                                      color: theme === "dark" ? "#fff" : "#000",
+                                    }}
+                                  />
+                                </span>
+                                <span
+                                  style={{
+                                    color: theme === "dark" ? "#fff" : "#000",
+                                  }}
+                                >
+                                  Xem Thêm
                                 </span>
                               </Link>
                             </div>
@@ -683,7 +826,11 @@ const NguoiDung = () => {
                                   ? "#FF4C4C"
                                   : "transparent",
                               color:
-                                currentPage === index + 1 ? "white" : "black",
+                                currentPage === index + 1
+                                  ? "white"
+                                  : theme === "dark"
+                                  ? "white"
+                                  : "black",
                               borderRadius: "50%",
                               cursor: "pointer",
                               textDecoration: "none",
