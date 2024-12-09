@@ -225,7 +225,7 @@ const TrangChu = () => {
                       )}
                     </div>
 
-                    <div className="animated-text-container mt-50">
+                    <div className="animated-text-container mt-50 d-none d-lg-block">
                       {Array.from("Welcome to ITBLOG").map((char, index) => (
                         <span
                           key={index}

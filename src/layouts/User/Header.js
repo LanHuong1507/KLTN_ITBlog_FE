@@ -123,7 +123,12 @@ const Header = () => {
       <div className="header-bottom header-sticky text-center">
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-lg-2 col-md-3 d-flex justify-content-between align-items-center">
+            <div
+              className="col-lg-2 col-md-3 d-flex justify-content-between align-items-center"
+              style={{
+                backgroundColor: theme === "dark" ? "#121212" : "#ffffff",
+              }}
+            >
               <div className="header-logo">
                 <Link to="/">
                   <img
@@ -141,10 +146,14 @@ const Header = () => {
               <button
                 onClick={toggleMobileMenu}
                 className="menu-toggle d-lg-none"
+                style={{
+                  color: theme === "dark" ? "#ffffff" : "#000000",
+                }}
               >
                 <FontAwesomeIcon icon={faBars} size="lg" />
               </button>
             </div>
+
             <div className="col-lg-10 col-md-9 main-header-navigation d-none d-lg-flex">
               <div className="main-nav text-left float-lg-left float-md-right">
                 <nav>
@@ -429,7 +438,15 @@ const Header = () => {
             </div>
           </div>
           {isMobileMenuOpen && (
-            <div className={`mobile-menu ${isMobileMenuOpen ? "active" : ""}`}>
+            <div
+              className={`mobile-menu ${isMobileMenuOpen ? "active" : ""} ${
+                theme === "dark" ? "dark-theme" : "light-theme"
+              }`}
+              style={{
+                backgroundColor: theme === "dark" ? "#333" : "#fff",
+                color: theme === "dark" ? "white" : "black",
+              }}
+            >
               <nav>
                 <ul className="main-menu">
                   <li>

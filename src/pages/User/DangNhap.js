@@ -13,6 +13,7 @@ const DangNhap = () => {
   const [captchaText, setCaptchaText] = useState("");
   const canvasRef = useRef(null);
   const { theme } = useTheme();
+
   const generateCaptcha = () => {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -24,7 +25,6 @@ const DangNhap = () => {
       );
     }
     setCaptchaText(captcha);
-
     return captcha;
   };
 
@@ -94,83 +94,85 @@ const DangNhap = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid pb-50">
+        <div className="container pb-50">
           <form
-            className="form-contact comment_form w-50 m-auto"
+            className="form-contact comment_form mx-auto px-3"
             action="#"
             id="commentForm"
             onSubmit={handleSubmit}
+            style={{ maxWidth: "500px" }}
           >
-            <div className="row">
-              <div className="col-sm-12">
-                <div className="form-group">
-                  <input
-                    className="form-control border-radius-15"
-                    name="name"
-                    id="name"
-                    type="text"
-                    placeholder="Nhập tài khoản"
-                    required
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="col-sm-12 mt-15">
-                <div className="form-group">
-                  <input
-                    className="form-control border-radius-15"
-                    name="email"
-                    id="password"
-                    type="password"
-                    placeholder="Nhập mật khẩu"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="col-sm-12 mt-15">
-                <div className="form-group d-flex align-items-center">
-                  <canvas
-                    ref={canvasRef}
-                    width="250"
-                    height="50"
-                    style={{
-                      border: "1px solid #ccc",
-                      background: "white",
-                      borderRadius: 15,
-                    }}
-                  />
-                  <input
-                    className="form-control ml-3"
-                    type="text"
-                    placeholder="Nhập câu trả lời CAPTCHA"
-                    value={captchaAnswer}
-                    onChange={(e) => setCaptchaAnswer(e.target.value)}
-                    style={{ maxWidth: "200px" }}
-                  />
-                </div>
+            <div className="form-group">
+              <input
+                className="form-control border-radius-15"
+                name="name"
+                id="name"
+                type="text"
+                placeholder="Nhập tài khoản"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div className="form-group mt-15">
+              <input
+                className="form-control border-radius-15"
+                name="email"
+                id="password"
+                type="password"
+                placeholder="Nhập mật khẩu"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="form-group mt-15">
+              <div
+                className="d-flex align-items-center flex-wrap"
+                style={{ gap: "10px" }}
+              >
+                <canvas
+                  ref={canvasRef}
+                  width="250"
+                  height="50"
+                  style={{
+                    border: "1px solid #ccc",
+                    background: "white",
+                    borderRadius: "15px",
+                    flexShrink: 0,
+                    marginLeft: "10px",
+                    maxWidth: "100%",
+                  }}
+                />
+                <input
+                  className="form-control border-radius-15"
+                  type="text"
+                  placeholder="Nhập câu trả lời CAPTCHA"
+                  value={captchaAnswer}
+                  onChange={(e) => setCaptchaAnswer(e.target.value)}
+                  style={{
+                    maxWidth: "100%",
+                    flex: 1,
+                    minWidth: "150px",
+                  }}
+                />
               </div>
             </div>
+
             <div className="form-group mt-15 w-100">
               <button type="submit" className="button button-contactForm w-100">
                 ĐĂNG NHẬP
               </button>
             </div>
-            <div className="form-group mt-25 w-100 d-flex justify-content-between">
+            <div className="form-group mt-25 w-100 d-flex justify-content-between flex-wrap">
               <div
                 className="text-left"
-                style={{
-                  color: theme === "dark" ? "#fff" : "#333",
-                }}
+                style={{ color: theme === "dark" ? "#fff" : "#333" }}
               >
                 Chưa có tài khoản?{" "}
                 <Link
                   to="/dang-ky"
-                  style={{
-                    color: theme === "dark" ? "#fff" : "#333",
-                  }}
+                  style={{ color: theme === "dark" ? "#fff" : "#333" }}
                   onMouseEnter={(e) =>
                     (e.target.style.color = theme === "dark" ? "red" : "red")
                   }
@@ -181,12 +183,13 @@ const DangNhap = () => {
                   Đăng Ký
                 </Link>
               </div>
-              <div className="text-right">
+              <div
+                className="text-right mt-3 mt-md-0"
+                style={{ color: theme === "dark" ? "#fff" : "#333" }}
+              >
                 <Link
                   to="/quen-mat-khau"
-                  style={{
-                    color: theme === "dark" ? "#fff" : "#333",
-                  }}
+                  style={{ color: theme === "dark" ? "#fff" : "#333" }}
                   onMouseEnter={(e) =>
                     (e.target.style.color = theme === "dark" ? "red" : "red")
                   }

@@ -179,10 +179,11 @@ const DangKy = () => {
         </div>
         <div className="container-fluid pb-50">
           <form
-            className="form-contact comment_form w-50 m-auto"
+            className="form-contact comment_form mx-auto px-3"
             action="#"
             id="commentForm"
             onSubmit={handleSubmit}
+            style={{ maxWidth: "500px" }}
           >
             <div className="row">
               <div className="col-sm-12">
@@ -278,8 +279,8 @@ const DangKy = () => {
                   )}
                 </div>
               </div>
-              <div className="col-sm-12 mt-15">
-                <div className="form-group d-flex align-items-center">
+              <div className="col-sm-12 mt-3">
+                <div className="form-group d-flex flex-column flex-sm-row align-items-center">
                   <canvas
                     ref={canvasRef}
                     width="250"
@@ -288,25 +289,31 @@ const DangKy = () => {
                       border: "1px solid #ccc",
                       background: "white",
                       borderRadius: 15,
+                      marginLeft: "10px",
+                      maxWidth: "100%", 
+                      width: "100%", 
                     }}
                   />
                   <input
-                    className="form-control ml-3"
+                    className="form-control mt-2 mt-sm-0 ml-sm-3 w-100"
                     type="text"
                     placeholder="Nhập câu trả lời CAPTCHA"
                     value={captchaAnswer}
                     onChange={(e) => setCaptchaAnswer(e.target.value)}
-                    style={{ maxWidth: "200px" }}
+                    style={{
+                      maxWidth: "500px",
+                      width: "100%",
+                    }}
                   />
                 </div>
               </div>
             </div>
-            <div className="form-group mt-15 w-100">
+            <div className="form-group mt-3 w-100">
               <button type="submit" className="button button-contactForm w-100">
                 ĐĂNG KÝ
               </button>
             </div>
-            <div className="form-group mt-25 w-100">
+            <div className="form-group mt-4 w-100">
               <div
                 className="text-center"
                 style={{ color: theme === "dark" ? "#fff" : "#333" }}
@@ -316,7 +323,6 @@ const DangKy = () => {
                   to="/dang-nhap"
                   style={{
                     color: theme === "dark" ? "#fff" : "#333",
-                    hover: { color: theme === "dark" ? "#fff" : "#333" },
                   }}
                 >
                   Đăng Nhập
