@@ -1751,24 +1751,26 @@ iframe {
 
 .entry-main-content p {
 	line-height: 1.75;
+	font-size: 15px;
+	color: #000; 
 }
-
 .entry-main-content h2 {
 	line-height: 1.25;
 	margin-top: 30px;
 	margin-bottom: 28px;
 	font-size: 24px;
+	color: #000; 
 }
-
-.entry-main-content p {
-	font-size: 15px;
-}
-
 .entry-main-content figure {
 	margin-bottom: 30px;
 	margin-top: 30px;
 }
-
+.entry-main-content a {
+	color: #007bff; 
+}
+entry-main-content img {
+	border-radius: 4px; 
+}
 .entry-bottom .tags a {
 	display: inline-block;
 	font-weight: normal;

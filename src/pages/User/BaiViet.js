@@ -13,7 +13,7 @@ import {
   faUserMinus,
 } from "@fortawesome/free-solid-svg-icons";
 import { faUser, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
-
+import { useTheme } from "../../context/ThemeContext";
 const decodeJWT = (token) => {
   const parts = token.split(".");
   if (parts.length !== 3) {
@@ -51,11 +51,12 @@ const BaiViet = () => {
   const [related, setRelated] = useState([]);
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
+  const { theme } = useTheme();
 
   const currentUrl = window.location.href;
   const handleDelete = async (id) => {
     try {
-      setComments(comments.filter(comment => comment.comment_id !== id));
+      setComments(comments.filter((comment) => comment.comment_id !== id));
       const destroy = await BinhLuanServices.delete(id);
       toast.success(destroy.data.message);
     } catch (error) {
@@ -63,7 +64,7 @@ const BaiViet = () => {
       toast.error("Lỗi khi xóa bình luận");
     }
   };
-  
+
   const fetchArticle = async (slugArticle = slug) => {
     try {
       const response = await BaiVietServices.showArticle(slugArticle);
@@ -110,8 +111,8 @@ const BaiViet = () => {
       const baseUrl = process.env.REACT_APP_API_URL;
       articleContent = articleContent.replace(
         /<img\s+[^>]*src="(\uploads\/[^"]+)"[^>]*>/g,
-        (match,path)=>{
-          return match.replace(path,`${baseUrl}/${path}`);
+        (match, path) => {
+          return match.replace(path, `${baseUrl}/${path}`);
         }
       );
 
@@ -489,7 +490,12 @@ const BaiViet = () => {
                 </div>
               </div>
               {/*author box*/}
-              <div className="author-bio border-radius-10 bg-white p-30 mb-40">
+              <div
+                className="author-bio border-radius-10 p-30 mb-40"
+                style={{
+                  color: theme === "dark" ? "#eee" : "#000",
+                }}
+              >
                 <div className="author-image mb-30">
                   <a
                     href={
@@ -502,6 +508,9 @@ const BaiViet = () => {
                       src={`${process.env.REACT_APP_API_URL}/${user.avatar_url}`}
                       alt={`${user.fullname}'s avatar`}
                       className="avatar"
+                      style={{
+                        border: theme === "dark" ? "2px solid #eee" : "none",
+                      }}
                     />
                   </a>
                 </div>
@@ -514,6 +523,9 @@ const BaiViet = () => {
                             to={`/tai-khoan`}
                             title="Posts by Robert"
                             rel="author"
+                            style={{
+                              color: theme === "dark" ? "#eee" : "#000",
+                            }}
                           >
                             {user.fullname}
                           </Link>
@@ -522,6 +534,9 @@ const BaiViet = () => {
                             to={`/nguoi-dung/${user.username}`}
                             title="Posts by Robert"
                             rel="author"
+                            style={{
+                              color: theme === "dark" ? "#eee" : "#000",
+                            }}
                           >
                             {user.fullname}
                           </Link>
@@ -529,28 +544,67 @@ const BaiViet = () => {
                       </span>
                     </span>
                   </h3>
-                  <h5 className="text-muted">
+                  <h5
+                    className="text-muted"
+                    style={{ color: theme === "dark" ? "#ccc" : "#777" }}
+                  >
                     <span className="mr-15">{user.username}</span>
-                    <i className="ti-star" />
-                    <i className="ti-star" />
-                    <i className="ti-star" />
-                    <i className="ti-star" />
-                    <i className="ti-star" />
+                    <i
+                      className="ti-star"
+                      style={{
+                        color: theme === "dark" ? "#f1c40f" : "#f8c200",
+                      }}
+                    />
+                    <i
+                      className="ti-star"
+                      style={{
+                        color: theme === "dark" ? "#f1c40f" : "#f8c200",
+                      }}
+                    />
+                    <i
+                      className="ti-star"
+                      style={{
+                        color: theme === "dark" ? "#f1c40f" : "#f8c200",
+                      }}
+                    />
+                    <i
+                      className="ti-star"
+                      style={{
+                        color: theme === "dark" ? "#f1c40f" : "#f8c200",
+                      }}
+                    />
+                    <i
+                      className="ti-star"
+                      style={{
+                        color: theme === "dark" ? "#f1c40f" : "#f8c200",
+                      }}
+                    />
                   </h5>
-                  <div className="author-description">{user.bio}</div>
+                  <div
+                    className="author-description"
+                    style={{ color: theme === "dark" ? "#ddd" : "#555" }}
+                  >
+                    {user.bio}
+                  </div>
                   {article.user_id === isAuthor ? (
                     <>
                       <Link
                         to={`/tai-khoan`}
                         className="author-bio-link text-muted"
-                        style={{ textTransform: "unset" }}
+                        style={{
+                          textTransform: "unset",
+                          color: theme === "dark" ? "#ccc" : "#666",
+                        }}
                       >
                         <FontAwesomeIcon icon={faUser} /> Trang Cá Nhân
                       </Link>
                       <Link
                         to={`/chinh-sua/${article.article_id}`}
                         className="author-bio-link text-muted"
-                        style={{ textTransform: "unset" }}
+                        style={{
+                          textTransform: "unset",
+                          color: theme === "dark" ? "#ccc" : "#666",
+                        }}
                       >
                         <FontAwesomeIcon icon={faPenToSquare} /> Chỉnh Sửa Bài
                       </Link>
@@ -565,7 +619,11 @@ const BaiViet = () => {
                         }`}
                         style={{
                           textTransform: "unset",
-                          color: liked ? "#f2546a" : "inherit",
+                          color: liked
+                            ? "#f2546a"
+                            : theme === "dark"
+                            ? "#ccc"
+                            : "#555",
                         }}
                       >
                         <FontAwesomeIcon icon={faThumbsUp} />
@@ -575,7 +633,10 @@ const BaiViet = () => {
                         onClick={() => handelFollow(user.username)}
                         to="#"
                         className="author-bio-link text-muted"
-                        style={{ textTransform: "unset" }}
+                        style={{
+                          textTransform: "unset",
+                          color: theme === "dark" ? "#ccc" : "#666",
+                        }}
                       >
                         {isFollower === true ? (
                           <>
@@ -590,7 +651,10 @@ const BaiViet = () => {
                       <Link
                         to="#"
                         className="author-bio-link text-muted"
-                        style={{ textTransform: "unset" }}
+                        style={{
+                          textTransform: "unset",
+                          color: theme === "dark" ? "#ccc" : "#666",
+                        }}
                       >
                         <FontAwesomeIcon icon={faRss} /> {followerCount} Người
                         Theo Dõi
@@ -602,35 +666,74 @@ const BaiViet = () => {
                     <ul className="author-social-icons">
                       <li className="author-social-link-facebook">
                         <Link to="#">
-                          <i className="ti-facebook" />
+                          <i
+                            className="ti-facebook"
+                            style={{
+                              color: theme === "dark" ? "#fff" : "#3b5998",
+                            }}
+                          />
                         </Link>
                       </li>
                       <li className="author-social-link-twitter">
                         <Link to="#">
-                          <i className="ti-twitter-alt" />
+                          <i
+                            className="ti-twitter-alt"
+                            style={{
+                              color: theme === "dark" ? "#fff" : "#00acee",
+                            }}
+                          />
                         </Link>
                       </li>
                       <li className="author-social-link-pinterest">
                         <Link to="#">
-                          <i className="ti-pinterest" />
+                          <i
+                            className="ti-pinterest"
+                            style={{
+                              color: theme === "dark" ? "#fff" : "#e60023",
+                            }}
+                          />
                         </Link>
                       </li>
                       <li className="author-social-link-instagram">
                         <Link to="#">
-                          <i className="ti-instagram" />
+                          <i
+                            className="ti-instagram"
+                            style={{
+                              color: theme === "dark" ? "#fff" : "#e1306c",
+                            }}
+                          />
                         </Link>
                       </li>
                     </ul>
                   </div>
                 </div>
               </div>
+
               {/*related posts*/}
-              <div className="related-posts">
-                <h3 className="mb-30">Bài Viết Liên Quan</h3>
+              <div
+                className="related-posts"
+                style={{
+                  backgroundColor: theme === "dark" ? "#333" : "#fff",
+                  color: theme === "dark" ? "#eee" : "#000",
+                }}
+              >
+                <h3
+                  className="mb-30"
+                  style={{
+                    color: theme === "dark" ? "#fff" : "#000",
+                  }}
+                >
+                  Bài Viết Liên Quan
+                </h3>
                 <div className="row">
                   {related.map((article, index) => (
                     <article key={index} className="col-lg-4">
-                      <div className="background-white border-radius-10 p-10 mb-30">
+                      <div
+                        className=" border-radius-10 p-10 mb-30"
+                        style={{
+                          color: theme === "dark" ? "#eee" : "#000",
+                        }}
+                      >
                         <div className="post-thumb d-flex mb-15 border-radius-15 img-hover-scale">
                           <Link
                             to={`/bai-viet/${article.slug}`}
@@ -638,7 +741,15 @@ const BaiViet = () => {
                           >
                             <img
                               className="border-radius-15"
-                              style={{ height: "183px", width: "261px" }}
+                              style={{
+                                height: "183px",
+                                width: "261px",
+                                borderRadius: "15px",
+                                boxShadow:
+                                  theme === "dark"
+                                    ? "0 2px 10px rgba(255, 255, 255, 0.1)"
+                                    : "none",
+                              }}
                               src={`${process.env.REACT_APP_API_URL}/${article.image_url}`}
                               alt=""
                             />
@@ -654,6 +765,9 @@ const BaiViet = () => {
                                 className={`post-in text-${
                                   colors[index % colors.length].split("-")[1]
                                 } font-x-small`}
+                                style={{
+                                  color: theme === "dark" ? "#ddd" : "",
+                                }}
                               >
                                 {article.category_name}
                               </span>
@@ -665,6 +779,9 @@ const BaiViet = () => {
                               onClick={() =>
                                 handelToArticleRelated(article.slug)
                               }
+                              style={{
+                                color: theme === "dark" ? "#eee" : "#000",
+                              }}
                             >
                               {article.title}
                             </Link>
@@ -672,11 +789,21 @@ const BaiViet = () => {
                           <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase mb-10">
                             <span className="post-by">
                               bởi{" "}
-                              <Link to={`/nguoi-dung/${article.username}`}>
+                              <Link
+                                to={`/nguoi-dung/${article.username}`}
+                                style={{
+                                  color: theme === "dark" ? "#ccc" : "",
+                                }}
+                              >
                                 {article.fullname}
                               </Link>
                             </span>
-                            <span className="post-on">
+                            <span
+                              className="post-on"
+                              style={{
+                                color: theme === "dark" ? "#bbb" : "",
+                              }}
+                            >
                               {new Date(article.createdAt).toLocaleDateString(
                                 "vi-VN"
                               )}
@@ -688,12 +815,31 @@ const BaiViet = () => {
                   ))}
                 </div>
               </div>
-              <div className="comments-area">
-                <h3 className="mb-30" id="list-comments-new">
+
+              <div
+                className="comments-area"
+                style={{
+                  color: theme === "dark" ? "#eee" : "#000",
+                  backgroundColor: theme === "dark" ? "#333" : "#fff",
+                }}
+              >
+                <h3
+                  className="mb-30"
+                  id="list-comments-new"
+                  style={{
+                    color: theme === "dark" ? "#fff" : "#000",
+                  }}
+                >
                   Bình Luận ({comments.length})
                 </h3>
                 {comments.length === 0 ? (
-                  <p>Chưa có bình luận nào cho bài viết này!</p>
+                  <p
+                    style={{
+                      color: theme === "dark" ? "#ccc" : "#555",
+                    }}
+                  >
+                    Chưa có bình luận nào cho bài viết này!
+                  </p>
                 ) : null}
                 {comments.map((comment, index) => (
                   <div key={index} className="comment-list">
@@ -703,26 +849,54 @@ const BaiViet = () => {
                           <img
                             src={`${process.env.REACT_APP_API_URL}/${comment.user.avatar_url}`}
                             alt=""
+                            style={{
+                              border:
+                                theme === "dark" ? "2px solid #eee" : "none",
+                            }}
                           />
                         </div>
                         <div className="desc">
-                          <p className="comment">{comment.content}</p>
+                          <p
+                            className="comment"
+                            style={{
+                              color: theme === "dark" ? "#ddd" : "#333",
+                            }}
+                          >
+                            {comment.content}
+                          </p>
                           <div className="d-flex justify-content-between">
                             <div className="d-flex align-items-center">
-                              <h5>
+                              <h5
+                                style={{
+                                  color: theme === "dark" ? "#fff" : "#000",
+                                }}
+                              >
                                 {comment.user_id === isAuthor ? (
-                                  <Link to={`/tai-khoan`}>
+                                  <Link
+                                    to={`/tai-khoan`}
+                                    style={{
+                                      color: theme === "dark" ? "#fff" : "#000",
+                                    }}
+                                  >
                                     {comment.user.fullname}
                                   </Link>
                                 ) : (
                                   <Link
                                     to={`/nguoi-dung/${comment.user.username}`}
+                                    style={{
+                                      color: theme === "dark" ? "#fff" : "#000",
+                                    }}
                                   >
                                     {comment.user.fullname}
                                   </Link>
                                 )}
                               </h5>
-                              <p className="date">
+                              <p
+                                className="date"
+                                style={{
+                                  color: theme === "dark" ? "#aaa" : "#777",
+                                }}
+                              >
                                 {new Date(comment.createdAt).toLocaleDateString(
                                   "vi-VN"
                                 )}
@@ -731,7 +905,11 @@ const BaiViet = () => {
                             {comment.user_id === isAuthor && (
                               <i
                                 className="fas fa-trash-alt text-danger pl-20"
-                                style={{ cursor: "pointer" }}
+                                style={{
+                                  cursor: "pointer",
+                                  color:
+                                    theme === "dark" ? "#f2546a" : "#dc3545",
+                                }}
                                 onClick={() => handleDelete(comment.comment_id)}
                                 title="Xóa Bình Luận"
                               ></i>
@@ -743,8 +921,22 @@ const BaiViet = () => {
                   </div>
                 ))}
               </div>
-              <div className="comment-form" style={{ marginTop: "0px" }}>
-                <h3 className="mb-30">Viết Bình Luận</h3>
+
+              <div
+                className="comment-form"
+                style={{
+                  marginTop: "0px",
+                  color: theme === "dark" ? "#eee" : "#000",
+                }}
+              >
+                <h3
+                  className="mb-30"
+                  style={{
+                    color: theme === "dark" ? "#fff" : "#000",
+                  }}
+                >
+                  Viết Bình Luận
+                </h3>
                 <div className="form-contact comment_form" id="commentForm">
                   <div className="row">
                     <div className="col-12">
@@ -758,6 +950,11 @@ const BaiViet = () => {
                           placeholder="Nhập nội dung bình luận"
                           value={postComment}
                           onChange={(e) => setPostComment(e.target.value)}
+                          style={{
+                            backgroundColor: theme === "dark" ? "#555" : "#fff",
+                            color: theme === "dark" ? "#eee" : "#000",
+                            borderColor: theme === "dark" ? "#777" : "#ccc",
+                          }}
                         />
                       </div>
                     </div>
@@ -767,6 +964,10 @@ const BaiViet = () => {
                       type="submit"
                       onClick={() => handelPostComment(article.article_id)}
                       className="button button-contactForm"
+                      style={{
+                        color: "#fff",
+                        border: "none",
+                      }}
                     >
                       Bình Luận
                     </button>
