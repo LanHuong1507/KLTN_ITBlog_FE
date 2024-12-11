@@ -3,11 +3,10 @@ import TrangChuServices from "../../services/User/TrangChuServices";
 import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesRight } from "@fortawesome/free-solid-svg-icons";
+import { useTheme } from "../../context/ThemeContext";
 
 function getShortDescription(content, length = 100) {
-  // Loại bỏ các thẻ HTML
   const plainText = content.replace(/<[^>]+>/g, "");
-  // Lấy một số ký tự đầu tiên làm mô tả ngắn
   return plainText.length > length
     ? plainText.substring(0, length) + "..."
     : plainText;
@@ -19,7 +18,7 @@ const TimKiem = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResult, setTotalResult] = useState(0);
   const [hoveredPage, setHoveredPage] = useState(null);
-
+  const { theme } = useTheme();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const search = queryParams.get("s");
@@ -39,7 +38,6 @@ const TimKiem = () => {
     fetchArticles();
   }, [search]);
 
-
   const handlePageChange = async (page) => {
     try {
       await fetchArticles(page);
@@ -57,20 +55,39 @@ const TimKiem = () => {
     <>
       <main className="position-relative">
         <div className="archive-header text-center mb-50">
-          <div className="archive-header text-center mb-50">
+          <div
+            className="archive-header text-center mb-50"
+            style={{
+              color: theme === "dark" ? "#bbb" : "#777",
+            }}
+          >
             <div className="container">
               <h2>
                 <span className="text-success">Tìm kiếm cho "{search}"</span>
               </h2>
-              <div className="breadcrumb">
-              {articles.length === 0 ? (
-                <span className="no-arrow">Không tìm thấy bài viết nào</span>
-              ) : (
-                <span className="no-arrow">
-                  Có <strong className="text-black font-large">{totalResult}</strong> bài viết được tìm thấy phù hợp với kết quả tìm kiếm
-                </span>
-              )}
-            </div>
+              <div
+                className="breadcrumb"
+                style={{
+                  color: theme === "dark" ? "#ddd" : "#555",
+                }}
+              >
+                {articles.length === 0 ? (
+                  <span className="no-arrow">Không tìm thấy bài viết nào</span>
+                ) : (
+                  <span className="no-arrow">
+                    Có{" "}
+                    <strong
+                      className="text-black font-large"
+                      style={{
+                        color: theme === "dark" ? "#eee" : "#000",
+                      }}
+                    >
+                      {totalResult}
+                    </strong>{" "}
+                    bài viết được tìm thấy phù hợp với kết quả tìm kiếm
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -85,12 +102,18 @@ const TimKiem = () => {
                         ? "latest-post"
                         : "latest-post mb-50"
                     }
+                    style={{
+                      color: theme === "dark" ? "#ccc" : "#444",
+                    }}
                   >
                     <div className="loop-list-style-1">
                       {articles.map((article, index) => (
                         <article
                           key={index}
-                          className="p-10 background-white border-radius-10 mb-30 wow fadeIn animated"
+                          className="p-10 border-radius-10 mb-30 wow fadeIn animated"
+                          style={{
+                            color: theme === "dark" ? "#fff" : "#000",
+                          }}
                         >
                           <div className="d-md-flex d-block">
                             <div className="post-thumb post-thumb-big d-flex mr-15 border-radius-15 img-hover-scale">
@@ -106,8 +129,19 @@ const TimKiem = () => {
                               </Link>
                             </div>
                             <div className="post-content media-body">
-                              <div className="entry-meta mb-15 mt-10">
-                                <Link className="entry-meta meta-2" to="#">
+                              <div
+                                className="entry-meta mb-15 mt-10"
+                                style={{
+                                  color: theme === "dark" ? "#aaa" : "#555",
+                                }}
+                              >
+                                <Link
+                                  className="entry-meta meta-2"
+                                  to="#"
+                                  style={{
+                                    color: theme === "dark" ? "#ddd" : "#777",
+                                  }}
+                                >
                                   <span className="post-in text-danger font-x-small">
                                     {new Date(
                                       article.createdAt
@@ -115,23 +149,50 @@ const TimKiem = () => {
                                   </span>
                                 </Link>
                               </div>
-                              <h5 className="post-title mb-15 text-limit-2-row">
+                              <h5
+                                className="post-title mb-15 text-limit-2-row"
+                                style={{
+                                  color: theme === "dark" ? "#f5f5f5" : "#000",
+                                }}
+                              >
                                 <Link to={`/bai-viet/${article.slug}`}>
                                   {article.title}
                                 </Link>
                               </h5>
-                              <p className="post-exerpt font-medium text-muted mb-30 d-none d-lg-block">
+                              <p
+                                className="post-exerpt font-medium text-muted mb-30 d-none d-lg-block"
+                                style={{
+                                  color: theme === "dark" ? "#ccc" : "#888",
+                                }}
+                              >
                                 {getShortDescription(article.content, 150)}
                               </p>
-                              <div className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase">
+                              <div
+                                className="entry-meta meta-1 font-x-small color-grey float-left text-uppercase"
+                                style={{
+                                  color: theme === "dark" ? "#aaa" : "#666",
+                                }}
+                              >
                                 <span className="post-by">
                                   Đăng bởi{" "}
-                                  <Link to={`/nguoi-dung/${article.fullname}`}>
-                                    {article.fullname}
+                                  <Link
+                                    to={`/nguoi-dung/${article.fullname}`}
+                                    style={{
+                                      color:
+                                        theme === "dark" ? "#f5f5f5" : "#000",
+                                    }}
+                                  >
+                                    {article.user.fullname}
                                   </Link>
                                 </span>
                                 <Link to={`/bai-viet/${article.slug}`}>
-                                  <span className="mr-10">
+                                  <span
+                                    className="mr-10 "
+                                    style={{
+                                      color:
+                                        theme === "dark" ? "#f5f5f5" : "#000",
+                                    }}
+                                  >
                                     <FontAwesomeIcon icon={faAnglesRight} /> Xem
                                     Thêm
                                   </span>
@@ -173,7 +234,11 @@ const TimKiem = () => {
                                     ? "#FF4C4C"
                                     : "transparent",
                                 color:
-                                  currentPage === index + 1 ? "white" : "black",
+                                  currentPage === index + 1
+                                    ? "white"
+                                    : theme === "dark"
+                                    ? "#bbb"
+                                    : "black",
                                 borderRadius: "50%",
                                 cursor: "pointer",
                                 textDecoration: "none",
@@ -195,30 +260,56 @@ const TimKiem = () => {
                   }
                 >
                   <div
-                    className="sidebar-widget p-20 border-radius-15 bg-white widget-text wow fadeIn animated"
-                    style={{ visibility: "visible", animationName: "fadeIn" }}
+                    className="sidebar-widget p-20 border-radius-15 widget-text wow fadeIn animated"
+                    style={{
+                      visibility: "visible",
+                      animationName: "fadeIn",
+                    }}
                   >
                     <div className="widget-header mb-30">
-                      <h5 className="widget-title">
+                      <h5
+                        className="widget-title "
+                        style={{
+                          color: theme === "dark" ? "#f5f5f5" : "#000",
+                        }}
+                      >
                         Mẹo <span>tìm kiếm</span>
                       </h5>
                     </div>
                     <div>
-                      <h6>1. Sử dụng các tab</h6>
+                      <h6
+                        style={{
+                          color: theme === "dark" ? "#f5f5f5" : "#000",
+                        }}
+                      >
+                        1. Sử dụng các tab
+                      </h6>
                       <p className="font-small text-muted">
                         Đầu tiên, hãy tận dụng các tab khi tìm kiếm trên Google.
                         Ở trên thanh tìm kiếm sẽ có các tab như Web, Hình ảnh,
                         Tin tức... Bạn có thể chọn tab phù hợp để Google tập
                         trung vào kiểu nội dung bạn cần.
                       </p>
-                      <h6>2. Sử dụng dấu ngoặc kép</h6>
+                      <h6
+                        style={{
+                          color: theme === "dark" ? "#f5f5f5" : "#000",
+                        }}
+                      >
+                        2. Sử dụng dấu ngoặc kép
+                      </h6>
                       <p className="font-small text-muted">
                         Khi bạn cần tìm kiếm chính xác một cụm từ nào đó, hãy
                         dùng dấu ngoặc kép. Điều này sẽ giúp Google chỉ tìm kiếm
                         những kết quả chứa chính xác cụm từ bạn muốn, giúp tiết
                         kiệm thời gian và cho ra kết quả chính xác hơn.
                       </p>
-                      <h6>3. Loại trừ từ với dấu gạch ngang</h6>
+                      <h6
+                        style={{
+                          color: theme === "dark" ? "#f5f5f5" : "#000",
+                        }}
+                      >
+                        3. Loại trừ từ với dấu gạch ngang
+                      </h6>
                       <p className="font-small text-muted">
                         Đôi khi bạn muốn tìm kiếm một từ nhưng lại có quá nhiều
                         nghĩa. Ví dụ, khi tìm "Mustang", bạn có thể nhận được

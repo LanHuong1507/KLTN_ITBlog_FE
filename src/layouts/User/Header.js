@@ -208,7 +208,7 @@ const Header = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     name="s"
                     style={{
-                      color: theme === "dark" ? "white" : "black",
+                      color: theme === "dark" ? "black" : "black",
                       border:
                         theme === "dark" ? "1px solid #444" : "1px solid #ccc",
                     }}
