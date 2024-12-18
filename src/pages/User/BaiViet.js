@@ -251,29 +251,38 @@ const BaiViet = () => {
     fetchLike(id);
     setLiked(!liked);
   };
+  const forbiddenWordsRegex =
+    /bậy|chửi|tục|bậy bạ|đồ ngu|ngu|đần|điên|khùng|fuck|shit|ass|idiot|stupid|wtf|clown|đm|dm|vkl|vl|mẹ mày|con chó|thằng chó|lồn|cặc|má mày|địt|đụ/i;
 
   const handelPostComment = async (id) => {
     if (!localStorage.getItem("token")) {
       toast.error("Vui lòng đăng nhập để bình luận!");
-    } else {
-      try {
-        const data = {
-          content: postComment,
-        };
-        const response = await BaiVietServices.postComment(id, data);
-        if (response.status == 201) {
-          fetchComment(id);
-          setPostComment("");
-          const element = document.getElementById("list-comments-new");
-          if (element) {
-            element.scrollIntoView({ behavior: "instant", block: "start" });
-          }
-        } else {
-          toast.error(response.response.data.message);
+      return;
+    }
+
+    if (forbiddenWordsRegex.test(postComment)) {
+      toast.error("Bình luận chứa từ ngữ không phù hợp. Vui lòng nhập lại!");
+      return;
+    }
+
+    try {
+      const data = {
+        content: postComment,
+      };
+      const response = await BaiVietServices.postComment(id, data);
+      if (response.status === 201) {
+        fetchComment(id);
+        setPostComment("");
+        const element = document.getElementById("list-comments-new");
+        if (element) {
+          element.scrollIntoView({ behavior: "instant", block: "start" });
         }
-      } catch (error) {
-        console.error("Lỗi khi gọi API:", error);
+      } else {
+        toast.error(response.response.data.message);
       }
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+      toast.error("Có lỗi xảy ra khi gửi bình luận!");
     }
   };
 

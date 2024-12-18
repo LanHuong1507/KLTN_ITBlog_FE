@@ -30,6 +30,7 @@ const TrangChu = () => {
   const [currentTime, setCurrentTime] = useState("");
   const [isAuthor, setIsAuthor] = useState(-1);
   const { theme } = useTheme();
+  const [title, setTitle] = useState("Bài Viết Mới");
 
   const fetchWeatherData = async () => {
     const city = "Ho Chi Minh City";
@@ -71,13 +72,25 @@ const TrangChu = () => {
 
   const fetchArticles = async (page = 1) => {
     try {
-      const response = await TrangChuServices.getListArticles(page);
+      let response;
+
+      // Kiểm tra xem người dùng có token (đã đăng nhập) hay không
+      if (localStorage.getItem("token")) {
+        // Nếu có token, gọi API getListArticlesRecomend
+        response = await TrangChuServices.getListArticlesRecomend(page);
+        setTitle("Đề xuất cho bạn");
+      } else {
+        // Nếu không có token, gọi API getListArticles
+        response = await TrangChuServices.getListArticles(page);
+        setTitle("Bài Viết Mới");
+      }
       setArticles(response.data.articles);
       setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
     }
   };
+
   const decodeJWT = (token) => {
     const parts = token.split(".");
     if (parts.length !== 3) {
@@ -679,14 +692,7 @@ const TrangChu = () => {
                                 color: theme === "dark" ? "white" : "black",
                               }}
                             >
-                              Bài Viết{" "}
-                              <span
-                                style={{
-                                  color: theme === "dark" ? "white" : "black",
-                                }}
-                              >
-                                Mới
-                              </span>
+                              {title}
                             </h4>
                           </div>
                         </div>

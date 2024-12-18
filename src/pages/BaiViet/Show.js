@@ -23,9 +23,19 @@ const Show = () => {
   const navigate = useNavigate();
   const [rejectId, setRejectId] = useState(-1);
   const [show, setShow] = useState(false);
-  const [reason, setReason] = useState("");
-
+  const [reason, setReason] = useState([]);
+  const [customReason, setCustomReason] = useState("");
   const { id } = useParams();
+
+  const handleReasonChange = (e) => {
+    const { value, checked } = e.target;
+
+    if (checked) {
+      setReason((prevReason) => [...prevReason, value]); 
+    } else {
+      setReason((prevReason) => prevReason.filter((item) => item !== value)); 
+    }
+  };
 
   const breadcrumbs = [
     { label: "Trang Chủ", url: "/" },
@@ -193,19 +203,28 @@ const Show = () => {
     setRejectId(id);
   };
   const handleReject = async () => {
-    if (!reason || rejectId === -1) {
+    const finalReason =
+      reason.includes("Khác") && customReason
+        ? [...reason.filter((r) => r !== "Khác"), customReason]
+        : reason;
+
+    if (finalReason.length === 0 || rejectId === -1) {
       toast.error("Vui lòng chọn bài viết và nhập đủ nội dung từ chối!");
       return;
-    } else {
-      try {
-        const response = await BaiVietServices.reject(rejectId, { reason });
-        toast.success(response.data.message);
-      } catch (error) {
-        console.error("Lỗi khi gọi API:", error);
-      }
+    }
+
+    try {
+      const response = await BaiVietServices.reject(rejectId, {
+        reason: finalReason,
+      });
+      toast.success(response.data.message);
       setShow(false);
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+      toast.error("Đã xảy ra lỗi khi từ chối bài viết!");
     }
   };
+
   return (
     <div className="content-wrapper" style={{ minHeight: "1203.31px" }}>
       <ContentHeader title="Chỉnh Sửa" breadcrumbs={breadcrumbs} />
@@ -270,7 +289,7 @@ const Show = () => {
                               ],
                             },
                             ckfinder: {
-                              uploadUrl: `${process.env.REACT_APP_API_URL}/articles/uploadImage`
+                              uploadUrl: `${process.env.REACT_APP_API_URL}/articles/uploadImage`,
                             },
                           }}
                         />
@@ -414,23 +433,119 @@ const Show = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group controlId="reason" className="mb-3">
-              <Form.Control
-                as="textarea"
-                placeholder="Nhập lý do từ chối"
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                rows={4}
-                required
+            <Form.Group controlId="reasonSelection" className="mb-3">
+              <Form.Label>Chọn lý do từ chối</Form.Label>
+              <Form.Check
+                type="checkbox"
+                label="Nội dung không phù hợp"
+                value="Nội dung không phù hợp"
+                checked={reason.includes("Nội dung không phù hợp")}
+                onChange={handleReasonChange}
+              />
+
+              <Form.Check
+                type="checkbox"
+                label="Vi phạm chính sách"
+                value="Vi phạm chính sách"
+                checked={reason.includes("Vi phạm chính sách")}
+                onChange={handleReasonChange}
+              />
+
+              <Form.Check
+                type="checkbox"
+                label="Thiếu thông tin cần thiết"
+                value="Thiếu thông tin cần thiết"
+                checked={reason.includes("Thiếu thông tin cần thiết")}
+                onChange={handleReasonChange}
+              />
+
+              <Form.Check
+                type="checkbox"
+                label="Ngôn ngữ không rõ ràng hoặc sai chính tả"
+                value="Ngôn ngữ không rõ ràng hoặc sai chính tả"
+                checked={reason.includes(
+                  "Ngôn ngữ không rõ ràng hoặc sai chính tả"
+                )}
+                onChange={handleReasonChange}
+              />
+
+              <Form.Check
+                type="checkbox"
+                label="Không đúng chủ đề hoặc danh mục"
+                value="Không đúng chủ đề hoặc danh mục"
+                checked={reason.includes("Không đúng chủ đề hoặc danh mục")}
+                onChange={handleReasonChange}
+              />
+
+              <Form.Check
+                type="checkbox"
+                label="Hình ảnh không phù hợp hoặc chất lượng kém"
+                value="Hình ảnh không phù hợp hoặc chất lượng kém"
+                checked={reason.includes(
+                  "Hình ảnh không phù hợp hoặc chất lượng kém"
+                )}
+                onChange={handleReasonChange}
+              />
+
+              <Form.Check
+                type="checkbox"
+                label="Thông tin gây hiểu lầm hoặc không chính xác"
+                value="Thông tin gây hiểu lầm hoặc không chính xác"
+                checked={reason.includes(
+                  "Thông tin gây hiểu lầm hoặc không chính xác"
+                )}
+                onChange={handleReasonChange}
+              />
+
+              <Form.Check
+                type="checkbox"
+                label="Khác"
+                value="Khác"
+                checked={reason.includes("Khác")}
+                onChange={handleReasonChange}
               />
             </Form.Group>
+
+            {reason.includes("Khác") && (
+              <Form.Group controlId="customReason" className="mb-3">
+                <Form.Control
+                  as="textarea"
+                  placeholder="Nhập lý do từ chối"
+                  value={customReason}
+                  onChange={(e) => setCustomReason(e.target.value)}
+                  rows={4}
+                />
+              </Form.Group>
+            )}
+
+            <div className="mt-3">
+              <strong>Lý do đã chọn:</strong>
+              <div className="selected-reasons">
+                {reason.length > 0
+                  ? reason.includes("Khác") && customReason
+                    ? `${reason
+                        .filter((r) => r !== "Khác")
+                        .join(", ")}. ${customReason}`
+                    : reason.join(", ")
+                  : "Chưa chọn lý do"}
+              </div>
+            </div>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button className="btn btn-success" onClick={() => setShow(false)}>
             Hủy
           </Button>
-          <Button className="btn btn-dark" onClick={() => handleReject()}>
+          <Button
+            className="btn btn-dark"
+            onClick={() =>
+              handleReject(
+                reason.includes("Khác") && customReason
+                  ? [...reason.filter((r) => r !== "Khác"), customReason]
+                  : reason
+              )
+            }
+          >
             Từ Chối
           </Button>
         </Modal.Footer>

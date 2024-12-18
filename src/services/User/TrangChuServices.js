@@ -19,6 +19,15 @@ const TrangChuServices = {
         }
     },
 
+    getListArticlesRecomend: async (page, search = "") => {
+        try {
+            const response = await axiosInstance.get(`/others/articles_recommend?page=${page}&search=${search}`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    },
+
     getTopTrending: async () => {
         try {
             const response = await axiosInstance.get('/others/top_trendings');
